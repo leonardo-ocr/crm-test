@@ -1,111 +1,71 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
-
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #667eea, #764ba2);
-      color: #fff;
-    }
-
-    .dashboard-container {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    header {
-      background-color: rgba(0, 0, 0, 0.2);
-      padding: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-
-    #logout-btn {
-      background-color: #fff;
-      color: #333;
-      border: none;
-      padding: 10px 20px;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    #logout-btn:hover {
-      background-color: #f0f0f0;
-    }
-
-    main {
-      padding: 2rem;
-      flex-grow: 1;
-    }
-
-    .card {
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 2rem;
-      border-radius: 12px;
-      margin-top: 1.5rem;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IMPERA - Painel Administrativo</title>
+    <link rel="stylesheet" href="css\styles_dashboard.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-  <div class="dashboard-container">
-    <header>
-      <h1>Sistema IMPERA</h1>
-      <button id="logout-btn">Sair</button>
-    </header>
-    
-    <main>
-      <p>Você está logado com sucesso.</p>
-
-      <div class="card">
-        <h2>Painel de Informações</h2>
-        <p>Aqui você poderá visualizar dados do sistema futuramente.</p>
-      </div>
-    </main>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-    import {
-      getAuth,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDFKt1aJDq9O9hX0PgMnMoTWz343o5bheo",
-      authDomain: "gestao-escolar-impera.web.app",
-      projectId: "gestao-escolar-impera"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, user => {
-      if (!user) {
-        window.location.href = 'index.html'; 
-      }
-    });
-
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      signOut(auth).then(() => {
-        window.location.href = 'index.html';
-      });
-    });
-  </script>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">IMPERA</div>
+            <nav>
+                <div><i data-lucide="bar-chart-2"></i> Início</div>
+                <div><i data-lucide="users"></i> Gestão de Pessoas</div>
+                <div><i data-lucide="book-open"></i> Gestão Acadêmica</div>
+                <div><i data-lucide="calendar-days"></i> Agenda & Comunicação</div>
+                <div><i data-lucide="dollar-sign"></i> Financeiro</div>
+                <div><i data-lucide="clipboard-list"></i> Relatórios</div>
+                <div><i data-lucide="settings"></i> Configurações</div>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <section class="cards">
+                <div class="card"><h3>Alunos Ativos</h3><p>456</p></div>
+                <div class="card"><h3>Professores</h3><p>22</p></div>
+                <div class="card"><h3>Frequência Média</h3><p>91%</p></div>
+                <div class="card"><h3>Inadimplência</h3><p>R$ 2.140,00</p></div>
+            </section>
+            <section class="cards">
+                <div class="card">
+                    <h3>Receita do Mês</h3><p>R$ 24.800,00</p>
+                    <h3>Despesas</h3><p>R$ 9.300,00</p>
+                    <h3>Saldo</h3><p>R$ 15.500,00</p>
+                </div>
+                <div class="card">
+                    <h3>Matrículas e Desempenho</h3>
+                    <ul>
+                        <li>+12 novos alunos</li>
+                        <li>2 evasões</li>
+                        <li>Turma cheia: 8ºA (35 alunos)</li>
+                        <li>Média geral: 8,2</li>
+                    </ul>
+                </div>
+            </section>
+            <section class="cards">
+                <div class="card">
+                    <h3>Próximos Eventos</h3>
+                    <ul>
+                        <li>Reunião de pais – 04/08</li>
+                        <li>Simulado – 06/08</li>
+                        <li>Envio de boletins – 10/08</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Atalhos Rápidos</h3>
+                    <button><i data-lucide="plus-circle"></i> Novo Aluno</button>
+                    <button><i data-lucide="plus-circle"></i> Nova Turma</button>
+                    <button><i data-lucide="plus-circle"></i> Emitir Boleto</button>
+                    <button><i data-lucide="plus-circle"></i> Comunicado</button>
+                    <button><i data-lucide="plus-circle"></i> Relatório</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>

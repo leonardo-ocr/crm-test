@@ -1,19 +1,29 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tela de Login</title>
+  <title>Login / Cadastro</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="login-container">
-    <h2>Login</h2>
+    <h2 id="form-title">Login</h2>
+
+    <!-- Formulário de Login -->
     <form id="login-form">
       <input name="email" type="email" placeholder="Usuário (email)" required>
       <input name="password" type="password" placeholder="Senha" required>
       <button type="submit">Entrar</button>
+      <p>Não tem conta? <a href="#" id="show-register">Cadastrar</a></p>
+    </form>
+
+    <!-- Formulário de Cadastro (escondido por padrão) -->
+    <form id="register-form" style="display: none;">
+      <input name="email" type="email" placeholder="Novo email" required>
+      <input name="password" type="password" placeholder="Nova senha" required>
+      <button type="submit">Cadastrar</button>
+      <p>Já tem conta? <a href="#" id="show-login">Voltar ao login</a></p>
     </form>
   </div>
 
@@ -22,6 +32,7 @@
     import {
       getAuth,
       signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
 
@@ -29,32 +40,80 @@
       apiKey: "AIzaSyDFKt1aJDq9O9hX0PgMnMoTWz343o5bheo",
       authDomain: "gestao-escolar-impera.web.app",
       projectId: "gestao-escolar-impera",
-
     };
-    const app  = initializeApp(firebaseConfig);
+
+    const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-
+    // Redireciona se já estiver logado
     onAuthStateChanged(auth, user => {
-      if (user) {
-        window.location.replace('/dashboard.html');
+      if (user && window.location.pathname !== '/style_dashboard.html') {
+        window.location.replace('/style_dashboard.html');
       }
     });
 
+    // Login
     document.getElementById('login-form').addEventListener('submit', e => {
       e.preventDefault();
       const email = e.target.email.value;
       const pass  = e.target.password.value;
 
       signInWithEmailAndPassword(auth, email, pass)
+        .then(() => window.location.href = '/dashboard.html')
+        .catch(err => {
+          console.error(err);
+          alert('Erro no login: ' + tratarErro(err.code));
+        });
+    });
+
+    // Cadastro
+    document.getElementById('register-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const email = e.target.email.value;
+      const pass  = e.target.password.value;
+
+      createUserWithEmailAndPassword(auth, email, pass)
         .then(() => {
+          alert("Cadastro realizado com sucesso!");
           window.location.href = '/dashboard.html';
         })
         .catch(err => {
           console.error(err);
-          alert('Usuário ou senha inválidos.');
+          alert('Erro no cadastro: ' + tratarErro(err.code));
         });
     });
+
+    // Alternar entre login e cadastro
+    document.getElementById('show-register').addEventListener('click', e => {
+      e.preventDefault();
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('register-form').style.display = 'block';
+      document.getElementById('form-title').innerText = 'Cadastro';
+    });
+
+    document.getElementById('show-login').addEventListener('click', e => {
+      e.preventDefault();
+      document.getElementById('register-form').style.display = 'none';
+      document.getElementById('login-form').style.display = 'block';
+      document.getElementById('form-title').innerText = 'Login';
+    });
+
+    // Função para mensagens mais amigáveis
+    function tratarErro(code) {
+      switch(code) {
+        case 'auth/email-already-in-use':
+          return 'E-mail já está em uso.';
+        case 'auth/invalid-email':
+          return 'E-mail inválido.';
+        case 'auth/weak-password':
+          return 'A senha deve ter pelo menos 6 caracteres.';
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+          return 'Usuário ou senha incorretos.';
+        default:
+          return 'Ocorreu um erro. Tente novamente.';
+      }
+    }
   </script>
 </body>
 </html>
