@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login / Cadastro</title>
+  <title>Login</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -47,8 +47,8 @@
 
     // Redireciona se já estiver logado
     onAuthStateChanged(auth, user => {
-      if (user && window.location.pathname !== '/style_dashboard.html') {
-        window.location.replace('/style_dashboard.html');
+      if (user && window.location.pathname !== '/dashboard.html') {
+        window.location.replace('/dashboard.html');
       }
     });
 
