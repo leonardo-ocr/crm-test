@@ -1,71 +1,50 @@
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IMPERA - Painel Administrativo</title>
-    <link rel="stylesheet" href="css\styles_dashboard.css" />
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IMPERA - Dashboard Kiwify Style</title>
+  <link rel="stylesheet" href="css/styles_dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="dashboard">
-        <aside class="sidebar">
-            <div class="logo">IMPERA</div>
-            <nav>
-                <div><i data-lucide="bar-chart-2"></i> Início</div>
-                <div><i data-lucide="users"></i> Gestão de Pessoas</div>
-                <div><i data-lucide="book-open"></i> Gestão Acadêmica</div>
-                <div><i data-lucide="calendar-days"></i> Agenda & Comunicação</div>
-                <div><i data-lucide="dollar-sign"></i> Financeiro</div>
-                <div><i data-lucide="clipboard-list"></i> Relatórios</div>
-                <div><i data-lucide="settings"></i> Configurações</div>
-            </nav>
-        </aside>
-        <main class="main-content">
-            <section class="cards">
-                <div class="card"><h3>Alunos Ativos</h3><p>456</p></div>
-                <div class="card"><h3>Professores</h3><p>22</p></div>
-                <div class="card"><h3>Frequência Média</h3><p>91%</p></div>
-                <div class="card"><h3>Inadimplência</h3><p>R$ 2.140,00</p></div>
-            </section>
-            <section class="cards">
-                <div class="card">
-                    <h3>Receita do Mês</h3><p>R$ 24.800,00</p>
-                    <h3>Despesas</h3><p>R$ 9.300,00</p>
-                    <h3>Saldo</h3><p>R$ 15.500,00</p>
-                </div>
-                <div class="card">
-                    <h3>Matrículas e Desempenho</h3>
-                    <ul>
-                        <li>+12 novos alunos</li>
-                        <li>2 evasões</li>
-                        <li>Turma cheia: 8ºA (35 alunos)</li>
-                        <li>Média geral: 8,2</li>
-                    </ul>
-                </div>
-            </section>
-            <section class="cards">
-                <div class="card">
-                    <h3>Próximos Eventos</h3>
-                    <ul>
-                        <li>Reunião de pais – 04/08</li>
-                        <li>Simulado – 06/08</li>
-                        <li>Envio de boletins – 10/08</li>
-                    </ul>
-                </div>
-                <div class="card">
-                    <h3>Atalhos Rápidos</h3>
-                    <button><i data-lucide="plus-circle"></i> Novo Aluno</button>
-                    <button><i data-lucide="plus-circle"></i> Nova Turma</button>
-                    <button><i data-lucide="plus-circle"></i> Emitir Boleto</button>
-                    <button><i data-lucide="plus-circle"></i> Comunicado</button>
-                    <button><i data-lucide="plus-circle"></i> Relatório</button>
-                </div>
-            </section>
-        </main>
-    </div>
-    <script>
-        lucide.createIcons();
-    </script>
+  <div class="layout">
+    <aside class="sidebar">
+      <h1>IMPERA</h1>
+      <nav>
+        <a href="#">Painel</a>
+        <a href="#">Alunos</a>
+        <a href="#">Professores</a>
+        <a href="#">Turmas</a>
+        <a href="#">Financeiro</a>
+        <a href="#">Agenda</a>
+        <a href="#">Relatórios</a>
+      </nav>
+    </aside>
+    <main class="main">
+      <header class="header">
+        <h2>Visão Geral</h2>
+      </header>
+      <section class="cards">
+        <div class="card">
+          <p>Alunos Ativos</p>
+          <h3>324</h3>
+        </div>
+        <div class="card">
+          <p>Receita do Mês</p>
+          <h3>R$ 23.000,00</h3>
+        </div>
+        <div class="card">
+          <p>Inadimplência</p>
+          <h3>R$ 4.200,00</h3>
+        </div>
+      </section>
+      <section class="charts">
+        <canvas id="myChart"></canvas>
+      </section>
+    </main>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
