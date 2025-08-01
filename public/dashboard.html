@@ -7,11 +7,40 @@
   <title>IMPERA</title>
   <link rel="stylesheet" href="css/styles_dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+<header class="topbar">
+<div class="clock-area">
+  <div class="date" id="data">--/--/----</div>
+  <div class="clock" id="relogio">--:--:--</div>
+</div>
+
+  <div class="search-container">
+    <input type="search" placeholder="Pesquisar..." />
+  </div>
+  <div class="user-info">
+    <i class="fas fa-bell notification-icon"></i>
+    <img class="profile-pic" src="/img/perfil.jpeg" alt="Foto de Perfil">
+  <div class="profile-dropdown">
+  <span class="username" id="profile-toggle">
+    Método Educacional
+    <i class="fas fa-chevron-down dropdown-icon"></i>
+  </span>
+  <div class="dropdown-menu" id="dropdown-menu">
+    <a href="#">Meu Perfil</a>
+    <a href="#">Configurações</a>
+    <a href="#">Sair</a>
+  </div>
+</div>
+</span>
+
+  </div>
+</header>
+  </div>
   <div class="layout">
     <aside class="sidebar">
-      <h1>IMPERA</h1>
+      <img class="logo" src="./img/logo.jpeg">
       <nav>
         <a href="#">Painel</a>
         <a href="#">Alunos</a>
@@ -24,20 +53,21 @@
     </aside>
     <main class="main">
       <header class="header">
-        <h2>Visão Geral</h2>
+        <h2>Seja Bem-Vindo, Sandro!</h2>
+         <h2>Visão Geral</h2>
       </header>
       <section class="cards">
         <div class="card">
-          <p>Alunos Ativos</p>
+          <p>Alunos</p>
           <h3>324</h3>
         </div>
         <div class="card">
-          <p>Receita do Mês</p>
-          <h3>R$ 23.000,00</h3>
+          <p>Lucro Mensal</p>
+          <h3>R$ 550.700,00</h3>
         </div>
         <div class="card">
-          <p>Inadimplência</p>
-          <h3>R$ 4.200,00</h3>
+          <p>Funcionarios</p>
+          <h3>412</h3>
         </div>
       </section>
       <section class="charts">
@@ -45,6 +75,6 @@
       </section>
     </main>
   </div>
-  <script src="script.js"></script>
+  <script src="/js/scipt.js"></script>
 </body>
 </html>
