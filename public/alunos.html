@@ -53,32 +53,20 @@
     </aside>
     <main class="main">
       <header class="header">
-        <h2>Seja Bem-Vindo, Sandro!</h2>
-         <h2>Visão Geral</h2>
+        <h2>Gestão de alunos</h2>
+         <h2>Registro de Alunos</h2>
       </header>
-      <section class="cards">
-        <div class="card">
-          <p>Alunos</p>
-          <h3>324</h3>
-          <img class="card-img" src="img/aluno.png">
-        </div>
-        <div class="card">
-          <p>Lucro Mensal</p>
-          <h3>R$ 550.700,00</h3>
-          <img class="card-img" src="img/financeiro.png">
-        </div>
-        <div class="card">
-          <p>Funcionarios</p>
-          <h3>412</h3>
-          <img class="card-img" src="img/funcionarios.png">
-        </div>
-        <div class="card">
-          <p>Inadinplência</p>
-          <h3>R$ 90.182,00</h3>
-          <img class="card-img" src="img/inadimplencia.png">
-        </div>
-      </section>
       <section class="charts">
+          <section class="aluno-search">
+  <input type="text" id="searchInput" placeholder="Buscar aluno por nome, ID ou email..." />
+  <button id="searchBtn"><i class="fas fa-search"></i></button>
+  <button id="addStudentBtn" class="add-aluno"><i class="fas fa-user-plus"></i> Adicionar</button>
+</section>
+
+        <div class="resultadopesquisa">
+        <section id="searchResults">
+        </section>
+        </div>
         <canvas id="myChart"></canvas>
       </section>
     </main>

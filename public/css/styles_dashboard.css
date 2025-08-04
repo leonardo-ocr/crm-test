@@ -67,13 +67,13 @@ body {
 }
 
 .card-img {
-  width: 50px;
-  height: 50px;
-  position: absolute; /* <- ALTERE DE float para absolute */
-  top: 0;
-  right: 0;
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Distância da borda direita (ajuste conforme necessário) */
+  transform: translateY(-50%);
 }
-
 
 .card p {
   font-size: 0.9rem;
@@ -268,4 +268,90 @@ body {
   padding-left: 10px;
 }
 
+.aluno-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  margin-top: 20px;
+  background: linear-gradient(270deg, rgba(106,13,173,0.3), rgba(255,255,255,0.1));
+  background-size: 400% 400%;
+  animation: gradientLoop 5s ease infinite;
+  border-radius: 30px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
 
+.aluno-search input {
+  flex: 1;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  background: transparent;
+  border-radius: 30px;
+  color: #333;
+  outline: none;
+  transition: width 0.3s ease;
+}
+
+.aluno-search input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.aluno-search button {
+  padding: 10px 15px;
+  background-color: #6a0dad;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.aluno-search button:hover {
+  background-color: #5800b8;
+}
+
+.aluno-search button i {
+  font-size: 16px;
+}
+
+.aluno-search:focus-within {
+  transform: scale(1.02);
+  box-shadow: 0px 6px 16px rgba(106, 13, 173, 0.3);
+}
+
+/* Degradê animado */
+@keyframes gradientLoop {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.resultadopesquisa{
+  padding-top: 50px;
+}
+
+.add-aluno {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-aluno:hover {
+  background-color: #218838;
+}

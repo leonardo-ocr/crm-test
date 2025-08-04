@@ -33,3 +33,26 @@ document.addEventListener('click', (e) => {
     dropdownMenu.style.display = 'none';
   }
 });
+
+document.getElementById('searchBtn').addEventListener('click', () => {
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (!query) return;
+
+  // MOCK de dados para simular o Firebase
+  const alunosMock = [
+    { nome: "Lucas Silva", email: "lucas@email.com", id: "A001" },
+    { nome: "Ana Souza", email: "ana@email.com", id: "A002" },
+    { nome: "Carlos Lima", email: "carlos@email.com", id: "A003" }
+  ];
+
+  const resultados = alunosMock.filter(aluno =>
+    aluno.nome.toLowerCase().includes(query) ||
+    aluno.email.toLowerCase().includes(query) ||
+    aluno.id.toLowerCase().includes(query)
+  );
+
+  const container = document.getElementById('searchResults');
+  container.innerHTML = resultados.length
+    ? resultados.map(a => `<p><strong>${a.nome}</strong> - ${a.email} (ID: ${a.id})</p>`).join('')
+    : '<p>Nenhum aluno encontrado.</p>';
+});
