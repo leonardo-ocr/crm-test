@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IMPERA</title>
+  <link rel="stylesheet" href="css/styles_dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="clock-area">
+      <div class="date" id="data">--/--/----</div>
+      <div class="clock" id="relogio">--:--:--</div>
+    </div>
+
+    <div class="search-container">
+      <input type="search" placeholder="Pesquisar..." />
+    </div>
+
+    <div class="user-info">
+      <i class="fas fa-bell notification-icon"></i>
+      <img class="profile-pic" src="img/perfil.jpeg" alt="Foto de Perfil">
+      <div class="profile-dropdown">
+        <span class="username" id="profile-toggle">
+          Método Educacional
+          <i class="fas fa-chevron-down dropdown-icon"></i>
+        </span>
+        <div class="dropdown-menu" id="dropdown-menu">
+          <a href="#">Meu Perfil</a>
+          <a href="#">Configurações</a>
+          <a href="#">Sair</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <img class="logo" src="img/logo.jpeg">
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="alunos.html">Alunos</a>
+        <a href="rh.html">Recursos Humanos</a>
+        <a href="turma.html">Turmas</a>
+        <a href="#">Financeiro</a>
+        <a href="#">Agenda</a>
+        <a href="#">Reunião</a>
+        <a href="#">Relatórios</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <h2>Gestão de Turmas</h2>
+      </header>
+
+      <section class="aluno-search">
+        <button id="addClassBtn" class="add-aluno"><i class="fas fa-plus"></i> Nova Turma</button>
+        <button class="add-aluno"><i class="fas fa-upload"></i> Importar Turmas</button>
+        <select style="padding: 10px; border-radius: 30px; border: none;">
+          <option>Filtrar por Série</option>
+          <option>Educação infantl</option>
+          <option>Ensino Fundamental 1</option>
+          <option>Ensino Fundamental 2</option>
+          <option>Ensino Médio</option>
+        </select>
+      </section>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
