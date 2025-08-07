@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>IMPERA - Financeiro</title>
   <link rel="stylesheet" href="css/styles_dashboard.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-
   <!-- Topbar -->
   <header class="topbar">
     <div class="clock-area">
@@ -40,9 +39,8 @@
 
   <!-- Layout principal -->
   <div class="layout">
-    <!-- Sidebar -->
     <aside class="sidebar">
-      <img class="logo" src="img/logo.jpeg" alt="Logo">
+      <img class="logo" src="img/logo.jpeg" />
       <nav>
         <a href="dashboard.html">Dashboard</a>
         <a href="alunos.html">Alunos</a>
@@ -55,7 +53,6 @@
       </nav>
     </aside>
 
-    <!-- Conteúdo principal -->
     <main class="main">
       <header class="header">
         <h2>Financeiro</h2>
@@ -63,7 +60,7 @@
 
       <section class="financeiro-grid">
         <div class="grafico-card">
-          <h3>Faturamento x Lucro (últimos 6 meses)</h3>
+          <h3>Faturamento x Lucro (últimos meses)</h3>
           <canvas id="graficoFinanceiro" height="150"></canvas>
         </div>
 
@@ -79,7 +76,7 @@
               </tr>
             </thead>
             <tbody id="tabela-body">
-              <!-- Linhas serão preenchidas pelo JS -->
+              <!-- Dados inseridos via JS -->
             </tbody>
           </table>
         </div>
@@ -91,7 +88,7 @@
     </main>
   </div>
 
-  <!-- Modal para adicionar movimentações -->
+  <!-- Modal -->
   <div id="modal" class="modal">
     <div class="modal-conteudo">
       <span class="fechar" id="closeModal">&times;</span>
@@ -105,3 +102,10 @@
           </select>
         </label>
         <label>Valor: <input type="number" name="valor" step="0.01" required></label>
+        <button type="submit">Salvar</button>
+      </form>
+    </div>
+  </div>
+  <script src="js/financeiro.js"></script>
+</body>
+</html>

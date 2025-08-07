@@ -137,3 +137,111 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// Variáveis dos elementos
+const btnAdd = document.getElementById('btnAdd');
+const modal = document.getElementById('modal');
+const closeModal = document.getElementById('closeModal');
+const formMov = document.getElementById('formMov');
+const tabelaBody = document.getElementById('tabela-body');
+const ctx = document.getElementById('graficoFinanceiro').getContext('2d');
+
+// Objeto para armazenar os dados financeiros
+let dadosFinanceiros = {};
+
+// Ação do botão "Adicionar Movimentação"
+btnAdd.onclick = () => {
+  modal.style.display = 'block'; // Exibe o modal para inserir dados
+};
+
+// Fechar o modal quando clicar fora ou no "X"
+closeModal.onclick = () => modal.style.display = 'none';
+window.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
+
+// Evento de submit do formulário
+formMov.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const mes = formMov.mes.value.trim();
+  const tipo = formMov.tipo.value;
+  const valor = parseFloat(formMov.valor.value);
+
+  // Verifica se já existe um mês no objeto e se não, cria
+  if (!dadosFinanceiros[mes]) {
+    dadosFinanceiros[mes] = { entrada: 0, saida: 0 };
+  }
+
+  // Adiciona os valores conforme o tipo (entrada ou saída)
+  if (tipo === 'entrada') {
+    dadosFinanceiros[mes].entrada += valor;
+  } else {
+    dadosFinanceiros[mes].saida += valor;
+  }
+
+  // Atualiza a tabela e o gráfico com os novos dados
+  atualizarTabela();
+  atualizarGrafico();
+
+  // Fecha o modal e reseta o formulário
+  modal.style.display = 'none';
+  formMov.reset();
+});
+
+// Função para atualizar a tabela
+function atualizarTabela() {
+  tabelaBody.innerHTML = ''; // Limpa a tabela antes de adicionar os novos dados
+
+  // Ordena os meses para exibição
+  const mesesOrdenados = Object.keys(dadosFinanceiros).sort((a, b) => new Date('01 ' + a) - new Date('01 ' + b));
+
+  mesesOrdenados.forEach(mes => {
+    const entrada = dadosFinanceiros[mes].entrada || 0;
+    const saida = dadosFinanceiros[mes].saida || 0;
+    const lucro = entrada - saida;
+
+    // Cria a linha da tabela com os dados do mês
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${mes}</td>
+      <td>R$ ${entrada.toFixed(2)}</td>
+      <td>-R$ ${saida.toFixed(2)}</td>
+      <td style="color: ${lucro >= 0 ? 'green' : 'red'};">R$ ${lucro.toFixed(2)}</td>
+    `;
+    tabelaBody.appendChild(tr);
+  });
+}
+
+// Variável do gráfico
+let grafico;
+
+// Função para atualizar o gráfico
+function atualizarGrafico() {
+  // Coleta os dados dos meses e lucros
+  const meses = Object.keys(dadosFinanceiros);
+  const lucros = meses.map(mes => dadosFinanceiros[mes].entrada - dadosFinanceiros[mes].saida);
+
+  // Se o gráfico já existe, destrói o anterior antes de criar o novo
+  if (grafico) {
+    grafico.destroy();
+  }
+
+  // Cria o novo gráfico com os dados atualizados
+  grafico = new Chart(ctx, {
+    type: 'bar', // Tipo de gráfico: barra
+    data: {
+      labels: meses, // Rótulos do gráfico (meses)
+      datasets: [{
+        label: 'Lucro (R$)',
+        data: lucros, // Dados de lucro
+        backgroundColor: 'rgba(0, 123, 255, 0.6)', // Cor das barras
+        borderRadius: 4 // Bordas arredondadas
+      }]
+    },
+    options: {
+      responsive: true, // Responsivo para diferentes telas
+      scales: {
+        y: { beginAtZero: true } // Garante que o eixo Y começa do zero
+      }
+    }
+  });
+}
+
