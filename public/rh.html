@@ -1,98 +1,106 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IMPERA</title>
   <link rel="stylesheet" href="css/styles_dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
-<header class="topbar">
-<div class="clock-area">
-  <div class="date" id="data">--/--/----</div>
-  <div class="clock" id="relogio">--:--:--</div>
-</div>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="clock-area">
+      <div class="date" id="data">--/--/----</div>
+      <div class="clock" id="relogio">--:--:--</div>
+    </div>
 
-  <div class="search-container">
-    <input type="search" placeholder="Pesquisar..." />
-  </div>
-  <div class="user-info">
-    <i class="fas fa-bell notification-icon"></i>
-    <img class="profile-pic" src="\img\perfil.jpeg" alt="Foto de Perfil">
-  <div class="profile-dropdown">
-  <span class="username" id="profile-toggle">
-    Método Educacional
-    <i class="fas fa-chevron-down dropdown-icon"></i>
-  </span>
-  <div class="dropdown-menu" id="dropdown-menu">
-    <a href="#">Meu Perfil</a>
-    <a href="#">Configurações</a>
-    <a href="#">Sair</a>
-  </div>
-</div>
-</span>
+    <div class="search-container">
+      <input type="search" placeholder="Pesquisar..." />
+    </div>
 
-  </div>
-</header>
-  </div>
+    <div class="user-info">
+      <i class="fas fa-bell notification-icon"></i>
+      <img class="profile-pic" src="img/perfil.jpeg" alt="Foto de Perfil">
+      <div class="profile-dropdown">
+        <span class="username" id="profile-toggle">
+          Método Educacional
+          <i class="fas fa-chevron-down dropdown-icon"></i>
+        </span>
+        <div class="dropdown-menu" id="dropdown-menu">
+          <a href="#">Meu Perfil</a>
+          <a href="#">Configurações</a>
+          <a href="#">Sair</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Layout -->
   <div class="layout">
+    <!-- Sidebar -->
     <aside class="sidebar">
-      <img class="logo" src="./img/logo.jpeg">
+      <img class="logo" src="./img/logo.jpeg" alt="Logo">
       <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="alunos.html">Alunos</a>
-        <a href="rh.html">Recursos Humanos</a>
-        <a href="turma.html">Turmas</a>
-        <a href="financeiro.html">Financeiro</a>
-        <a href="#">Agenda</a>
-        <a href="#">Reunião</a>
-        <a href="#">Relatórios</a>
+        <a href="dashboard.html">📊Dashboard</a>
+        <a href="alunos.html">👨‍🎓Alunos</a>
+        <a href="rh.html">👥RH</a>
+        <a href="turma.html">🧑‍🏫Turmas</a>
+        <a href="financeiro.html">💳Financeiro</a>
+        <a href="agenda.html">📅Agenda</a>
+        <a href="reuniao.html">🗣️Reunião</a>
+        <a href="relatorios.html">📂Relatórios</a>
+        <a href="comunidade.html">💬Comunidade</a>
       </nav>
     </aside>
+
+    <!-- Main Content -->
     <main class="main">
       <header class="header">
-        <h2>Gestão de funcionários</h2>
+        <h2>Recursos Humanos</h2>
       </header>
+
       <section class="charts">
-          <section class="aluno-search">
-  <input type="text" id="searchInput" placeholder="Buscar funcionario por nome, ID ou email..." />
-  <button id="searchBtn"><i class="fas fa-search"></i></button>
-  <button id="addStudentBtn" class="add-aluno"><i class="fas fa-user-plus"></i> Adicionar</button>
-</section>
+        <!-- Pesquisa de Funcionários -->
+        <section class="aluno-search">
+          <input type="text" id="searchInput" placeholder="Buscar funcionário por nome, ID ou email..." />
+          <button id="searchBtn"><i class="fas fa-search"></i></button>
+          <button id="addStudentBtn" class="add-aluno"><i class="fas fa-user-plus"></i> Adicionar</button>
+        </section>
 
         <div class="resultadopesquisa">
-        <section id="searchResults">
-        </section>
+          <section id="searchResults"></section>
         </div>
+
         <canvas id="myChart"></canvas>
       </section>
     </main>
   </div>
 
-  <!-- Modal de Adição de Aluno -->
-<div id="modalAdicionarAluno" class="modal">
-  <div class="modal-conteudo">
-    <span class="fechar" id="fecharModal">&times;</span>
-    <h2>Adicionar Novo Aluno</h2>
-    <form id="formAdicionarAluno">
-      <label for="nome">Nome:</label>
-      <input type="text" id="nome" name="nome" required />
+  <!-- Modal de Adição de Funcionário -->
+  <div id="modalAdicionarAluno" class="modal">
+    <div class="modal-conteudo">
+      <span class="fechar" id="fecharModal">&times;</span>
+      <h2>Adicionar Novo Funcionário</h2>
+      <form id="formAdicionarAluno">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required />
 
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required />
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
 
-      <label for="id">ID:</label>
-      <input type="text" id="id" name="id" required />
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required />
 
-      <button type="submit">Salvar</button>
-    </form>
+        <button type="submit">Salvar</button>
+      </form>
+    </div>
   </div>
-</div>
 
-
-  <script src="\js\script.js"></script>
+  <script src="/public/js/script.js"></script>
 </body>
+
 </html>

@@ -2,13 +2,14 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IMPERA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comunidade IMPERA</title>
   <link rel="stylesheet" href="css/styles_dashboard.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="css/comunidade.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+
   <!-- Topbar -->
   <header class="topbar">
     <div class="clock-area">
@@ -41,7 +42,7 @@
   <div class="layout">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <img class="logo" src="img/logo.jpeg" alt="Logo">
+      <img class="logo" src="/public/img/logo.jpeg" alt="Logo">
       <nav>
         <a href="dashboard.html">📊Dashboard</a>
         <a href="alunos.html">👨‍🎓Alunos</a>
@@ -51,48 +52,56 @@
         <a href="agenda.html">📅Agenda</a>
         <a href="reuniao.html">🗣️Reunião</a>
         <a href="relatorios.html">📂Relatórios</a>
-        <a href="comunidade.html">💬Comunidade</a>
+        <a href="#" class="active">💬Comunidade</a>
       </nav>
     </aside>
 
     <!-- Conteúdo principal -->
     <main class="main">
       <header class="header">
-        <h2>Seja Bem-Vindo, Sandro!</h2>
-        <h2>Dashboard</h2>
+        <h2>Comunidade IMPERA</h2>
+        <button class="botao-novo-topico"><i class="fas fa-plus"></i> Novo Tópico</button>
       </header>
+      <!-- Container -->
+      <div class="comunidade-container">
+        <!-- Lista de tópicos -->
+        <div class="topicos-comunidade">
+          <div class="card-topico">
+            <h3>📌 Estratégias para reduzir inadimplência</h3>
+            <small>por <strong>Escola Alfa</strong></small>
+            <div class="meta-topico">
+              <span><i class="fas fa-comments"></i> 12 respostas</span>
+              <span><i class="fas fa-eye"></i> 134 visualizações</span>
+            </div>
+          </div>
 
-      <!-- Cards de resumo -->
-      <section class="cards">
-        <div class="card">
-          <p>Alunos</p>
-          <h3>324</h3>
-          <img class="card-img" src="img/aluno.png" alt="Alunos">
+          <div class="card-topico">
+            <h3>❓ Melhor forma de implementar ensino híbrido?</h3>
+            <small>por <strong>Colégio Delta</strong></small>
+            <div class="meta-topico">
+              <span><i class="fas fa-comments"></i> 5 respostas</span>
+              <span><i class="fas fa-eye"></i> 80 visualizações</span>
+            </div>
+          </div>
         </div>
 
-        <div class="card">
-          <p>Funcionários</p>
-          <h3>412</h3>
-          <img class="card-img" src="img/funcionarios.png" alt="Funcionários">
-        </div>
-    
-        <div class="card">
-          <p>Lucro Mensal</p>
-          <h3>R$ 550.700,00</h3>
-          <img class="card-img" src="img/financeiro.png" alt="Lucro Mensal">
-        </div>
+        <!-- Sidebar direita -->
+        <div class="sidebar-direita">
+          <div class="card-info-comunidade">
+            <h4>📢 Novidades</h4>
+            <p>Evento de Networking dia 20/08</p>
+          </div>
 
-        <div class="card">
-          <p>Inadimplência</p>
-          <h3>R$ 90.182,00</h3>
-          <img class="card-img" src="img/inadimplencia.png" alt="Inadimplência">
+          <div class="card-info-comunidade">
+            <h4>🏆 Ranking</h4>
+            <ul>
+              <li>Escola Alfa</li>
+              <li>Colégio Beta</li>
+              <li>Instituto Gama</li>
+            </ul>
+          </div>
         </div>
-      </section>
-
-      <!-- Gráfico de desempenho -->
-      <section class="charts">
-        <canvas id="myChart"></canvas>
-      </section>
+      </div>
     </main>
   </div>
 

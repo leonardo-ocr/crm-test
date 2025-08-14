@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IMPERA</title>
   <link rel="stylesheet" href="css/styles_dashboard.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
+
 <body>
+  <!-- Topbar -->
   <header class="topbar">
     <div class="clock-area">
       <div class="date" id="data">--/--/----</div>
@@ -15,12 +18,12 @@
     </div>
 
     <div class="search-container">
-      <input type="search" placeholder="Pesquisar..." />
+      <input id="searchInput" type="search" placeholder="Pesquisar..." />
     </div>
 
     <div class="user-info">
       <i class="fas fa-bell notification-icon"></i>
-      <img class="profile-pic" src="img/perfil.jpeg" alt="Foto de Perfil">
+      <img class="profile-pic" src="img/perfil.jpeg" alt="Foto de Perfil" />
       <div class="profile-dropdown">
         <span class="username" id="profile-toggle">
           Método Educacional
@@ -35,43 +38,93 @@
     </div>
   </header>
 
+  <!-- Layout principal -->
   <div class="layout">
+    <!-- Sidebar -->
     <aside class="sidebar">
-      <img class="logo" src="img/logo.jpeg">
+      <img class="logo" src="img/logo.jpeg" alt="Logo" />
       <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="alunos.html">Alunos</a>
-        <a href="rh.html">Recursos Humanos</a>
-        <a href="turma.html">Turmas</a>
-        <a href="financeiro.html">Financeiro</a>
-        <a href="#">Agenda</a>
-        <a href="#">Reunião</a>
-        <a href="#">Relatórios</a>
+       <a href="dashboard.html">📊Dashboard</a>
+        <a href="alunos.html">👨‍🎓Alunos</a>
+        <a href="rh.html">👥RH</a>
+        <a href="turma.html">🧑‍🏫Turmas</a>
+        <a href="financeiro.html">💳Financeiro</a>
+        <a href="agenda.html">📅Agenda</a>
+        <a href="reuniao.html">🗣️Reunião</a>
+        <a href="relatorios.html">📂Relatórios</a>
+        <a href="comunidade.html">💬Comunidade</a>
       </nav>
     </aside>
 
+    <!-- Conteúdo principal -->
     <main class="main">
       <header class="header">
         <h2>Gestão de Turmas</h2>
       </header>
-
+      <!-- Seção de filtros e ações -->
       <section class="aluno-search">
         <button id="addClassBtn" class="add-aluno"><i class="fas fa-plus"></i> Nova Turma</button>
-        <button class="add-aluno"><i class="fas fa-upload"></i> Importar Turmas</button>
-        <select style="padding: 10px; border-radius: 30px; border: none;">
-          <option>Filtrar por Série</option>
-          <option>Educação infantl</option>
-          <option>Ensino Fundamental 1</option>
-          <option>Ensino Fundamental 2</option>
-          <option>Ensino Médio</option>
-          <option>Cursos Eletivos</option>
-        </select>
+        <!-- Modal para adicionar nova turma -->
+        <div id="modalNovaTurma" class="modal">
+          <div class="modal-conteudo">
+            <span class="fechar" id="fecharModal">&times;</span>
+            <h3>Adicionar Nova Turma</h3>
+            <form id="formNovaTurma">
+              <label>Nome da Turma:</label>
+              <input type="text" id="nomeTurma" placeholder="Ex: Turma A" required />
+
+              <label>Série:</label>
+              <select id="serieTurma" required>
+                <option value="">Selecione a Série</option>
+                <option value="infantil">Educação Infantil</option>
+                <option value="fund1">Ensino Fundamental 1</option>
+                <option value="fund2">Ensino Fundamental 2</option>
+                <option value="medio">Ensino Médio</option>
+              </select>
+
+              <label>Ano Escolar:</label>
+              <select id="anoEscolar" required>
+                <option value="">Selecione o Ano</option>
+                <option value="1">1º Ano</option>
+                <option value="2">2º Ano</option>
+                <option value="3">3º Ano</option>
+                <option value="4">4º Ano</option>
+                <option value="5">5º Ano</option>
+                <option value="6">6º Ano</option>
+                <option value="7">7º Ano</option>
+                <option value="8">8º Ano</option>
+                <option value="9">9º Ano</option>
+                <option value="1M">1º Médio</option>
+                <option value="2M">2º Médio</option>
+                <option value="3M">3º Médio</option>
+              </select>
+
+              <button type="submit">Adicionar Turma</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="filtros-container">
+          <select id="filtroSerie">
+            <option value="">Selecione a Série</option>
+            <option value="infantil">Educação Infantil</option>
+            <option value="fund1">Ensino Fundamental 1</option>
+            <option value="fund2">Ensino Fundamental 2</option>
+            <option value="medio">Ensino Médio</option>
+          </select>
+
+          <select id="filtroAno" disabled>
+            <option value="">Selecione o Ano</option>
+          </select>
+
+          <select id="filtroTurma" disabled>
+            <option value="">Selecione a Turma</option>
+          </select>
+        </div>
       </section>
-        </section>
-      </div>
     </main>
   </div>
-
-  <script src="js/script.js"></script>
+  <script src="/public/js/script.js"></script>
 </body>
+
 </html>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IMPERA - Financeiro</title>
-  <link rel="stylesheet" href="css/styles_dashboard.css"/>
+  <link rel="stylesheet" href="css/styles_dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -12,8 +12,8 @@
   <!-- Topbar -->
   <header class="topbar">
     <div class="clock-area">
-      <div class="date" id="data">07/08/2025</div>
-      <div class="clock" id="relogio">09:35</div>
+      <div class="date" id="data">--/--/----</div>
+      <div class="clock" id="relogio">--:--:--</div>
     </div>
 
     <div class="search-container">
@@ -39,31 +39,37 @@
 
   <!-- Layout principal -->
   <div class="layout">
+    <!-- Sidebar -->
     <aside class="sidebar">
-      <img class="logo" src="img/logo.jpeg" />
+      <img class="logo" src="img/logo.jpeg" alt="Logo">
       <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="alunos.html">Alunos</a>
-        <a href="rh.html">Recursos Humanos</a>
-        <a href="turma.html">Turmas</a>
-        <a class="active" href="financeiro.html">Financeiro</a>
-        <a href="#">Agenda</a>
-        <a href="#">Reunião</a>
-        <a href="#">Relatórios</a>
+        <a href="dashboard.html">📊Dashboard</a>
+        <a href="alunos.html">👨‍🎓Alunos</a>
+        <a href="rh.html">👥RH</a>
+        <a href="turma.html">🧑‍🏫Turmas</a>
+        <a href="financeiro.html">💳Financeiro</a>
+        <a href="agenda.html">📅Agenda</a>
+        <a href="reuniao.html">🗣️Reunião</a>
+        <a href="relatorios.html">📂Relatórios</a>
+        <a href="comunidade.html">💬Comunidade</a>
       </nav>
     </aside>
 
+    <!-- Conteúdo principal -->
     <main class="main">
       <header class="header">
         <h2>Financeiro</h2>
       </header>
 
+      <!-- Seção de gráficos e tabelas -->
       <section class="financeiro-grid">
+        <!-- Gráfico -->
         <div class="grafico-card">
           <h3>Faturamento x Lucro (últimos meses)</h3>
           <canvas id="graficoFinanceiro" height="150"></canvas>
         </div>
 
+        <!-- Tabela financeira -->
         <div class="tabela-card">
           <h3>Tabela Financeira</h3>
           <table class="tabela-financeiro">
@@ -82,13 +88,14 @@
         </div>
       </section>
 
+      <!-- Botão para adicionar movimentação -->
       <section class="botao-adicionar">
         <button id="btnAdd">+ Adicionar Movimentação</button>
       </section>
     </main>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal para nova movimentação -->
   <div id="modal" class="modal">
     <div class="modal-conteudo">
       <span class="fechar" id="closeModal">&times;</span>
@@ -106,6 +113,7 @@
       </form>
     </div>
   </div>
-  <script src="js/financeiro.js"></script>
+
+  <script src="js/script.js"></script>
 </body>
 </html>
