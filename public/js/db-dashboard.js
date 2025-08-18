@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -10,29 +11,34 @@ const firebaseConfig = {
 
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Buscar CNPJ da empresa esc001
-async function exibirCNPJ() {
-  try {
-    const ref = doc(db, "empresa", "esc001");
-    const snapshot = await getDoc(ref);
+// Verifica o estado de autenticação
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const uid = user.uid;
+    const userDocRef = doc(db, "empresa", "esc001", "usuario", uid);
+    const userDocSnap = await getDoc(userDocRef);
 
-    if (snapshot.exists()) {
-      const dados = snapshot.data();
-      const cnpj = dados.cnpj;
-
-      // Atualizar no HTML
-      const cnpjEl = document.getElementById("empresa-cnpj");
-      if (cnpjEl) {
-        cnpjEl.textContent = `CNPJ: ${cnpj}`;
-      }
+    if (userDocSnap.exists()) {
+      console.log("Usuário encontrado:", userDocSnap.data());
     } else {
-      console.warn("Documento empresa/esc001 não encontrado");
-    }
-  } catch (err) {
-    console.error("Erro ao buscar CNPJ:", err);
-  }
-}
+      console.warn("Usuário logado mas não encontrado no Firestore. Criando...");
 
-window.addEventListener("DOMContentLoaded", exibirCNPJ);
+      await setDoc(userDocRef, {
+        nome: user.displayName || "Usuário",
+        email: user.email || "",
+        telefone: "",
+        role: "/empresa/esc001/roles/padrao",
+        uidUsuario: uid
+      });
+
+      console.log("Usuário criado no Firestore.");
+    }
+  } else {
+    console.log("Usuário não logado.");
+    // Se quiser redirecionar para login:
+    // window.location.href = "/login.html";
+  }
+});
