@@ -1,44 +1,33 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+//db-dashboard.js
+import { verificarUsuario } from "/js/auth-check.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
 
-// Configuração do Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyDFKt1aJDq9O9hX0PgMnMoTWz343o5bheo",
-  authDomain: "gestao-escolar-impera.firebaseapp.com",
-  projectId: "gestao-escolar-impera"
-};
-
-// Inicializa Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// Verifica o estado de autenticação
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const uid = user.uid;
-    const userDocRef = doc(db, "empresa", "esc001", "usuario", uid);
-    const userDocSnap = await getDoc(userDocRef);
-
-    if (userDocSnap.exists()) {
-      console.log("Usuário encontrado:", userDocSnap.data());
-    } else {
-      console.warn("Usuário logado mas não encontrado no Firestore. Criando...");
-
-      await setDoc(userDocRef, {
-        nome: user.displayName || "Usuário",
-        email: user.email || "",
-        telefone: "",
-        role: "/empresa/esc001/roles/padrao",
-        uidUsuario: uid
-      });
-
-      console.log("Usuário criado no Firestore.");
+document.addEventListener("DOMContentLoaded", () => {
+  verificarUsuario(async (usuario) => {
+    console.log("Usuário logado:", usuario);
+    
+    const nomeElemento = document.getElementById("nomeUsuario");
+    if (nomeElemento) {
+      nomeElemento.textContent = usuario.nome || "Usuário";
     }
-  } else {
-    console.log("Usuário não logado.");
-    // Se quiser redirecionar para login:
-    // window.location.href = "/login.html";
-  }
+
+    const empresaCnpjElemento = document.getElementById("empresa-cnpj");
+    if (!empresaCnpjElemento) return;
+
+    try {
+      const db = getFirestore();
+      const empresaRef = doc(db, "empresa", "esc001");
+      const empresaSnap = await getDoc(empresaRef);
+
+      if (empresaSnap.exists()) {
+        const cnpj = empresaSnap.data().cnpj || "Não disponível";
+        empresaCnpjElemento.textContent = `CNPJ: ${cnpj}`;
+      } else {
+        empresaCnpjElemento.textContent = "Empresa não encontrada";
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados da empresa:", error);
+      empresaCnpjElemento.textContent = "Erro ao carregar CNPJ";
+    }
+  });
 });
