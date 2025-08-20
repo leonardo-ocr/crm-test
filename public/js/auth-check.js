@@ -67,3 +67,15 @@ export async function verificarUsuario(callback) {
     }
   });
 }
+
+export async function logoutUsuario() {
+  try {
+    await auth.signOut();
+    localStorage.removeItem("usuarioLogado");
+    console.log("Usuário deslogado com sucesso.");
+    window.location.href = "/index.html";
+  } catch (error) {
+    console.error("Erro ao fazer logout:", error);
+  }
+}
+
