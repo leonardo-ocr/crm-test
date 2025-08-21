@@ -1,6 +1,8 @@
 //db-dashboard.js
 import { verificarUsuario } from "/js/auth-check.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+import { db } from './firebase-config.js';
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 
 document.addEventListener("DOMContentLoaded", () => {
   verificarUsuario(async (usuario) => {

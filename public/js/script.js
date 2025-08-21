@@ -1,3 +1,7 @@
+window.addEventListener("DOMContentLoaded", () => {
+  initAlunos();
+});
+
 document.addEventListener("DOMContentLoaded", function () {
   // ⏰ Relógio
   const atualizarHorarioData = () => {
@@ -54,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   }
-
   // 🧑‍🎓 Mock de alunos (para dashboard)
   const alunosMock = [
     { nome: "Lucas Silva", email: "lucas@email.com", id: "A001" },
@@ -144,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
       formAdicionarAluno.reset();
       modalAdicionarAluno.style.display = "none";
     });
-  }
+  } 
 
   // 📌 Ativar link na sidebar
   const links = document.querySelectorAll(".sidebar nav a");

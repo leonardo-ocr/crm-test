@@ -1,27 +1,15 @@
-//auth-check.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+// auth-check.js
+import { auth, db } from "./firebase-config.js";
 import {
-  getAuth,
-  onAuthStateChanged
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-  getFirestore,
   doc,
   getDoc,
   setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Configuração Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyDFKt1aJDq9O9hX0PgMnMoTWz343o5bheo",
-  authDomain: "gestao-escolar-impera.firebaseapp.com",
-  projectId: "gestao-escolar-impera",
-};
-
-// Inicialização
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
 
 // ✅ Função exportada que pode ser usada em qualquer página
 export async function verificarUsuario(callback) {
