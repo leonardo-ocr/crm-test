@@ -1,85 +1,108 @@
-//db-alunos
 import { db } from './firebase-config.js';
-import { collection, getDocs, query, addDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { collection, getDocs, query, addDoc, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { auth } from './firebase-config.js';
 
 export function initAlunos() {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      const empresaId = user.uid;
+      try {
+        const userId = user.uid;
 
-      const alunosRef = collection(db, "empresa", empresaId, "aluno");
-      const q = query(alunosRef);
-      const querySnapshot = await getDocs(q);
+        // Para buscar a empresa, precisamos conhecer os documentos da coleção empresa
+        // Se você só tem uma empresa, pode definir empresaId fixo.
+        // Se tem várias, seria bom armazenar em algum lugar o ID da empresa do usuário.
 
-      const alunos = querySnapshot.docs.map(doc => doc.data());
-      renderizarAlunos(alunos);
+        // Aqui vamos assumir que o usuário está dentro de empresa 'esc001' para exemplificar.
+        const empresaId = "esc001";
 
-      // Ativa o filtro de busca
-      const searchInput = document.getElementById('searchInput');
-      if (searchInput) {
-        searchInput.addEventListener('input', () => {
-          const query = searchInput.value.trim().toLowerCase();
-          const filtrados = alunos.filter(aluno =>
-            aluno.nome.toLowerCase().includes(query) ||
-            aluno.email.toLowerCase().includes(query) ||
-            aluno.id.toLowerCase().includes(query)
-          );
-          renderizarAlunos(filtrados);
-        });
-      }
+        // Busca o documento do usuário na empresa
+        const userDocRef = doc(db, "empresa", empresaId, "usuario", userId);
+        const userDocSnap = await getDoc(userDocRef);
 
-      // Modal de adicionar aluno
-      const addStudentBtn = document.getElementById("addStudentBtn");
-      const modalAdicionarAluno = document.getElementById("modalAdicionarAluno");
-      const fecharModal = document.getElementById("fecharModal");
-      const formAdicionarAluno = document.getElementById("formAdicionarAluno");
+        if (!userDocSnap.exists()) {
+          console.warn("Documento do usuário não encontrado.");
+          return;
+        }
 
-      if (addStudentBtn && modalAdicionarAluno && fecharModal && formAdicionarAluno) {
-        addStudentBtn.addEventListener("click", () => {
-          modalAdicionarAluno.style.display = "block";
-        });
+        const userData = userDocSnap.data();
 
-        fecharModal.addEventListener("click", () => {
-          modalAdicionarAluno.style.display = "none";
-        });
+        // Se quiser, pode extrair o empresaId do campo role, exemplo:
+        // const rolePath = userData.role || "";
+        // const match = rolePath.match(/\/empresa\/(.*?)\//);
+        // const empresaIdFromRole = match ? match[1] : null;
+        // if (empresaIdFromRole) empresaId = empresaIdFromRole;
 
-        window.addEventListener("click", (event) => {
-          if (event.target === modalAdicionarAluno) {
+        // Agora busca alunos na subcoleção correta
+        const alunosRef = collection(db, "empresa", empresaId, "alunos");
+        const q = query(alunosRef);
+        const querySnapshot = await getDocs(q);
+
+        const alunos = querySnapshot.docs.map(doc => doc.data());
+        renderizarAlunos(alunos);
+
+        // Busca e modal para adicionar alunos
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+          searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim().toLowerCase();
+            const filtrados = alunos.filter(aluno =>
+              aluno.nome.toLowerCase().includes(query) ||
+              aluno.email.toLowerCase().includes(query) ||
+              aluno.id.toLowerCase().includes(query)
+            );
+            renderizarAlunos(filtrados);
+          });
+        }
+
+        const addStudentBtn = document.getElementById("addStudentBtn");
+        const modalAdicionarAluno = document.getElementById("modalAdicionarAluno");
+        const fecharModal = document.getElementById("fecharModal");
+        const formAdicionarAluno = document.getElementById("formAdicionarAluno");
+
+        if (addStudentBtn && modalAdicionarAluno && fecharModal && formAdicionarAluno) {
+          addStudentBtn.addEventListener("click", () => {
+            modalAdicionarAluno.style.display = "block";
+          });
+
+          fecharModal.addEventListener("click", () => {
             modalAdicionarAluno.style.display = "none";
-          }
-        });
+          });
 
-        formAdicionarAluno.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const nome = document.getElementById("nome").value;
-          const email = document.getElementById("email").value;
-          const id = document.getElementById("id").value;
+          window.addEventListener("click", (event) => {
+            if (event.target === modalAdicionarAluno) {
+              modalAdicionarAluno.style.display = "none";
+            }
+          });
 
-          try {
-            await addDoc(collection(db, "empresa", empresaId, "aluno"), {
-              nome,
-              email,
-              id
-            });
+          formAdicionarAluno.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const nome = document.getElementById("nome").value;
+            const email = document.getElementById("email").value;
+            const id = document.getElementById("id").value;
 
-            alert(`Aluno cadastrado com sucesso:\nNome: ${nome}\nEmail: ${email}\nID: ${id}`);
-            formAdicionarAluno.reset();
-            modalAdicionarAluno.style.display = "none";
+            try {
+              await addDoc(alunosRef, {
+                nome,
+                email,
+                id
+              });
 
-            // Recarrega a lista com o novo aluno
-            initAlunos();
-          } catch (error) {
-            console.error("Erro ao cadastrar aluno:", error);
-            alert("Erro ao cadastrar aluno.");
-            console.log('addStudentBtn:', addStudentBtn);
-            console.log('modalAdicionarAluno:', modalAdicionarAluno);
-            console.log('fecharModal:', fecharModal);
-            console.log('formAdicionarAluno:', formAdicionarAluno);
+              alert(`Aluno cadastrado com sucesso:\nNome: ${nome}\nEmail: ${email}\nID: ${id}`);
+              formAdicionarAluno.reset();
+              modalAdicionarAluno.style.display = "none";
 
-          }
-        });
+              // Recarrega lista de alunos
+              initAlunos();
+            } catch (error) {
+              console.error("Erro ao cadastrar aluno:", error);
+              alert("Erro ao cadastrar aluno.");
+            }
+          });
+        }
+
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
       }
     } else {
       console.warn("Usuário não autenticado.");
@@ -87,7 +110,6 @@ export function initAlunos() {
   });
 }
 
-// Função para mostrar os alunos
 function renderizarAlunos(lista) {
   const container = document.getElementById('searchResults');
   if (!container) return;

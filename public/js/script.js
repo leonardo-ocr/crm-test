@@ -1,7 +1,3 @@
-window.addEventListener("DOMContentLoaded", () => {
-  initAlunos();
-});
-
 document.addEventListener("DOMContentLoaded", function () {
   // ⏰ Relógio
   const atualizarHorarioData = () => {
@@ -122,32 +118,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const formAdicionarAluno = document.getElementById("formAdicionarAluno");
 
   if (addStudentBtn && modalAdicionarAluno && fecharModal && formAdicionarAluno) {
-    addStudentBtn.addEventListener("click", () => {
-      modalAdicionarAluno.style.display = "block";
-    });
-
-    fecharModal.addEventListener("click", () => {
-      modalAdicionarAluno.style.display = "none";
-    });
+  addStudentBtn.addEventListener("click", () => {
+    modalAdicionarAluno.style.display = "block";
+  });
+}
 
     window.addEventListener("click", (event) => {
       if (event.target === modalAdicionarAluno) {
         modalAdicionarAluno.style.display = "none";
       }
     });
-
-    formAdicionarAluno.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const nome = document.getElementById("nome").value;
-      const email = document.getElementById("email").value;
-      const id = document.getElementById("id").value;
-
-      alert(`Aluno cadastrado com sucesso:\nNome: ${nome}\nEmail: ${email}\nID: ${id}`);
-
-      formAdicionarAluno.reset();
-      modalAdicionarAluno.style.display = "none";
-    });
-  } 
 
   // 📌 Ativar link na sidebar
   const links = document.querySelectorAll(".sidebar nav a");
@@ -247,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     };
   }
-});
+
 
 // Filtros de série, ano e turma
 const filtroSerie = document.getElementById("filtroSerie");
@@ -329,7 +309,6 @@ filtroTurma.addEventListener("change", function () {
 // Abrir modal
 const addClassBtn = document.getElementById('addClassBtn');
 const modalNovaTurma = document.getElementById('modalNovaTurma');
-const fecharModal = document.getElementById('fecharModal');
 const formNovaTurma = document.getElementById('formNovaTurma');
 
 addClassBtn.addEventListener('click', () => {
@@ -371,5 +350,4 @@ formNovaTurma.addEventListener('submit', (e) => {
   // Feedback e reset
   alert(`Turma "${turma.nome}" adicionada com sucesso!`);
   formNovaTurma.reset();
-  modalNovaTurma.style.display = 'none';
-});
+  modalNovaTurma.style.display = 'none';})})
