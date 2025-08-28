@@ -83,24 +83,59 @@
   </div>
 
   <!-- Modal de Adição de Aluno -->
-  <div id="modalAdicionarAluno" class="modal">
-    <div class="modal-conteudo">
-      <span class="fechar" id="fecharModal">&times;</span>
-      <h2>Adicionar Novo Aluno</h2>
-      <form id="formAdicionarAluno">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required />
+ <div id="modalAdicionarAluno" class="modal">
+  <div class="modal-conteudo">
+    <span class="fechar" id="fecharModal">&times;</span>
+    <h2>Adicionar Novo Aluno</h2>
+    <form id="formAdicionarAluno">
+      <!-- Dados do aluno -->
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" required />
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required />
+      <label for="dataNascimento">Data de Nascimento:</label>
+      <input type="date" id="dataNascimento" name="dataNascimento" required />
 
-        <label for="id">ID:</label>
-        <input type="text" id="id" name="id" required />
+      <label for="dataMatricula">Data de Matrícula:</label>
+      <input type="date" id="dataMatricula" name="dataMatricula" required />
 
-        <button type="submit">Salvar</button>
-      </form>
-    </div>
+      <label for="idTurma">ID da Turma:</label>
+      <input type="text" id="idTurma" name="idTurma" required />
+
+      <!-- Responsável -->
+      <label for="nomeResponsavel">Nome do Responsável:</label>
+      <input type="text" id="nomeResponsavel" name="nomeResponsavel" required />
+
+      <label for="emailResponsavel">Email do Responsável:</label>
+      <input type="email" id="emailResponsavel" name="emailResponsavel" required />
+
+      <label for="telefoneResponsavel">Telefone do Responsável:</label>
+      <input type="text" id="telefoneResponsavel" name="telefoneResponsavel" required />
+
+      <!-- Pagamento -->
+      <label for="mensalidade">Mensalidade:</label>
+      <input type="text" id="mensalidade" name="mensalidade" required />
+
+      <label for="motivoBolsa">Motivo da Bolsa:</label>
+      <input type="text" id="motivoBolsa" name="motivoBolsa" />
+
+      <label for="porcentagemBolsa">Porcentagem da Bolsa:</label>
+      <input type="text" id="porcentagemBolsa" name="porcentagemBolsa" />
+
+      <button type="submit">Salvar</button>
+    </form>
   </div>
+</div>
+
+    <!-- Modal de Detalhes do Aluno -->
+    <div id="modalDetalhesAluno" class="modal">
+      <div class="modal-conteudo">
+        <span class="fechar" id="fecharModalDetalhes">&times;</span>
+        <h2>Detalhes do Aluno</h2>
+        <div id="modalDetalhesAluno"></div>
+          <!-- Dados preenchidos via JS -->
+        </div>
+      </div>
+    </div>
   <script type="module" src="js/firebaseConfig.js"></script>
   <script type="module">
   import { initAlunos } from "./js/db-alunos.js";
