@@ -51,16 +51,25 @@ async function buscarAlunos(alunosRef) {
 
 function configurarBusca(alunos) {
   const searchInput = document.getElementById('searchInput');
-  if (!searchInput) return;
+  const searchBtn = document.getElementById('searchBtn');
 
-  searchInput.addEventListener('input', () => {
+  if (!searchInput || !searchBtn) return;
+
+  const buscar = () => {
     const query = searchInput.value.trim().toLowerCase();
     const filtrados = alunos.filter(aluno =>
       aluno.nome?.toLowerCase().includes(query) ||
       aluno.emailResponsavel?.toLowerCase().includes(query) ||
-      aluno.id?.toLowerCase().includes(query)
+      aluno.id?.toLowerCase().includes(query) ||
+      aluno.serie?.toLowerCase().includes(query)
     );
     renderizarAlunos(filtrados);
+  };
+
+  searchInput.addEventListener('input', buscar);
+  searchBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    buscar();
   });
 }
 
@@ -88,6 +97,8 @@ function configurarModalAdicionarAluno(alunosRef) {
       nome: document.getElementById("nome").value.trim(),
       dataNascimento: document.getElementById("dataNascimento").value.trim(),
       dataMatricula: document.getElementById("dataMatricula").value.trim(),
+      serie: document.getElementById("serie").value.trim(),
+      periodo: document.getElementById("periodo").value.trim(), // <-- novo campo
       idTurma: document.getElementById("idTurma").value.trim(),
       nomeResponsavel: document.getElementById("nomeResponsavel").value.trim(),
       emailResponsavel: document.getElementById("emailResponsavel").value.trim(),
@@ -106,7 +117,7 @@ function configurarModalAdicionarAluno(alunosRef) {
       alert("Aluno cadastrado com sucesso!");
       formAdicionarAluno.reset();
       modalAdicionarAluno.style.display = "none";
-      location.reload(); // recarrega para evitar múltiplos listeners e atualizar lista
+      location.reload();
     } catch (error) {
       console.error("Erro ao cadastrar aluno:", error);
       alert("Erro ao cadastrar aluno.");
@@ -124,34 +135,22 @@ function renderizarAlunos(lista) {
   }
 
   const tabela = `
-    <table style="
-      width: 100%;
-      border-collapse: collapse;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      margin-top: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      border-radius: 8px;
-      overflow: hidden;
-    ">
+    <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); border-radius: 8px; overflow: hidden;">
       <thead>
         <tr style="background-color: #6a4fce; color: white;">
           <th style="padding: 12px 15px; text-align: left;">Nome</th>
-          <th style="padding: 12px 15px; text-align: left;">Email</th>
+          <th style="padding: 12px 15px; text-align: left;">Série</th>
+          <th style="padding: 12px 15px; text-align: left;">Período</th> <!-- NOVO -->
           <th style="padding: 12px 15px; text-align: left;">ID</th>
         </tr>
       </thead>
       <tbody>
         ${lista.map(aluno => `
-          <tr style="border-bottom: 1px solid #e0e0e0; transition: background-color 0.2s;">
-            <td 
-              style="padding: 12px 15px; color: #6a4fce; font-weight: 600; cursor: pointer;"
-              class="aluno-nome"
-              data-aluno='${encodeURIComponent(JSON.stringify(aluno))}'>
-              ${aluno.nome}
-            </td>
-            <td style="padding: 12px 15px;">${aluno.emailResponsavel || "-"}</td>
-            <td style="padding: 12px 15px;">${aluno.id || "-"}</td>
+          <tr style="border-bottom: 1px solid #e0e0e0;">
+            <td class="aluno-nome" style="padding: 12px 15px; color: #6a4fce; font-weight: 600; cursor: pointer;" data-aluno='${encodeURIComponent(JSON.stringify(aluno))}'>${aluno.nome}</td>
+            <td style="padding: 12px 15px;">${aluno.serie || "-"}</td>
+            <td style="padding: 12px 15px;">${aluno.periodo || "-"}</td> <!-- NOVO -->
+            <td style="padding: 12px 15px;">${aluno.id || "-"}</td>       
           </tr>
         `).join('')}
       </tbody>
@@ -179,15 +178,17 @@ function mostrarDetalhesAluno(aluno) {
       <span class="close-btn" id="fecharModalDetalhes">&times;</span>
       <div class="modal-header">Detalhes do Aluno</div>
       <div class="modal-body">
-        <p class="full-width"><strong>Nome:</strong> ${aluno.nome || "-"}</p>
+        <p><strong>Nome:</strong> ${aluno.nome || "-"}</p>
         <p><strong>Email do responsável:</strong> ${aluno.emailResponsavel || "-"}</p>
         <p><strong>Telefone do responsável:</strong> ${aluno.telefoneResponsavel || "-"}</p>
         <p><strong>Mensalidade:</strong> R$${aluno.pagamento?.mensalidade || "-"}</p>
         <p><strong>Porcentagem da bolsa:</strong> ${aluno.pagamento?.porcentagemBolsa || "0"}%</p>
         <p><strong>Motivo da bolsa:</strong> ${aluno.pagamento?.motivoBolsa || "-"}</p>
         <p><strong>Data de nascimento:</strong> ${aluno.dataNascimento || "-"}</p>
+        <p><strong>Série:</strong> ${aluno.serie || "-"}</p>
+        <p><strong>Período:</strong> ${aluno.periodo || "-"}</p>
         <p><strong>Data de matrícula:</strong> ${aluno.dataMatricula || "-"}</p>
-        <p class="full-width"><strong>Status da matrícula:</strong> <span class="${isAtivo ? 'status-ativo' : 'status-inativo'}">${isAtivo ? 'Ativo' : 'Inativo'}</span></p>
+        <p><strong>Status da matrícula:</strong> <span class="${isAtivo ? 'status-ativo' : 'status-inativo'}">${isAtivo ? 'Ativo' : 'Inativo'}</span></p>
         <p><strong>ID:</strong> ${aluno.id || "-"}</p>
         <p><strong>ID Turma:</strong> ${aluno.idTurma || "-"}</p>
       </div>
@@ -202,7 +203,6 @@ function mostrarDetalhesAluno(aluno) {
 
   modal.style.display = 'block';
 
-  // Fechar modal
   document.getElementById('fecharModalDetalhes').onclick = () => modal.style.display = 'none';
 
   window.onclick = (e) => {
@@ -211,7 +211,6 @@ function mostrarDetalhesAluno(aluno) {
     }
   };
 
-  // Alterar status do aluno
   document.getElementById('alterarStatusAlunoBtn').onclick = async () => {
     const empresaId = "esc001";
 
@@ -232,7 +231,7 @@ function mostrarDetalhesAluno(aluno) {
 
       alert(`Matrícula ${novoStatus ? 'reativada' : 'desativada'} com sucesso.`);
       modal.style.display = 'none';
-      location.reload(); // Atualiza a lista
+      location.reload();
     } catch (error) {
       console.error("Erro ao atualizar status do aluno:", error);
       alert("Erro ao atualizar matrícula.");

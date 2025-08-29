@@ -64,7 +64,7 @@
       <section class="charts">
         <!-- Barra de Pesquisa de Alunos -->
         <section class="aluno-search">
-          <input type="text" id="searchInput" placeholder="Buscar aluno por nome, ID ou email..." />
+          <input type="text" id="searchInput" placeholder="Buscar aluno por nome, ID, Email ou Série..." />
           <button id="searchBtn"><i class="fas fa-search"></i></button>
           <button id="addStudentBtn" class="add-aluno"><i class="fas fa-user-plus"></i> Adicionar</button>
         </section>
@@ -97,6 +97,18 @@
 
       <label for="dataMatricula">Data de Matrícula:</label>
       <input type="date" id="dataMatricula" name="dataMatricula" required />
+
+      <label for="serie">Série:</label>
+      <input type="text" id="serie" name="serie" required />
+
+      <label for="periodo">Período:</label>
+        <select id="periodo" name="periodo" required>
+          <option value="">Selecione</option>
+          <option value="Manhã">Manhã</option>
+          <option value="Tarde">Tarde</option>
+          <option value="Noite">Noite</option>
+          <option value="Integral">Integral</option>
+        </select>
 
       <label for="idTurma">ID da Turma:</label>
       <input type="text" id="idTurma" name="idTurma" required />
