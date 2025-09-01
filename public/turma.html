@@ -42,18 +42,18 @@
   <div class="layout">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <img class="logo" src="img/logo.jpeg" alt="Logo" />
+      <img class="logo" src="img/LOGO.png" alt="Logo" />
       <nav>
-       <a href="dashboard.html">📊Dashboard</a>
-        <a href="alunos.html">👨‍🎓Alunos</a>
-        <a href="rh.html">👥RH</a>
-        <a href="turma.html">🧑‍🏫Turmas</a>
-        <a href="financeiro.html">💳Financeiro</a>
-        <a href="agenda.html">📅Agenda</a>
-        <a href="reuniao.html">🗣️Reunião</a>
-        <a href="relatorios.html">📂Relatórios</a>
-        <a href="comunidade.html">💬Comunidade</a>
-      </nav>
+  <a href="dashboard.html"><i class="fas fa-chart-bar" style="color: white;"></i> Dashboard</a>
+  <a href="alunos.html"><i class="fas fa-user-graduate" style="color: white;"></i> Alunos</a>
+  <a href="rh.html"><i class="fas fa-users" style="color: white;"></i> RH</a>
+  <a href="turma.html"><i class="fas fa-chalkboard-teacher" style="color: white;"></i> Turmas</a>
+  <a href="financeiro.html"><i class="fas fa-credit-card" style="color: white;"></i> Financeiro</a>
+  <a href="agenda.html"><i class="fas fa-calendar-alt" style="color: white;"></i> Agenda</a>
+  <a href="reuniao.html"><i class="fas fa-comments" style="color: white;"></i> Reunião</a>
+  <a href="relatorios.html"><i class="fas fa-folder-open" style="color: white;"></i> Relatórios</a>
+  <a href="comunidade.html"><i class="fas fa-comment-alt" style="color: white;"></i> Comunidade</a>
+</nav>
     </aside>
 
     <!-- Conteúdo principal -->
@@ -61,49 +61,16 @@
       <header class="header">
         <h2>Gestão de Turmas</h2>
       </header>
-      <!-- Seção de filtros e ações -->
+
+      <!-- Seção de ações e filtros -->
       <section class="aluno-search">
-        <button id="addClassBtn" class="add-aluno"><i class="fas fa-plus"></i> Nova Turma</button>
-        <!-- Modal para adicionar nova turma -->
-        <div id="modalNovaTurma" class="modal">
-          <div class="modal-conteudo">
-            <span class="fechar" id="fecharModal">&times;</span>
-            <h3>Adicionar Nova Turma</h3>
-            <form id="formNovaTurma">
-              <label>Nome da Turma:</label>
-              <input type="text" id="nomeTurma" placeholder="Ex: Turma A" required />
 
-              <label>Série:</label>
-              <select id="serieTurma" required>
-                <option value="">Selecione a Série</option>
-                <option value="infantil">Educação Infantil</option>
-                <option value="fund1">Ensino Fundamental 1</option>
-                <option value="fund2">Ensino Fundamental 2</option>
-                <option value="medio">Ensino Médio</option>
-              </select>
+        <!-- Botão Nova Turma -->
+        <button id="addClassBtn" class="add-aluno">
+          <i class="fas fa-plus"></i> Nova Turma
+        </button>
 
-              <label>Ano Escolar:</label>
-              <select id="anoEscolar" required>
-                <option value="">Selecione o Ano</option>
-                <option value="1">1º Ano</option>
-                <option value="2">2º Ano</option>
-                <option value="3">3º Ano</option>
-                <option value="4">4º Ano</option>
-                <option value="5">5º Ano</option>
-                <option value="6">6º Ano</option>
-                <option value="7">7º Ano</option>
-                <option value="8">8º Ano</option>
-                <option value="9">9º Ano</option>
-                <option value="1M">1º Médio</option>
-                <option value="2M">2º Médio</option>
-                <option value="3M">3º Médio</option>
-              </select>
-
-              <button type="submit">Adicionar Turma</button>
-            </form>
-          </div>
-        </div>
-
+        <!-- Filtros -->
         <div class="filtros-container">
           <select id="filtroSerie">
             <option value="">Selecione a Série</option>
@@ -121,9 +88,58 @@
             <option value="">Selecione a Turma</option>
           </select>
         </div>
+
       </section>
     </main>
   </div>
+
+  <!-- Modal para adicionar nova turma (fora do layout principal) -->
+  <div id="modalNovaTurma" class="modal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle" style="display:none;">
+    <div class="modal-conteudo">
+      <button class="fechar" id="fecharModal" aria-label="Fechar modal">&times;</button>
+      <h3 id="modalTitle">Adicionar Nova Turma</h3>
+
+      <form id="formNovaTurma" novalidate>
+        <div class="form-group">
+          <label for="nomeTurma">Nome da Turma:</label>
+          <input type="text" id="nomeTurma" placeholder="Ex: Turma A" required />
+        </div>
+
+        <div class="form-group">
+          <label for="serieTurma">Série:</label>
+          <select id="serieTurma" required>
+            <option value="">Selecione a Série</option>
+            <option value="infantil">Educação Infantil</option>
+            <option value="fund1">Ensino Fundamental 1</option>
+            <option value="fund2">Ensino Fundamental 2</option>
+            <option value="medio">Ensino Médio</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="anoEscolar">Ano Escolar:</label>
+          <select id="anoEscolar" required>
+            <option value="">Selecione o Ano</option>
+            <option value="1">1º Ano</option>
+            <option value="2">2º Ano</option>
+            <option value="3">3º Ano</option>
+            <option value="4">4º Ano</option>
+            <option value="5">5º Ano</option>
+            <option value="6">6º Ano</option>
+            <option value="7">7º Ano</option>
+            <option value="8">8º Ano</option>
+            <option value="9">9º Ano</option>
+            <option value="1M">1º Médio</option>
+            <option value="2M">2º Médio</option>
+            <option value="3M">3º Médio</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-submit">Adicionar Turma</button>
+      </form>
+    </div>
+  </div>
+
   <script src="js/script.js"></script>
   <script type="module" src="js/logout.js"></script>
 </body>
