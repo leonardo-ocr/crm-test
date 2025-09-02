@@ -1164,3 +1164,134 @@ body {
   font-weight: 700;
 }
 
+/* Modal Geral */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Conteúdo do Modal */
+.modal-conteudo {
+  background: white;
+  border-radius: 10px;
+  width: 360px;
+  max-width: 90%;
+  padding: 20px 30px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  position: relative;
+}
+
+/* Título do Modal */
+.modal-conteudo h2 {
+  font-weight: 700;
+  font-size: 18px;
+  color: #6B4CF5; /* roxo */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Botão fechar (x) */
+.fechar {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #6B4CF5;
+  transition: color 0.3s ease;
+}
+
+.fechar:hover {
+  color: #444;
+}
+
+/* Formulário */
+.modal-conteudo form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-conteudo label {
+  font-weight: 600;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #6B4CF5;
+}
+
+.modal-conteudo input[type="text"],
+.modal-conteudo input[type="email"],
+.modal-conteudo select {
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.3s ease;
+}
+
+.modal-conteudo input[type="text"]:focus,
+.modal-conteudo input[type="email"]:focus,
+.modal-conteudo select:focus {
+  outline: none;
+  border-color: #6B4CF5;
+}
+
+/* Botões */
+.modal-conteudo button {
+  margin-top: 20px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+/* Botão Salvar */
+.modal-conteudo button[type="submit"] {
+  background-color: #6B4CF5;
+  color: white;
+}
+
+.modal-conteudo button[type="submit"]:hover {
+  background-color: #533bcf;
+}
+
+/* Botão Cancelar */
+.modal-conteudo .btn-cancelar {
+  background-color: #f28024;
+  color: white;
+  margin-top: 10px;
+}
+
+.modal-conteudo .btn-cancelar:hover {
+  background-color: #c46217;
+}
+
+/* Select para status */
+.modal-conteudo select {
+  width: 100%;
+}
+
+/* Deixe os inputs e labels alinhados verticalmente */
+.modal-conteudo label,
+.modal-conteudo input,
+.modal-conteudo select {
+  width: 100%;
+}
+
+
