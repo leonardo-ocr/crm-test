@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comunidade IMPERA</title>
+  <link rel="stylesheet" href="css/styles_dashboard.css" />
+  <link rel="stylesheet" href="css/comunidade.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="clock-area">
+      <div class="date" id="data">--/--/----</div>
+      <div class="clock" id="relogio">--:--:--</div>
+    </div>
+
+    <div class="search-container">
+      <input type="search" placeholder="Pesquisar..." />
+    </div>
+
+    <div class="user-info">
+      <i class="fas fa-bell notification-icon"></i>
+      <img class="profile-pic" src="img/perfil.jpeg" alt="Foto de Perfil">
+      <div class="profile-dropdown">
+        <span class="username" id="profile-toggle">
+          Método Educacional
+          <i class="fas fa-chevron-down dropdown-icon"></i>
+        </span>
+        <div class="dropdown-menu" id="dropdown-menu">
+          <a href="#">Meu Perfil</a>
+          <a href="#">Configurações</a>
+          <a href="#">Sair</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Layout principal -->
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <img class="logo" src="img/LOGO.png" alt="Logo">
+      <nav>
+  <a href="dashboard.html"><i class="fas fa-chart-bar" style="color: white;"></i> Dashboard</a>
+  <a href="alunos.html"><i class="fas fa-user-graduate" style="color: white;"></i> Alunos</a>
+  <a href="rh.html"><i class="fas fa-users" style="color: white;"></i> RH</a>
+  <a href="turma.html"><i class="fas fa-chalkboard-teacher" style="color: white;"></i> Turmas</a>
+  <a href="financeiro.html"><i class="fas fa-credit-card" style="color: white;"></i> Financeiro</a>
+  <a href="agenda.html"><i class="fas fa-calendar-alt" style="color: white;"></i> Agenda</a>
+  <a href="reuniao.html"><i class="fas fa-comments" style="color: white;"></i> Reunião</a>
+  <a href="relatorios.html"><i class="fas fa-folder-open" style="color: white;"></i> Relatórios</a>
+  <a href="comunidade.html"><i class="fas fa-comment-alt" style="color: white;"></i> Comunidade</a>
+</nav>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="main">
+      <header class="header">
+        <h2>Comunidade IMPERA</h2>
+        <button class="botao-novo-topico"><i class="fas fa-plus"></i> Novo Tópico</button>
+      </header>
+      <!-- Container -->
+      <div class="comunidade-container">
+        <!-- Lista de tópicos -->
+        <div class="topicos-comunidade">
+          <div class="card-topico">
+            <h3>📌 Estratégias para reduzir inadimplência</h3>
+            <small>por <strong>Escola Alfa</strong></small>
+            <div class="meta-topico">
+              <span><i class="fas fa-comments"></i> 12 respostas</span>
+              <span><i class="fas fa-eye"></i> 134 visualizações</span>
+            </div>
+          </div>
+
+          <div class="card-topico">
+            <h3>❓ Melhor forma de implementar ensino híbrido?</h3>
+            <small>por <strong>Colégio Delta</strong></small>
+            <div class="meta-topico">
+              <span><i class="fas fa-comments"></i> 5 respostas</span>
+              <span><i class="fas fa-eye"></i> 80 visualizações</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar direita -->
+        <div class="sidebar-direita">
+          <div class="card-info-comunidade">
+            <h4>📢 Novidades</h4>
+            <p>Evento de Networking dia 20/08</p>
+          </div>
+
+          <div class="card-info-comunidade">
+            <h4>🏆 Ranking</h4>
+            <ul>
+              <li>Escola Alfa</li>
+              <li>Colégio Beta</li>
+              <li>Instituto Gama</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/script.js"></script>
+  <script type="module" src="js/logout.js"></script>
+</body>
+</html>

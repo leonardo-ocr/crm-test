@@ -4,6 +4,9 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
+const empresaId = 'esc001';
+const funcionariosRef = collection(db, 'empresa', empresaId, 'funcionarios');
+
 export function initFuncionarios() {
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -11,23 +14,19 @@ export function initFuncionarios() {
       return;
     }
 
-    const empresaId = 'esc001'; // Ajuste conforme sua estrutura Firestore
-    const funcionariosRef = collection(db, 'empresa', empresaId, 'funcionarios');
-
     try {
-      const funcionarios = await buscarFuncionarios(funcionariosRef);
+      const funcionarios = await buscarFuncionarios();
       renderizarFuncionarios(funcionarios);
       configurarBusca(funcionarios);
-      configurarModalAdicionarFuncionario(funcionariosRef);
+      configurarModalAdicionar(funcionarios);
     } catch (error) {
       console.error('Erro ao carregar funcionários:', error);
     }
   });
 }
 
-async function buscarFuncionarios(ref) {
-  const q = query(ref);
-  const snapshot = await getDocs(q);
+async function buscarFuncionarios() {
+  const snapshot = await getDocs(query(funcionariosRef));
   return snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
 }
 
@@ -37,7 +36,7 @@ function configurarBusca(funcionarios) {
 
   if (!input || !btn) return;
 
-  function buscar() {
+  const buscar = () => {
     const termo = input.value.trim().toLowerCase();
     const filtrados = funcionarios.filter(f =>
       (f.nome?.toLowerCase().includes(termo)) ||
@@ -45,7 +44,7 @@ function configurarBusca(funcionarios) {
       (f.id?.toLowerCase().includes(termo))
     );
     renderizarFuncionarios(filtrados);
-  }
+  };
 
   input.addEventListener('input', buscar);
   btn.addEventListener('click', e => {
@@ -54,21 +53,17 @@ function configurarBusca(funcionarios) {
   });
 }
 
-function configurarModalAdicionarFuncionario(ref) {
-  const btnAbrir = document.getElementById('addFuncionarioBtn');
+function configurarModalAdicionar(funcionarios) {
+  const btn = document.getElementById('addFuncionarioBtn');
   const modal = document.getElementById('modalAdicionarFuncionario');
   const fechar = document.getElementById('fecharModalFuncionario');
   const form = document.getElementById('formAdicionarFuncionario');
 
-  if (!btnAbrir || !modal || !fechar || !form) return;
+  if (!btn || !modal || !fechar || !form) return;
 
-  btnAbrir.onclick = () => modal.style.display = 'block';
-
+  btn.onclick = () => modal.style.display = 'block';
   fechar.onclick = () => modal.style.display = 'none';
-
-  window.onclick = (e) => {
-    if (e.target === modal) modal.style.display = 'none';
-  };
+  window.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
 
   form.onsubmit = async (e) => {
     e.preventDefault();
@@ -78,7 +73,7 @@ function configurarModalAdicionarFuncionario(ref) {
       email: form.email.value.trim(),
       id: form.id.value.trim(),
       ativo: true,
-      cargo: '/empresa/esc001/cargo/dono', // Exemplo fixo, ajuste se quiser
+      cargo: `/empresa/${empresaId}/cargo/dono`,
       cpf: form.cpf.value.trim(),
       dataAdmissao: new Date(),
       salario: parseFloat(form.salario.value) || 0,
@@ -95,11 +90,15 @@ function configurarModalAdicionarFuncionario(ref) {
     };
 
     try {
-      await addDoc(ref, novoFuncionario);
+      await addDoc(funcionariosRef, novoFuncionario);
       alert('Funcionário adicionado com sucesso!');
       form.reset();
       modal.style.display = 'none';
-      location.reload(); // Ou você pode atualizar só a lista pra ficar mais suave
+
+      // Atualiza a lista sem recarregar a página
+      const atualizados = await buscarFuncionarios();
+      renderizarFuncionarios(atualizados);
+      configurarBusca(atualizados);
     } catch (err) {
       console.error('Erro ao adicionar funcionário:', err);
       alert('Erro ao adicionar funcionário.');
@@ -127,8 +126,8 @@ function renderizarFuncionarios(lista) {
         </tr>
       </thead>
       <tbody>
-        ${lista.map((f, i) => `
-          <tr style="border-bottom: 1px solid #e0e0e0; cursor: pointer;" data-index="${i}">
+        ${lista.map(f => `
+          <tr style="border-bottom: 1px solid #e0e0e0; cursor: pointer;">
             <td class="funcionario-nome" style="padding: 12px 15px; font-weight: 600; color: #6a4fce; cursor: pointer;" data-func='${encodeURIComponent(JSON.stringify(f))}'>${f.nome || '-'}</td>
             <td style="padding: 12px 15px;">${f.email || '-'}</td>
             <td style="padding: 12px 15px;">${f.id || '-'}</td>
@@ -141,11 +140,10 @@ function renderizarFuncionarios(lista) {
 
   container.innerHTML = tabela;
 
-  // Adiciona evento para mostrar detalhes
   document.querySelectorAll('.funcionario-nome').forEach(el => {
     el.addEventListener('click', () => {
-      const func = JSON.parse(decodeURIComponent(el.dataset.func));
-      mostrarDetalhesFuncionario(func);
+      const funcionario = JSON.parse(decodeURIComponent(el.dataset.func));
+      mostrarDetalhesFuncionario(funcionario);
     });
   });
 }
@@ -155,7 +153,6 @@ function mostrarDetalhesFuncionario(funcionario) {
   if (!modal) return;
 
   let editando = false;
-  const empresaId = 'esc001';
   let funcionarioEditavel = { ...funcionario };
 
   function renderVisualizacao() {
@@ -190,87 +187,87 @@ function mostrarDetalhesFuncionario(funcionario) {
     };
   }
 
-  function renderEditar() {
-    modal.innerHTML = `
-      <div class="modal-content" style="padding: 20px; background: white; border-radius: 8px; max-width: 500px; margin: auto; position: relative;">
-        <span id="fecharDetalhes" style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px;">&times;</span>
-        <h2>Editar Funcionário</h2>
-        <form id="formEditarFuncionario">
-          <label>Nome:<br><input type="text" id="inputNome" value="${funcionarioEditavel.nome || ''}" required></label><br><br>
-          <label>Email:<br><input type="email" id="inputEmail" value="${funcionarioEditavel.email || ''}" required></label><br><br>
-          <label>ID:<br><input type="text" id="inputId" value="${funcionarioEditavel.id || ''}" required></label><br><br>
-          <label>CPF:<br><input type="text" id="inputCpf" value="${funcionarioEditavel.cpf || ''}"></label><br><br>
-          <label>Telefone:<br><input type="text" id="inputTelefone" value="${funcionarioEditavel.telefone || ''}"></label><br><br>
-          <label>Salário:<br><input type="number" id="inputSalario" value="${funcionarioEditavel.salario || ''}" step="0.01"></label><br><br>
-          <label>ID Responsável:<br><input type="text" id="inputIdResponsavel" value="${funcionarioEditavel.idResponsavel || ''}"></label><br><br>
-          <h3>Endereço</h3>
-          <label>Rua:<br><input type="text" id="inputRua" value="${funcionarioEditavel.endereco?.rua || ''}"></label><br><br>
-          <label>Número:<br><input type="text" id="inputNumero" value="${funcionarioEditavel.endereco?.numero || ''}"></label><br><br>
-          <label>Bairro:<br><input type="text" id="inputBairro" value="${funcionarioEditavel.endereco?.bairro || ''}"></label><br><br>
-          <label>CEP:<br><input type="text" id="inputCep" value="${funcionarioEditavel.endereco?.cep || ''}"></label><br><br>
-          <label>Cidade:<br><input type="text" id="inputCidade" value="${funcionarioEditavel.endereco?.cidade || ''}"></label><br><br>
-          <label>Estado:<br><input type="text" id="inputEstado" value="${funcionarioEditavel.endereco?.estado || ''}"></label><br><br>
-          <label>Status:<br>
-            <select id="inputAtivo">
-              <option value="true" ${funcionarioEditavel.ativo ? 'selected' : ''}>Ativo</option>
-              <option value="false" ${!funcionarioEditavel.ativo ? 'selected' : ''}>Inativo</option>
-            </select>
-          </label><br><br>
-          <button type="submit" style="background: #6a4fce; color: white; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer;">Salvar</button>
-          <button type="button" id="btnCancelarEdicao" style="margin-left: 10px; padding: 8px 12px; cursor: pointer;">Cancelar</button>
-        </form>
+function renderEditar() {
+  modal.innerHTML = `
+    <div class="modal-content">
+      <span class="close-btn" id="fecharModalDetalhes">&times;</span>
+      <div class="modal-header">Editar Funcionário</div>
+      <div class="modal-body">
+        <label>Nome:<br><input type="text" id="inputNome" value="${funcionarioEditavel.nome || ''}" required></label>
+        <label>Email:<br><input type="email" id="inputEmail" value="${funcionarioEditavel.email || ''}" required></label>
+        <label>ID:<br><input type="text" id="inputId" value="${funcionarioEditavel.id || ''}" required></label>
+        <label>CPF:<br><input type="text" id="inputCpf" value="${funcionarioEditavel.cpf || ''}"></label>
+        <label>Telefone:<br><input type="text" id="inputTelefone" value="${funcionarioEditavel.telefone || ''}"></label>
+        <label>Salário:<br><input type="number" id="inputSalario" step="0.01" value="${funcionarioEditavel.salario || ''}"></label>
+        <label>ID Responsável:<br><input type="text" id="inputIdResponsavel" value="${funcionarioEditavel.idResponsavel || ''}"></label>
+
+        <h3 style="margin-top: 20px; color: #6a4fce;">Endereço</h3>
+        <label>Rua:<br><input type="text" id="inputRua" value="${funcionarioEditavel.endereco?.rua || ''}"></label>
+        <label>Número:<br><input type="text" id="inputNumero" value="${funcionarioEditavel.endereco?.numero || ''}"></label>
+        <label>Bairro:<br><input type="text" id="inputBairro" value="${funcionarioEditavel.endereco?.bairro || ''}"></label>
+        <label>CEP:<br><input type="text" id="inputCep" value="${funcionarioEditavel.endereco?.cep || ''}"></label>
+        <label>Cidade:<br><input type="text" id="inputCidade" value="${funcionarioEditavel.endereco?.cidade || ''}"></label>
+        <label>Estado:<br><input type="text" id="inputEstado" value="${funcionarioEditavel.endereco?.estado || ''}"></label>
+
+        <label>Status:<br>
+          <select id="inputAtivo">
+            <option value="true" ${funcionarioEditavel.ativo ? 'selected' : ''}>Ativo</option>
+            <option value="false" ${!funcionarioEditavel.ativo ? 'selected' : ''}>Inativo</option>
+          </select>
+        </label>
       </div>
-    `;
+      <div class="modal-footer">
+        <button type="submit" id="btnSalvarFuncionario">Salvar</button>
+        <button type="button" id="btnCancelarEdicao">Cancelar</button>
+      </div>
+    </div>
+  `;
 
-    document.getElementById('fecharDetalhes').onclick = () => modal.style.display = 'none';
-    document.getElementById('btnCancelarEdicao').onclick = () => {
-      editando = false;
-      renderVisualizacao();
-    };
+  document.getElementById('fecharModalDetalhes').onclick = () => modal.style.display = 'none';
+  document.getElementById('btnCancelarEdicao').onclick = () => {
+    editando = false;
+    renderVisualizacao();
+  };
 
-    document.getElementById('formEditarFuncionario').onsubmit = async (e) => {
-      e.preventDefault();
+  document.getElementById('btnSalvarFuncionario').onclick = async (e) => {
+    e.preventDefault();
 
-      funcionarioEditavel.nome = document.getElementById('inputNome').value.trim();
-      funcionarioEditavel.email = document.getElementById('inputEmail').value.trim();
-      funcionarioEditavel.id = document.getElementById('inputId').value.trim();
-      funcionarioEditavel.cpf = document.getElementById('inputCpf').value.trim();
-      funcionarioEditavel.telefone = document.getElementById('inputTelefone').value.trim();
-      funcionarioEditavel.salario = parseFloat(document.getElementById('inputSalario').value) || 0;
-      funcionarioEditavel.idResponsavel = document.getElementById('inputIdResponsavel').value.trim();
-      funcionarioEditavel.ativo = document.getElementById('inputAtivo').value === 'true';
-      funcionarioEditavel.endereco = {
+    funcionarioEditavel = {
+      ...funcionarioEditavel,
+      nome: document.getElementById('inputNome').value.trim(),
+      email: document.getElementById('inputEmail').value.trim(),
+      id: document.getElementById('inputId').value.trim(),
+      cpf: document.getElementById('inputCpf').value.trim(),
+      telefone: document.getElementById('inputTelefone').value.trim(),
+      salario: parseFloat(document.getElementById('inputSalario').value) || 0,
+      idResponsavel: document.getElementById('inputIdResponsavel').value.trim(),
+      ativo: document.getElementById('inputAtivo').value === 'true',
+      endereco: {
         rua: document.getElementById('inputRua').value.trim(),
         numero: document.getElementById('inputNumero').value.trim(),
         bairro: document.getElementById('inputBairro').value.trim(),
         cep: document.getElementById('inputCep').value.trim(),
         cidade: document.getElementById('inputCidade').value.trim(),
         estado: document.getElementById('inputEstado').value.trim()
-      };
-
-      try {
-        const docRef = doc(db, 'empresa', empresaId, 'funcionarios', funcionarioEditavel.idDoc);
-        await updateDoc(docRef, {
-          nome: funcionarioEditavel.nome,
-          email: funcionarioEditavel.email,
-          id: funcionarioEditavel.id,
-          cpf: funcionarioEditavel.cpf,
-          telefone: funcionarioEditavel.telefone,
-          salario: funcionarioEditavel.salario,
-          idResponsavel: funcionarioEditavel.idResponsavel,
-          ativo: funcionarioEditavel.ativo,
-          endereco: funcionarioEditavel.endereco
-        });
-
-        alert('Funcionário atualizado com sucesso!');
-        editando = false;
-        renderVisualizacao();
-      } catch (error) {
-        console.error('Erro ao atualizar funcionário:', error);
-        alert('Erro ao atualizar funcionário.');
       }
     };
-  }
+
+    try {
+      const docRef = doc(db, 'empresa', empresaId, 'funcionarios', funcionarioEditavel.idDoc);
+      await updateDoc(docRef, funcionarioEditavel);
+
+      alert('Funcionário atualizado com sucesso!');
+      editando = false;
+      modal.style.display = 'none';
+      renderVisualizacao();
+    } catch (error) {
+      console.error('Erro ao atualizar funcionário:', error);
+      alert('Erro ao atualizar funcionário.');
+    }
+  };
+
+  modal.style.display = 'block';
+}
 
   modal.style.display = 'block';
   renderVisualizacao();

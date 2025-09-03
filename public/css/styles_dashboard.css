@@ -912,23 +912,22 @@ body {
 }
 
 #modalDetalhesAluno .modal-footer button {
-  background-color: #e67e22;
-  border: none;
-  padding: 12px 25px;
-  font-size: 16px;
-  font-weight: 600;
+  margin-top: 20px;
+  align-self: center;
+  padding: 10px 28px;
+  background-color: #6a4fce;
   color: white;
+  border: none;
   border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   transition: background-color 0.3s ease;
-  box-shadow: 0 6px 12px rgba(230, 126, 34, 0.5);
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(106, 79, 206, 0.4);
 }
 
 #modalDetalhesAluno .modal-footer button:hover {
-  background-color: #d35400;
+  background-color: #3700ff;
 }
 
 /* Ícones FontAwesome ajuste */
@@ -1034,110 +1033,141 @@ body {
 }
 
 /* Estilos para a modal */
+/* Fundo escuro transparente do modal */
 #modalDetalhesAluno {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: none; /* começa escondida */
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.15);
+  display: none; /* modal começa escondido */
   justify-content: center;
   align-items: center;
   z-index: 1000;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#modalDetalhesAluno .modal-content {
-  background-color: #fff;
+
+/* Caixa branca do modal */
+#modalDetalhesAluno .modal-conteudo {
+  background: #fff;
   border-radius: 12px;
   width: 420px;
   max-width: 90%;
-  padding: 24px 30px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  padding: 30px 25px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   position: relative;
   display: flex;
   flex-direction: column;
 }
 
-#modalDetalhesAluno .modal-header {
-  font-size: 1.5rem;
-  font-weight: 700;
+/* Título do modal */
+#modalDetalhesAluno h2 {
   color: #6a4fce;
-  margin-bottom: 20px;
+  font-weight: 700;
   text-align: center;
+  margin-bottom: 25px;
+}
+
+/* Container onde o conteúdo será inserido via JS */
+#modalDetalhesAlunoContent {
+  font-size: 1rem;
+  color: #222;
   user-select: none;
 }
 
-#modalDetalhesAluno .modal-body p {
-  margin: 10px 0;
+/* Linha de detalhes, com espaçamento entre label e valor */
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-weight: 600;
   font-size: 1rem;
   color: #333;
 }
 
-#modalDetalhesAluno .modal-body p strong {
+/* Títulos destacados */
+.detail-row strong {
   color: #6a4fce;
 }
 
-#modalDetalhesAluno .modal-body label {
-  display: block;
-  margin-bottom: 15px;
-  font-weight: 600;
-  color: #444;
+/* Ícones pequenos antes dos textos */
+.detail-row i {
+  margin-right: 8px;
+  color: #6a4fce;
 }
 
-#modalDetalhesAluno .modal-body input[type="text"],
-#modalDetalhesAluno .modal-body input[type="email"],
-#modalDetalhesAluno .modal-body input[type="tel"],
-#modalDetalhesAluno .modal-body input[type="date"],
-#modalDetalhesAluno .modal-body input[type="number"] {
-  width: 100%;
-  padding: 8px 10px;
-  font-size: 1rem;
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  transition: border-color 0.3s ease;
-}
-
-#modalDetalhesAluno .modal-body input[type="text"]:focus,
-#modalDetalhesAluno .modal-body input[type="email"]:focus,
-#modalDetalhesAluno .modal-body input[type="tel"]:focus,
-#modalDetalhesAluno .modal-body input[type="date"]:focus,
-#modalDetalhesAluno .modal-body input[type="number"]:focus {
-  border-color: #6a4fce;
-  outline: none;
-}
-
-#modalDetalhesAluno .modal-footer {
-  margin-top: 20px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-#modalDetalhesAluno button {
-  background-color: #6a4fce;
-  border: none;
-  color: white;
+/* Status da matrícula inativo */
+.status-inativo {
+  background-color: #f9c0c0;
+  color: #c42424;
+  padding: 4px 16px;
+  border-radius: 20px;
   font-weight: 700;
-  padding: 10px 18px;
-  border-radius: 6px;
+  font-size: 0.85rem;
+  user-select: none;
+  display: inline-block;
+}
+
+/* Container para ID e turma no topo direito */
+.info-top-right {
+  font-size: 0.85rem;
+  color: #666;
+  text-align: right;
+}
+
+/* Container com status e infos lado a lado */
+.status-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+/* Botões embaixo do modal */
+.buttons-container {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+/* Botão ativar matrícula - verde */
+.buttons-container .btn-ativar {
+  background-color: #00c853;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  flex: 1;
+  font-weight: 700;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
-#modalDetalhesAluno button:hover {
-  background-color: #563d9a;
+/* Hover botão ativar */
+.buttons-container .btn-ativar:hover {
+  background-color: #009624;
 }
 
-#modalDetalhesAluno button:active {
-  background-color: #3f2a6d;
+/* Botão editar - branco com borda cinza */
+.buttons-container .btn-editar {
+  background-color: white;
+  border: 1px solid #ddd;
+  color: #222;
+  border-radius: 8px;
+  padding: 12px 0;
+  flex: 1;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-#modalDetalhesAluno .close-btn {
+/* Hover botão editar */
+.buttons-container .btn-editar:hover {
+  background-color: #f3f3f3;
+}
+
+/* Botão fechar modal no canto superior direito */
+.fechar {
   position: absolute;
   top: 14px;
   right: 20px;
@@ -1149,9 +1179,14 @@ body {
   transition: color 0.3s ease;
 }
 
-#modalDetalhesAluno .close-btn:hover {
+
+
+/* Hover botão fechar */
+.fechar:hover {
   color: #6a4fce;
 }
+
+
 
 /* Status ativo/inativo */
 .status-ativo {
@@ -1164,134 +1199,161 @@ body {
   font-weight: 700;
 }
 
-/* Modal Geral */
-.modal {
+
+/* Container do modal */
+/* Container do modal */
+#modalDetalhesFuncionario {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.3);
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.15);
+  display: none; /* começa escondido */
+  z-index: 9999;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: auto; /* <- deixa rolar caso ultrapasse altura */
+  padding: 20px;
+  box-sizing: border-box;
+
+  /* Centralização com flex */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
 }
 
-/* Conteúdo do Modal */
-.modal-conteudo {
-  background: white;
-  border-radius: 10px;
-  width: 360px;
-  max-width: 90%;
-  padding: 20px 30px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
-  font-family: 'Poppins', sans-serif;
-  color: #333;
+/* Caixa branca do modal */
+#modalDetalhesFuncionario .modal-content {
+  background: #fff;
+  border-radius: 12px;
+  width: 420px;
+  max-width: 100%;
+  padding: 30px 25px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+
+  /* Garante que o conteúdo centralize mesmo se passar da altura */
+  margin: auto;
 }
 
-/* Título do Modal */
-.modal-conteudo h2 {
+
+/* Título */
+#modalDetalhesFuncionario .modal-header {
+  color: #6a4fce;
   font-weight: 700;
-  font-size: 18px;
-  color: #6B4CF5; /* roxo */
-  margin-bottom: 20px;
   text-align: center;
+  font-size: 1.6rem;
+  margin-bottom: 15px;
+  user-select: none;
 }
 
-/* Botão fechar (x) */
-.fechar {
-  position: absolute;
-  top: 12px;
-  right: 18px;
-  font-size: 20px;
-  font-weight: 700;
-  cursor: pointer;
-  color: #6B4CF5;
-  transition: color 0.3s ease;
+/* Conteúdo do modal */
+#modalDetalhesFuncionario .modal-body {
+  font-size: 1rem;
+  color: #222;
+  user-select: none;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 5px;
 }
 
-.fechar:hover {
+#modalDetalhesFuncionario .modal-body label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
   color: #444;
 }
 
-/* Formulário */
-.modal-conteudo form {
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-conteudo label {
-  font-weight: 600;
-  margin-top: 12px;
-  font-size: 14px;
-  color: #6B4CF5;
-}
-
-.modal-conteudo input[type="text"],
-.modal-conteudo input[type="email"],
-.modal-conteudo select {
-  margin-top: 6px;
-  padding: 6px 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 13px;
-  font-family: 'Poppins', sans-serif;
+#modalDetalhesFuncionario .modal-body input[type="text"],
+#modalDetalhesFuncionario .modal-body input[type="email"],
+#modalDetalhesFuncionario .modal-body input[type="number"],
+#modalDetalhesFuncionario .modal-body input[type="tel"],
+#modalDetalhesFuncionario .modal-body input[type="date"],
+#modalDetalhesFuncionario .modal-body select {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
   transition: border-color 0.3s ease;
 }
 
-.modal-conteudo input[type="text"]:focus,
-.modal-conteudo input[type="email"]:focus,
-.modal-conteudo select:focus {
+#modalDetalhesFuncionario .modal-body input:focus,
+#modalDetalhesFuncionario .modal-body select:focus {
+  border-color: #6a4fce;
   outline: none;
-  border-color: #6B4CF5;
 }
 
-/* Botões */
-.modal-conteudo button {
+/* Rodapé com botões */
+#modalDetalhesFuncionario .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
   margin-top: 20px;
-  padding: 8px 12px;
-  border: none;
+}
+
+/* Botões Salvar e Cancelar */
+#modalDetalhesFuncionario .modal-footer button {
+  padding: 10px 20px;
   border-radius: 6px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
   transition: background-color 0.3s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-/* Botão Salvar */
-.modal-conteudo button[type="submit"] {
-  background-color: #6B4CF5;
+/* Salvar - roxo */
+#modalDetalhesFuncionario #btnSalvar {
+  background-color: #6a4fce;
+  color: white;
+  box-shadow: 0 4px 12px rgba(106, 79, 206, 0.4);
+}
+
+#modalDetalhesFuncionario #btnSalvar:hover {
+  background-color: #563d9a;
+}
+
+#modalDetalhesFuncionario #btnSalvar:active {
+  background-color: #3f2a6d;
+}
+
+/* Cancelar - branco com borda roxa */
+#modalDetalhesFuncionario #btnCancelar {
+  background-color: white;
+  color: #6a4fce;
+  border: 2px solid #6a4fce;
+}
+
+#modalDetalhesFuncionario #btnCancelar:hover {
+  background-color: #6a4fce;
   color: white;
 }
 
-.modal-conteudo button[type="submit"]:hover {
-  background-color: #533bcf;
+/* Botão de fechar */
+#modalDetalhesFuncionario .close-btn {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.3s ease;
 }
 
-/* Botão Cancelar */
-.modal-conteudo .btn-cancelar {
-  background-color: #f28024;
-  color: white;
-  margin-top: 10px;
+#modalDetalhesFuncionario .close-btn:hover {
+  color: #6a4fce;
 }
 
-.modal-conteudo .btn-cancelar:hover {
-  background-color: #c46217;
+.kekw{
+background-color: #3700ff;
+color: white;
+
 }
-
-/* Select para status */
-.modal-conteudo select {
-  width: 100%;
-}
-
-/* Deixe os inputs e labels alinhados verticalmente */
-.modal-conteudo label,
-.modal-conteudo input,
-.modal-conteudo select {
-  width: 100%;
-}
-
-

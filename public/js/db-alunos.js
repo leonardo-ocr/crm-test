@@ -273,8 +273,8 @@ async function mostrarDetalhesAluno(aluno) {
         <label>ID Turma:<br><input type="text" id="inputIdTurma" value="${alunoEditavel.idTurma || ''}"></label>
       </div>
       <div class="modal-footer">
-        <button id="btnSalvar">Salvar</button>
-        <button id="btnCancelar">Cancelar</button>
+        <button class="kekw" id="btnSalvar">Salvar</button>
+        <button id="btnCancelar" class="kekw2">Cancelar</button>
       </div>
     </div>
   `;
