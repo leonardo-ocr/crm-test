@@ -43,16 +43,14 @@
     <aside class="sidebar">
       <img class="logo" src="img/LOGO.png" alt="Logo">
       <nav>
-        <nav>
-  <a href="dashboard.html"><i class="fas fa-chart-bar" style="color: white;"></i> Dashboard</a>
-  <a href="alunos.html"><i class="fas fa-user-graduate" style="color: white;"></i> Alunos</a>
-  <a href="rh.html"><i class="fas fa-users" style="color: white;"></i> RH</a>
-  <a href="turma.html"><i class="fas fa-chalkboard-teacher" style="color: white;"></i> Turmas</a>
-  <a href="financeiro.html"><i class="fas fa-credit-card" style="color: white;"></i> Financeiro</a>
-  <a href="agenda.html"><i class="fas fa-calendar-alt" style="color: white;"></i> Agenda</a>
-  <a href="reuniao.html"><i class="fas fa-comments" style="color: white;"></i> Reunião</a>
-  <a href="relatorios.html"><i class="fas fa-folder-open" style="color: white;"></i> Relatórios</a>
-</nav>
+        <a href="dashboard.html"><i class="fas fa-chart-bar" style="color: white;"></i> Dashboard</a>
+        <a href="alunos.html"><i class="fas fa-user-graduate" style="color: white;"></i> Alunos</a>
+        <a href="rh.html"><i class="fas fa-users" style="color: white;"></i> RH</a>
+        <a href="turma.html"><i class="fas fa-chalkboard-teacher" style="color: white;"></i> Turmas</a>
+        <a href="financeiro.html"><i class="fas fa-credit-card" style="color: white;"></i> Financeiro</a>
+        <a href="agenda.html"><i class="fas fa-calendar-alt" style="color: white;"></i> Agenda</a>
+        <a href="reuniao.html"><i class="fas fa-comments" style="color: white;"></i> Reunião</a>
+        <a href="relatorios.html"><i class="fas fa-folder-open" style="color: white;"></i> Relatórios</a>
       </nav>
     </aside>
 
@@ -65,19 +63,20 @@
 
       <!-- Cards de resumo -->
       <section class="cards">
-      <div class="card">
-        <p>Alunos</p>
-        <h3><span id="contador-alunos" class="contador-flip">0</span></h3>
-        <img class="card-img" src="img/aluno.png" alt="Alunos">
-      </div>
+        <!-- Card para Alunos -->
+        <div class="card">
+          <p>Alunos</p>
+          <h3><span id="contador-alunos" class="contador-flip">0</span></h3>
+          <img class="card-img" src="img/aluno.png" alt="Alunos">
+        </div>
 
-
+        <!-- Card para Funcionários -->
         <div class="card">
           <p>Funcionários</p>
-          <h3>412</h3>
+          <h3><span id="contador-funcionarios" class="contador-flip">0</span></h3> <!-- Contador de Funcionários -->
           <img class="card-img" src="img/funcionarios.png" alt="Funcionários">
         </div>
-    
+
         <div class="card">
           <p>Lucro Mensal</p>
           <h3>R$ 550.700,00</h3>
@@ -90,16 +89,15 @@
           <img class="card-img" src="img/inadimplencia.png" alt="Inadimplência">
         </div>
       </section>
-      <section style="padding: 20px;">
-      <p id="empresa-cnpj">Carregando CNPJ...</p>
-      </section>
+
       <!-- Gráfico de desempenho -->
       <section class="charts">
-        <canvas id="myChart">
-        </canvas>
+        <canvas id="myChart"></canvas>
       </section>
     </main>
   </div>
+
+  <!-- Scripts -->
   <script type="module" src="js/script.js"></script>
   <script type="module" src="js/logout.js"></script>
   <script type="module" src="js/db-dashboard.js"></script>

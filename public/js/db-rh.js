@@ -40,25 +40,35 @@ function configurarBusca(funcionarios) {
   if (!searchInput || !searchBtn || !filtroStatusFuncionario) return;
 
   const buscar = () => {
-    const query = searchInput.value.trim().toLowerCase();
-    const statusSelecionado = filtroStatusFuncionario.value;
+  const query = searchInput.value.trim().toLowerCase(); // Pesquisa em minúsculas
+  const statusSelecionado = filtroStatusFuncionario.value;
 
-    const filtrados = funcionarios.filter(funcionario => {
-      const textoCorresponde =
-        funcionario.nome?.toLowerCase().includes(query) ||
-        funcionario.email?.toLowerCase().includes(query) ||
-        funcionario.idDoc?.toLowerCase().includes(query) || // Para os funcionários, vamos usar `idDoc`
-        funcionario.cargo?.toLowerCase().includes(query);
+  const filtrados = funcionarios.filter(funcionario => {
+    // Garantir que todos os campos sejam tratados como strings antes da comparação
+    const nome = funcionario.nome ? funcionario.nome.toLowerCase() : '';
+    const email = funcionario.email ? funcionario.email.toLowerCase() : '';
+    const idDoc = funcionario.idDoc ? funcionario.idDoc.toLowerCase() : '';
+    const cargo = funcionario.cargo ? (typeof funcionario.cargo === 'string' ? funcionario.cargo.toLowerCase() : '') : '';
 
-      const statusFuncionario = funcionario.ativo ? 'ativo' : 'inativo'; // Verifica se o funcionário está ativo ou inativo
-      const statusCorresponde =
-        statusSelecionado === 'todos' || statusSelecionado === statusFuncionario;
+    // Verifica se qualquer campo corresponde ao valor de pesquisa
+    const textoCorresponde =
+      nome.includes(query) ||
+      email.includes(query) ||
+      idDoc.includes(query) ||
+      cargo.includes(query); // Verifica se o cargo é uma string e compara
 
-      return textoCorresponde && statusCorresponde; // Filtra tanto pelo texto quanto pelo status
-    });
+    // Verifica o status
+    const statusFuncionario = funcionario.ativo ? 'ativo' : 'inativo';
+    const statusCorresponde =
+      statusSelecionado === 'todos' || statusSelecionado === statusFuncionario;
 
-    renderizarFuncionarios(filtrados); // Atualiza a tabela de funcionários filtrados
-  };
+    return textoCorresponde && statusCorresponde; // Filtra tanto pelo texto quanto pelo status
+  });
+
+  renderizarFuncionarios(filtrados); // Atualiza a tabela de funcionários filtrados
+};
+
+
 
   searchInput.addEventListener('input', buscar); // Busca ao digitar
   searchBtn.addEventListener('click', (e) => { // Busca ao clicar no botão

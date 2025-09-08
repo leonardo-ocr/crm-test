@@ -61,15 +61,29 @@ document.addEventListener("DOMContentLoaded", () => {
     // 🔢 Contador de alunos com animação flip
     try {
       const alunosRef = collection(db, "empresa", "esc001", "alunos");
-      const snapshot = await getDocs(alunosRef);
-      const totalAlunos = snapshot.size;
+      const snapshotAlunos = await getDocs(alunosRef);
+      const totalAlunos = snapshotAlunos.size;
 
-      const contadorElemento = document.getElementById("contador-alunos");
-      if (contadorElemento) {
-        animarContagemFlip(contadorElemento, totalAlunos); // Com efeito flip
+      const contadorAlunosElemento = document.getElementById("contador-alunos");
+      if (contadorAlunosElemento) {
+        animarContagemFlip(contadorAlunosElemento, totalAlunos); // Com efeito flip
       }
     } catch (error) {
       console.error("Erro ao contar alunos:", error);
+    }
+
+    // 🔢 Contador de funcionários com animação flip
+    try {
+      const funcionariosRef = collection(db, "empresa", "esc001", "funcionarios");
+      const snapshotFuncionarios = await getDocs(funcionariosRef);
+      const totalFuncionarios = snapshotFuncionarios.size;
+
+      const contadorFuncionariosElemento = document.getElementById("contador-funcionarios");
+      if (contadorFuncionariosElemento) {
+        animarContagemFlip(contadorFuncionariosElemento, totalFuncionarios); // Com efeito flip
+      }
+    } catch (error) {
+      console.error("Erro ao contar funcionários:", error);
     }
   });
 });
