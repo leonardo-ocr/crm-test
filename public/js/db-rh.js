@@ -7,6 +7,8 @@ import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/f
 const empresaId = 'esc001';
 const funcionariosRef = collection(db, 'empresa', empresaId, 'funcionarios');
 
+let funcionariosCache = []; // Armazena os funcionários em cache
+
 export function initFuncionarios() {
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -15,14 +17,55 @@ export function initFuncionarios() {
     }
 
     try {
-      const funcionarios = await buscarFuncionarios();
-      renderizarFuncionarios(funcionarios);
-      configurarBusca(funcionarios);
-      configurarModalAdicionar(funcionarios);
+      funcionariosCache = await buscarFuncionarios(); // Armazena a lista de funcionários no cache
+      renderizarFuncionarios(funcionariosCache);  // Renderiza os funcionários inicialmente
+      configurarBusca(funcionariosCache);  // Configura a busca
+      configurarModalAdicionar(funcionariosCache);  // Configura o modal para adicionar funcionários
+
+      // Aplica o filtro logo após a renderização inicial
+      filtrarFuncionarios();  // Aplica o filtro após o carregamento dos funcionários
+
     } catch (error) {
       console.error('Erro ao carregar funcionários:', error);
     }
   });
+}
+
+
+function configurarBusca(funcionarios) {
+  const searchInput = document.getElementById('searchInput');
+  const searchBtn = document.getElementById('searchBtn');
+  const filtroStatusFuncionario = document.getElementById('filtroStatusFuncionario'); // <- novo, adaptado para funcionários
+
+  if (!searchInput || !searchBtn || !filtroStatusFuncionario) return;
+
+  const buscar = () => {
+    const query = searchInput.value.trim().toLowerCase();
+    const statusSelecionado = filtroStatusFuncionario.value;
+
+    const filtrados = funcionarios.filter(funcionario => {
+      const textoCorresponde =
+        funcionario.nome?.toLowerCase().includes(query) ||
+        funcionario.email?.toLowerCase().includes(query) ||
+        funcionario.idDoc?.toLowerCase().includes(query) || // Para os funcionários, vamos usar `idDoc`
+        funcionario.cargo?.toLowerCase().includes(query);
+
+      const statusFuncionario = funcionario.ativo ? 'ativo' : 'inativo'; // Verifica se o funcionário está ativo ou inativo
+      const statusCorresponde =
+        statusSelecionado === 'todos' || statusSelecionado === statusFuncionario;
+
+      return textoCorresponde && statusCorresponde; // Filtra tanto pelo texto quanto pelo status
+    });
+
+    renderizarFuncionarios(filtrados); // Atualiza a tabela de funcionários filtrados
+  };
+
+  searchInput.addEventListener('input', buscar); // Busca ao digitar
+  searchBtn.addEventListener('click', (e) => { // Busca ao clicar no botão
+    e.preventDefault();
+    buscar();
+  });
+  filtroStatusFuncionario.addEventListener('change', buscar); // Filtro de status ao alterar o status selecionado
 }
 
 async function buscarFuncionarios() {
@@ -30,30 +73,7 @@ async function buscarFuncionarios() {
   return snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
 }
 
-function configurarBusca(funcionarios) {
-  const input = document.getElementById('searchInput');
-  const btn = document.getElementById('searchBtn');
-
-  if (!input || !btn) return;
-
-  const buscar = () => {
-    const termo = input.value.trim().toLowerCase();
-    const filtrados = funcionarios.filter(f =>
-      (f.nome?.toLowerCase().includes(termo)) ||
-      (f.email?.toLowerCase().includes(termo)) ||
-      (f.id?.toLowerCase().includes(termo))
-    );
-    renderizarFuncionarios(filtrados);
-  };
-
-  input.addEventListener('input', buscar);
-  btn.addEventListener('click', e => {
-    e.preventDefault();
-    buscar();
-  });
-}
-
-function configurarModalAdicionar(funcionarios) {
+async function configurarModalAdicionar(funcionariosRef) {
   const btn = document.getElementById('addFuncionarioBtn');
   const modal = document.getElementById('modalAdicionarFuncionario');
   const fechar = document.getElementById('fecharModalFuncionario');
@@ -69,33 +89,41 @@ function configurarModalAdicionar(funcionarios) {
     e.preventDefault();
 
     const novoFuncionario = {
-      nome: form.nome.value.trim(),
-      email: form.email.value.trim(),
-      id: form.id.value.trim(),
-      ativo: true,
-      cargo: `/empresa/${empresaId}/cargo/dono`,
-      cpf: form.cpf.value.trim(),
-      dataAdmissao: new Date(),
-      salario: parseFloat(form.salario.value) || 0,
-      endereco: {
-        rua: form.rua.value.trim(),
-        numero: form.numero.value.trim(),
-        bairro: form.bairro.value.trim(),
-        cep: form.cep.value.trim(),
-        cidade: form.cidade.value.trim(),
-        estado: form.estado.value.trim()
-      },
-      idResponsavel: form.idResponsavel.value.trim(),
-      telefone: form.telefone.value.trim()
-    };
+  nome: form.nome.value.trim(),
+  email: form.email.value.trim(),
+  cpf: form.cpf.value.trim(),
+  rg: form.rg.value.trim(),
+  estadoCivil: form.estadoCivil.value.trim(),
+  dependentes: parseInt(form.dependentes.value) || 0,
+  cargo: form.cargo.value.trim(),
+  departamento: form.departamento.value.trim(),
+  jornadaTrabalho: form.jornadaTrabalho.value.trim(),
+  tipoContrato: form.tipoContrato.value.trim(),
+  dataNascimento: form.dataNascimento.value.trim(),
+  dataAdmissao: form.dataAdmissao.value.trim(),
+  salario: parseFloat(form.salario.value) || 0,
+  telefone: form.telefone.value.trim(),
+  banco: form.banco.value.trim(),
+  agencia: form.agencia.value.trim(),
+  conta: form.conta.value.trim(),
+  carteiraTrabalho: form.carteiraTrabalho.value.trim(),
+  pisPasep: form.pisPasep.value.trim(),
+  tituloEleitor: form.tituloEleitor.value.trim(),
+  idResponsavel: form.idResponsavel.value.trim(),
+  ativo: true // Adiciona um campo ativo ao funcionário
+};
+
 
     try {
-      await addDoc(funcionariosRef, novoFuncionario);
+      const docRef = await addDoc(funcionariosRef, novoFuncionario);
       alert('Funcionário adicionado com sucesso!');
       form.reset();
       modal.style.display = 'none';
 
-      // Atualiza a lista sem recarregar a página
+      // Agora que o documento foi criado, podemos recuperar o ID gerado automaticamente
+      novoFuncionario.idDoc = docRef.id; // Atribui o ID gerado pelo Firestore ao funcionário
+
+      // Atualiza a lista de funcionários sem recarregar a página
       const atualizados = await buscarFuncionarios();
       renderizarFuncionarios(atualizados);
       configurarBusca(atualizados);
@@ -116,22 +144,23 @@ function renderizarFuncionarios(lista) {
   }
 
   const tabela = `
-    <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden;">
+    <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); border-radius: 8px; overflow: hidden;">
       <thead>
         <tr style="background-color: #6a4fce; color: white;">
           <th style="padding: 12px 15px; text-align: left;">Nome</th>
-          <th style="padding: 12px 15px; text-align: left;">Email</th>
+          <th style="padding: 12px 15px; text-align: left;">Cargo</th>
           <th style="padding: 12px 15px; text-align: left;">ID</th>
-          <th style="padding: 12px 15px; text-align: left;">Status</th>
+          <th style="padding: 12px 15px; text-align: left;">Status</th> <!-- Coluna de Status -->
         </tr>
       </thead>
       <tbody>
         ${lista.map(f => `
           <tr style="border-bottom: 1px solid #e0e0e0; cursor: pointer;">
             <td class="funcionario-nome" style="padding: 12px 15px; font-weight: 600; color: #6a4fce; cursor: pointer;" data-func='${encodeURIComponent(JSON.stringify(f))}'>${f.nome || '-'}</td>
-            <td style="padding: 12px 15px;">${f.email || '-'}</td>
-            <td style="padding: 12px 15px;">${f.id || '-'}</td>
-            <td style="padding: 12px 15px;">${f.ativo ? '<span class="status-ativo">Ativo</span>' : '<span class="status-inativo">Inativo</span>'}</td>
+            <td style="padding: 12px 15px;">${f.cargo || '-'}</td>
+            <td style="padding: 12px 15px;">${f.idDoc || '-'}</td>
+            <!-- Exibindo o status diretamente, sem formatação -->
+            <td style="padding: 12px 15px;">${f.ativo ? 'Ativo' : 'Inativo'}</td>
           </tr>
         `).join('')}
       </tbody>
@@ -148,57 +177,97 @@ function renderizarFuncionarios(lista) {
   });
 }
 
+
+
 function mostrarDetalhesFuncionario(funcionario) {
   const modal = document.getElementById('modalDetalhesFuncionario');
   if (!modal) return;
 
-  let editando = false;
   let funcionarioEditavel = { ...funcionario };
 
-  function renderVisualizacao() {
-    modal.innerHTML = `
-      <div class="modal-content" style="padding: 20px; background: white; border-radius: 8px; max-width: 500px; margin: auto; position: relative;">
-        <span id="fecharDetalhes" style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px;">&times;</span>
-        <h2>Detalhes do Funcionário</h2>
-        <p><strong>Nome:</strong> ${funcionarioEditavel.nome || '-'}</p>
-        <p><strong>Email:</strong> ${funcionarioEditavel.email || '-'}</p>
-        <p><strong>ID:</strong> ${funcionarioEditavel.id || '-'}</p>
-        <p><strong>CPF:</strong> ${funcionarioEditavel.cpf || '-'}</p>
-        <p><strong>Telefone:</strong> ${funcionarioEditavel.telefone || '-'}</p>
-        <p><strong>Salário:</strong> R$ ${funcionarioEditavel.salario || '-'}</p>
-        <p><strong>Data Admissão:</strong> ${funcionarioEditavel.dataAdmissao?.seconds ? new Date(funcionarioEditavel.dataAdmissao.seconds * 1000).toLocaleDateString() : '-'}</p>
-        <p><strong>ID Responsável:</strong> ${funcionarioEditavel.idResponsavel || '-'}</p>
-        <h3>Endereço</h3>
-        <p><strong>Rua:</strong> ${funcionarioEditavel.endereco?.rua || '-'}</p>
-        <p><strong>Número:</strong> ${funcionarioEditavel.endereco?.numero || '-'}</p>
-        <p><strong>Bairro:</strong> ${funcionarioEditavel.endereco?.bairro || '-'}</p>
-        <p><strong>CEP:</strong> ${funcionarioEditavel.endereco?.cep || '-'}</p>
-        <p><strong>Cidade:</strong> ${funcionarioEditavel.endereco?.cidade || '-'}</p>
-        <p><strong>Estado:</strong> ${funcionarioEditavel.endereco?.estado || '-'}</p>
-        <p><strong>Status:</strong> ${funcionarioEditavel.ativo ? 'Ativo' : 'Inativo'}</p>
-        <button id="btnEditarFuncionario" style="margin-top: 15px; padding: 8px 12px; background: #6a4fce; color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button>
-      </div>
-    `;
+  // Renderização dos detalhes no modal
+  modal.innerHTML = `
+    <div class="modal-content" style="padding: 20px; background: white; border-radius: 8px; max-width: 600px; margin: auto; position: relative;">
+      <span id="fecharDetalhes" style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px;">&times;</span>
+      <h2>Detalhes do Funcionário</h2>
+      <p><strong>Nome:</strong> ${funcionarioEditavel.nome || '-'}</p>
+      <p><strong>Cargo:</strong> ${funcionarioEditavel.cargo || '-'}</p>
+      <p><strong>ID:</strong> ${funcionarioEditavel.idDoc || '-'}</p> <!-- ID gerado automaticamente pelo Firestore -->
+      <p><strong>CPF:</strong> ${funcionarioEditavel.cpf || '-'}</p>
+      <p><strong>RG:</strong> ${funcionarioEditavel.rg || '-'}</p>
+      <p><strong>Estado Civil:</strong> ${funcionarioEditavel.estadoCivil || '-'}</p>
+      <p><strong>Dependentes:</strong> ${funcionarioEditavel.dependentes ?? '-'}</p>
+      <p><strong>Departamento:</strong> ${funcionarioEditavel.departamento || '-'}</p>
+      <p><strong>Jornada de Trabalho:</strong> ${funcionarioEditavel.jornadaTrabalho || '-'}</p>
+      <p><strong>Tipo de Contrato:</strong> ${funcionarioEditavel.tipoContrato || '-'}</p>
+      <p><strong>Data de Nascimento:</strong> ${funcionarioEditavel.dataNascimento || '-'}</p>
+      <p><strong>Data de Admissão:</strong> ${funcionarioEditavel.dataAdmissao || '-'}</p>
+      <p><strong>Salário:</strong> R$ ${funcionarioEditavel.salario || '-'}</p>
+      <p><strong>Telefone:</strong> ${funcionarioEditavel.telefone || '-'}</p>
+      <p><strong>ID Responsável:</strong> ${funcionarioEditavel.idResponsavel || '-'}</p>
 
-    document.getElementById('fecharDetalhes').onclick = () => modal.style.display = 'none';
-    document.getElementById('btnEditarFuncionario').onclick = () => {
-      editando = true;
-      renderEditar();
-    };
-  }
+      <h3>Endereço</h3>
+      <p><strong>Rua:</strong> ${funcionarioEditavel.endereco?.rua || '-'}</p>
+      <p><strong>Número:</strong> ${funcionarioEditavel.endereco?.numero || '-'}</p>
+      <p><strong>Bairro:</strong> ${funcionarioEditavel.endereco?.bairro || '-'}</p>
+      <p><strong>CEP:</strong> ${funcionarioEditavel.endereco?.cep || '-'}</p>
+      <p><strong>Cidade:</strong> ${funcionarioEditavel.endereco?.cidade || '-'}</p>
+      <p><strong>Estado:</strong> ${funcionarioEditavel.endereco?.estado || '-'}</p>
 
-function renderEditar() {
+      <h3>Bancários</h3>
+      <p><strong>Banco:</strong> ${funcionarioEditavel.banco || '-'}</p>
+      <p><strong>Agência:</strong> ${funcionarioEditavel.agencia || '-'}</p>
+      <p><strong>Conta:</strong> ${funcionarioEditavel.conta || '-'}</p>
+
+      <h3>Documentos</h3>
+      <p><strong>Carteira de Trabalho:</strong> ${funcionarioEditavel.carteiraTrabalho || '-'}</p>
+      <p><strong>PIS/PASEP:</strong> ${funcionarioEditavel.pisPasep || '-'}</p>
+      <p><strong>Título de Eleitor:</strong> ${funcionarioEditavel.tituloEleitor || '-'}</p>
+
+      <p><strong>Status:</strong> <span class="${funcionarioEditavel.ativo ? 'status-ativo' : 'status-inativo'}">${funcionarioEditavel.ativo ? 'Ativo' : 'Inativo'}</span></p>
+
+      <button id="btnEditarFuncionario" style="margin-top: 15px; padding: 8px 12px; background: #6a4fce; color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button>
+    </div>
+  `;
+
+  document.getElementById('fecharDetalhes').onclick = () => modal.style.display = 'none';
+
+  // Aqui é onde o "Editar" é tratado. 
+  // A função renderEditar será chamada quando o usuário clicar no botão "Editar"
+  document.getElementById('btnEditarFuncionario').onclick = () => {
+    renderEditar(funcionarioEditavel);  // Chama a função renderEditar com os dados para editar.
+  };
+
+  // Exibe o modal
+  modal.style.display = 'block';
+}
+
+
+
+function renderEditar(funcionarioEditavel) {
+  const modal = document.getElementById('modalDetalhesFuncionario');
+  if (!modal) return;
+
   modal.innerHTML = `
     <div class="modal-content">
       <span class="close-btn" id="fecharModalDetalhes">&times;</span>
       <div class="modal-header">Editar Funcionário</div>
-      <div class="modal-body">
-        <label>Nome:<br><input type="text" id="inputNome" value="${funcionarioEditavel.nome || ''}" required></label>
-        <label>Email:<br><input type="email" id="inputEmail" value="${funcionarioEditavel.email || ''}" required></label>
-        <label>ID:<br><input type="text" id="inputId" value="${funcionarioEditavel.id || ''}" required></label>
+      <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <label>Nome:<br><input type="text" id="inputNome" value="${funcionarioEditavel.nome || ''}"></label>
+        <label>Email:<br><input type="email" id="inputEmail" value="${funcionarioEditavel.email || ''}"></label>
+        <label>ID:<br><input type="text" id="inputId" value="${funcionarioEditavel.id || ''}"></label>
         <label>CPF:<br><input type="text" id="inputCpf" value="${funcionarioEditavel.cpf || ''}"></label>
+        <label>RG:<br><input type="text" id="inputRg" value="${funcionarioEditavel.rg || ''}"></label>
+        <label>Estado Civil:<br><input type="text" id="inputEstadoCivil" value="${funcionarioEditavel.estadoCivil || ''}"></label>
+        <label>Dependentes:<br><input type="number" id="inputDependentes" value="${funcionarioEditavel.dependentes || 0}"></label>
+        <label>Cargo:<br><input type="text" id="inputCargo" value="${funcionarioEditavel.cargo || ''}"></label>
+        <label>Departamento:<br><input type="text" id="inputDepartamento" value="${funcionarioEditavel.departamento || ''}"></label>
+        <label>Jornada de Trabalho:<br><input type="text" id="inputJornada" value="${funcionarioEditavel.jornadaTrabalho || ''}"></label>
+        <label>Tipo de Contrato:<br><input type="text" id="inputContrato" value="${funcionarioEditavel.tipoContrato || ''}"></label>
+        <label>Data de Nascimento:<br><input type="date" id="inputNascimento" value="${funcionarioEditavel.dataNascimento || ''}"></label>
+        <label>Data de Admissão:<br><input type="date" id="inputAdmissao" value="${funcionarioEditavel.dataAdmissao || ''}"></label>
+        <label>Salário:<br><input type="number" step="0.01" id="inputSalario" value="${funcionarioEditavel.salario || ''}"></label>
         <label>Telefone:<br><input type="text" id="inputTelefone" value="${funcionarioEditavel.telefone || ''}"></label>
-        <label>Salário:<br><input type="number" id="inputSalario" step="0.01" value="${funcionarioEditavel.salario || ''}"></label>
         <label>ID Responsável:<br><input type="text" id="inputIdResponsavel" value="${funcionarioEditavel.idResponsavel || ''}"></label>
 
         <h3 style="margin-top: 20px; color: #6a4fce;">Endereço</h3>
@@ -208,6 +277,16 @@ function renderEditar() {
         <label>CEP:<br><input type="text" id="inputCep" value="${funcionarioEditavel.endereco?.cep || ''}"></label>
         <label>Cidade:<br><input type="text" id="inputCidade" value="${funcionarioEditavel.endereco?.cidade || ''}"></label>
         <label>Estado:<br><input type="text" id="inputEstado" value="${funcionarioEditavel.endereco?.estado || ''}"></label>
+
+        <h3 style="margin-top: 20px; color: #6a4fce;">Bancários</h3>
+        <label>Banco:<br><input type="text" id="inputBanco" value="${funcionarioEditavel.banco || ''}"></label>
+        <label>Agência:<br><input type="text" id="inputAgencia" value="${funcionarioEditavel.agencia || ''}"></label>
+        <label>Conta:<br><input type="text" id="inputConta" value="${funcionarioEditavel.conta || ''}"></label>
+
+        <h3 style="margin-top: 20px; color: #6a4fce;">Documentos</h3>
+        <label>Carteira de Trabalho:<br><input type="text" id="inputCarteiraTrabalho" value="${funcionarioEditavel.carteiraTrabalho || ''}"></label>
+        <label>PIS/PASEP:<br><input type="text" id="inputPisPasep" value="${funcionarioEditavel.pisPasep || ''}"></label>
+        <label>Título de Eleitor:<br><input type="text" id="inputTituloEleitor" value="${funcionarioEditavel.tituloEleitor || ''}"></label>
 
         <label>Status:<br>
           <select id="inputAtivo">
@@ -223,25 +302,34 @@ function renderEditar() {
     </div>
   `;
 
+  // Fechar o modal
   document.getElementById('fecharModalDetalhes').onclick = () => modal.style.display = 'none';
+
+  // Cancelar a edição
   document.getElementById('btnCancelarEdicao').onclick = () => {
-    editando = false;
-    renderVisualizacao();
+    modal.style.display = 'none';  // Fechar o modal
+    renderizarFuncionarios();  // Exibe a lista de funcionários
   };
 
-  document.getElementById('btnSalvarFuncionario').onclick = async (e) => {
-    e.preventDefault();
-
-    funcionarioEditavel = {
-      ...funcionarioEditavel,
+  // Salvar as alterações no Firestore
+  document.getElementById('btnSalvarFuncionario').onclick = async () => {
+    const funcionarioAtualizado = {
       nome: document.getElementById('inputNome').value.trim(),
       email: document.getElementById('inputEmail').value.trim(),
       id: document.getElementById('inputId').value.trim(),
       cpf: document.getElementById('inputCpf').value.trim(),
-      telefone: document.getElementById('inputTelefone').value.trim(),
+      rg: document.getElementById('inputRg').value.trim(),
+      estadoCivil: document.getElementById('inputEstadoCivil').value.trim(),
+      dependentes: parseInt(document.getElementById('inputDependentes').value) || 0,
+      cargo: document.getElementById('inputCargo').value.trim(),
+      departamento: document.getElementById('inputDepartamento').value.trim(),
+      jornadaTrabalho: document.getElementById('inputJornada').value.trim(),
+      tipoContrato: document.getElementById('inputContrato').value.trim(),
+      dataNascimento: document.getElementById('inputNascimento').value.trim(),
+      dataAdmissao: document.getElementById('inputAdmissao').value.trim(),
       salario: parseFloat(document.getElementById('inputSalario').value) || 0,
+      telefone: document.getElementById('inputTelefone').value.trim(),
       idResponsavel: document.getElementById('inputIdResponsavel').value.trim(),
-      ativo: document.getElementById('inputAtivo').value === 'true',
       endereco: {
         rua: document.getElementById('inputRua').value.trim(),
         numero: document.getElementById('inputNumero').value.trim(),
@@ -249,26 +337,30 @@ function renderEditar() {
         cep: document.getElementById('inputCep').value.trim(),
         cidade: document.getElementById('inputCidade').value.trim(),
         estado: document.getElementById('inputEstado').value.trim()
-      }
+      },
+      banco: document.getElementById('inputBanco').value.trim(),
+      agencia: document.getElementById('inputAgencia').value.trim(),
+      conta: document.getElementById('inputConta').value.trim(),
+      carteiraTrabalho: document.getElementById('inputCarteiraTrabalho').value.trim(),
+      pisPasep: document.getElementById('inputPisPasep').value.trim(),
+      tituloEleitor: document.getElementById('inputTituloEleitor').value.trim(),
+      ativo: document.getElementById('inputAtivo').value === 'true'
     };
 
     try {
-      const docRef = doc(db, 'empresa', empresaId, 'funcionarios', funcionarioEditavel.idDoc);
-      await updateDoc(docRef, funcionarioEditavel);
+      // Atualiza o documento do funcionário no Firestore
+      const funcionarioDocRef = doc(db, 'empresa', empresaId, 'funcionarios', funcionarioEditavel.idDoc);
+      await updateDoc(funcionarioDocRef, funcionarioAtualizado);
 
       alert('Funcionário atualizado com sucesso!');
-      editando = false;
-      modal.style.display = 'none';
-      renderVisualizacao();
+      modal.style.display = 'none';  // Fecha o modal
+
+      // Atualiza a lista de funcionários sem recarregar a página
+      const funcionarios = await buscarFuncionarios();
+      renderizarFuncionarios(funcionarios);
     } catch (error) {
       console.error('Erro ao atualizar funcionário:', error);
       alert('Erro ao atualizar funcionário.');
     }
   };
-
-  modal.style.display = 'block';
-}
-
-  modal.style.display = 'block';
-  renderVisualizacao();
 }

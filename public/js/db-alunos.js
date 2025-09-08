@@ -52,17 +52,28 @@ async function buscarAlunos(alunosRef) {
 function configurarBusca(alunos) {
   const searchInput = document.getElementById('searchInput');
   const searchBtn = document.getElementById('searchBtn');
+  const filtroStatus = document.getElementById('filtroStatus'); // <- novo
 
-  if (!searchInput || !searchBtn) return;
+  if (!searchInput || !searchBtn || !filtroStatus) return;
 
   const buscar = () => {
     const query = searchInput.value.trim().toLowerCase();
-    const filtrados = alunos.filter(aluno =>
-      aluno.nome?.toLowerCase().includes(query) ||
-      aluno.emailResponsavel?.toLowerCase().includes(query) ||
-      aluno.id?.toLowerCase().includes(query) ||
-      aluno.serie?.toLowerCase().includes(query)
-    );
+    const statusSelecionado = filtroStatus.value;
+
+    const filtrados = alunos.filter(aluno => {
+      const textoCorresponde =
+        aluno.nome?.toLowerCase().includes(query) ||
+        aluno.emailResponsavel?.toLowerCase().includes(query) ||
+        aluno.id?.toLowerCase().includes(query) ||
+        aluno.serie?.toLowerCase().includes(query);
+
+      const statusAluno = aluno.status ? 'ativo' : 'inativo';
+      const statusCorresponde =
+        statusSelecionado === 'todos' || statusSelecionado === statusAluno;
+
+      return textoCorresponde && statusCorresponde;
+    });
+
     renderizarAlunos(filtrados);
   };
 
@@ -71,7 +82,9 @@ function configurarBusca(alunos) {
     e.preventDefault();
     buscar();
   });
+  filtroStatus.addEventListener('change', buscar); // <- novo
 }
+
 
 function configurarModalAdicionarAluno(alunosRef) {
   const addStudentBtn = document.getElementById("addStudentBtn");
@@ -140,8 +153,9 @@ function renderizarAlunos(lista) {
         <tr style="background-color: #6a4fce; color: white;">
           <th style="padding: 12px 15px; text-align: left;">Nome</th>
           <th style="padding: 12px 15px; text-align: left;">Série</th>
-          <th style="padding: 12px 15px; text-align: left;">Período</th> <!-- NOVO -->
+          <th style="padding: 12px 15px; text-align: left;">Período</th> 
           <th style="padding: 12px 15px; text-align: left;">ID</th>
+          <th style="padding: 12px 15px; text-align: left;">Status</th> <!-- Nova coluna de Status -->
         </tr>
       </thead>
       <tbody>
@@ -149,8 +163,9 @@ function renderizarAlunos(lista) {
           <tr style="border-bottom: 1px solid #e0e0e0;">
             <td class="aluno-nome" style="padding: 12px 15px; color: #6a4fce; font-weight: 600; cursor: pointer;" data-aluno='${encodeURIComponent(JSON.stringify(aluno))}'>${aluno.nome}</td>
             <td style="padding: 12px 15px;">${aluno.serie || "-"}</td>
-            <td style="padding: 12px 15px;">${aluno.periodo || "-"}</td> <!-- NOVO -->
-            <td style="padding: 12px 15px;">${aluno.id || "-"}</td>       
+            <td style="padding: 12px 15px;">${aluno.periodo || "-"}</td> 
+            <td style="padding: 12px 15px;">${aluno.id || "-"}</td>
+            <td style="padding: 12px 15px;">${aluno.status ? 'Ativo' : 'Inativo'}</td> <!-- Status -->
           </tr>
         `).join('')}
       </tbody>
@@ -167,6 +182,7 @@ function renderizarAlunos(lista) {
   });
 }
 
+
 async function mostrarDetalhesAluno(aluno) {
   const modal = document.getElementById('modalDetalhesAluno');
   if (!modal) return;
@@ -176,75 +192,47 @@ async function mostrarDetalhesAluno(aluno) {
   let alunoEditavel = { ...aluno }; // clone para edição
 
   function renderModoVisualizacao() {
-    const isAtivo = alunoEditavel.status;
+  const isAtivo = alunoEditavel.status;
 
-    modal.innerHTML = `
-      <div class="modal-content">
-        <span class="close-btn" id="fecharModalDetalhes">&times;</span>
-        <div class="modal-header">Detalhes do Aluno</div>
-        <div class="modal-body">
-          <p><strong>Nome:</strong> <span id="campoNome">${alunoEditavel.nome || "-"}</span></p>
-          <p><strong>Email do responsável:</strong> <span id="campoEmailResponsavel">${alunoEditavel.emailResponsavel || "-"}</span></p>
-          <p><strong>Telefone do responsável:</strong> <span id="campoTelefoneResponsavel">${alunoEditavel.telefoneResponsavel || "-"}</span></p>
-          <p><strong>Mensalidade:</strong> R$<span id="campoMensalidade">${alunoEditavel.pagamento?.mensalidade || "-"}</span></p>
-          <p><strong>Porcentagem da bolsa:</strong> <span id="campoPorcentagemBolsa">${alunoEditavel.pagamento?.porcentagemBolsa || "0"}</span>%</p>
-          <p><strong>Motivo da bolsa:</strong> <span id="campoMotivoBolsa">${alunoEditavel.pagamento?.motivoBolsa || "-"}</span></p>
-          <p><strong>Data de nascimento:</strong> <span id="campoDataNascimento">${alunoEditavel.dataNascimento || "-"}</span></p>
-          <p><strong>Série:</strong> <span id="campoSerie">${alunoEditavel.serie || "-"}</span></p>
-          <p><strong>Período:</strong> <span id="campoPeriodo">${alunoEditavel.periodo || "-"}</span></p>
-          <p><strong>Data de matrícula:</strong> <span id="campoDataMatricula">${alunoEditavel.dataMatricula || "-"}</span></p>
-          <p><strong>Status da matrícula:</strong> <span class="${isAtivo ? 'status-ativo' : 'status-inativo'}">${isAtivo ? 'Ativo' : 'Inativo'}</span></p>
-          <p><strong>ID:</strong> ${alunoEditavel.id || "-"}</p>
-          <p><strong>ID Turma:</strong> <span id="campoIdTurma">${alunoEditavel.idTurma || "-"}</span></p>
-        </div>
-        <div class="modal-footer">
-          <button id="btnAlterarStatus" title="${isAtivo ? 'Desativar matrícula' : 'Ativar matrícula'}">
-            <i class="fas ${isAtivo ? 'fa-user-slash' : 'fa-user-check'}"></i>
-            ${isAtivo ? 'Desativar Matrícula' : 'Ativar Matrícula'}
-          </button>
-          <button id="btnEditar">Editar</button>
-        </div>
+  modal.innerHTML = `
+    <div class="modal-content">
+      <span class="close-btn" id="fecharModalDetalhes">&times;</span>
+      <div class="modal-header">Detalhes do Aluno</div>
+      <div class="modal-body">
+        <p><strong>Nome:</strong> <span id="campoNome">${alunoEditavel.nome || "-"}</span></p>
+        <p><strong>Email do responsável:</strong> <span id="campoEmailResponsavel">${alunoEditavel.emailResponsavel || "-"}</span></p>
+        <p><strong>Telefone do responsável:</strong> <span id="campoTelefoneResponsavel">${alunoEditavel.telefoneResponsavel || "-"}</span></p>
+        <p><strong>Mensalidade:</strong> R$<span id="campoMensalidade">${alunoEditavel.pagamento?.mensalidade || "-"}</span></p>
+        <p><strong>Porcentagem da bolsa:</strong> <span id="campoPorcentagemBolsa">${alunoEditavel.pagamento?.porcentagemBolsa || "0"}</span>%</p>
+        <p><strong>Motivo da bolsa:</strong> <span id="campoMotivoBolsa">${alunoEditavel.pagamento?.motivoBolsa || "-"}</span></p>
+        <p><strong>Data de nascimento:</strong> <span id="campoDataNascimento">${alunoEditavel.dataNascimento || "-"}</span></p>
+        <p><strong>Série:</strong> <span id="campoSerie">${alunoEditavel.serie || "-"}</span></p>
+        <p><strong>Período:</strong> <span id="campoPeriodo">${alunoEditavel.periodo || "-"}</span></p>
+        <p><strong>Data de matrícula:</strong> <span id="campoDataMatricula">${alunoEditavel.dataMatricula || "-"}</span></p>
+        <p><strong>Status da matrícula:</strong> <span class="${isAtivo ? 'status-ativo' : 'status-inativo'}">${isAtivo ? 'Ativo' : 'Inativo'}</span></p>
+        <p><strong>ID:</strong> ${alunoEditavel.id || "-"}</p>
+        <p><strong>ID Turma:</strong> <span id="campoIdTurma">${alunoEditavel.idTurma || "-"}</span></p>
       </div>
-    `;
+      <div class="modal-footer">
+        <button id="btnEditar">Editar</button>
+      </div>
+    </div>
+  `;
 
-    document.getElementById('fecharModalDetalhes').onclick = () => modal.style.display = 'none';
+  document.getElementById('fecharModalDetalhes').onclick = () => modal.style.display = 'none';
 
-    window.onclick = (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
-    };
+  window.onclick = (e) => {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  };
 
-    document.getElementById('btnAlterarStatus').onclick = async () => {
-      try {
-        const alunosRef = collection(db, "empresa", empresaId, "alunos");
-        const snapshot = await getDocs(alunosRef);
-        const alunoDoc = snapshot.docs.find(doc => doc.data().id === alunoEditavel.id);
+  document.getElementById('btnEditar').onclick = () => {
+    editando = true;
+    renderModoEdicao();
+  };
+}
 
-        if (!alunoDoc) {
-          alert("Aluno não encontrado.");
-          return;
-        }
-
-        const alunoDocRef = doc(db, "empresa", empresaId, "alunos", alunoDoc.id);
-        const novoStatus = !alunoEditavel.status;
-
-        await updateDoc(alunoDocRef, { status: novoStatus });
-
-        alert(`Matrícula ${novoStatus ? 'reativada' : 'desativada'} com sucesso.`);
-        modal.style.display = 'none';
-        location.reload();
-      } catch (error) {
-        console.error("Erro ao atualizar status do aluno:", error);
-        alert("Erro ao atualizar matrícula.");
-      }
-    };
-
-    document.getElementById('btnEditar').onclick = () => {
-      editando = true;
-      renderModoEdicao();
-    };
-  }
 
   function renderModoEdicao() {
   modal.innerHTML = `
@@ -271,6 +259,12 @@ async function mostrarDetalhesAluno(aluno) {
         </label>
         <label>Data de matrícula:<br><input type="date" id="inputDataMatricula" value="${alunoEditavel.dataMatricula || ''}"></label>
         <label>ID Turma:<br><input type="text" id="inputIdTurma" value="${alunoEditavel.idTurma || ''}"></label>
+        <label>Status da matrícula:<br>
+          <select id="inputStatusAluno">
+            <option value="true" ${alunoEditavel.status ? 'selected' : ''}>Ativo</option>
+            <option value="false" ${!alunoEditavel.status ? 'selected' : ''}>Inativo</option>
+          </select>
+        </label>
       </div>
       <div class="modal-footer">
         <button class="kekw" id="btnSalvar">Salvar</button>
@@ -305,6 +299,7 @@ async function mostrarDetalhesAluno(aluno) {
     alunoEditavel.periodo = document.getElementById('inputPeriodo').value.trim();
     alunoEditavel.dataMatricula = document.getElementById('inputDataMatricula').value.trim();
     alunoEditavel.idTurma = document.getElementById('inputIdTurma').value.trim();
+    alunoEditavel.status = document.getElementById('inputStatusAluno').value === 'true';
 
     try {
       // Busca o documento para pegar o id correto do Firestore
@@ -321,20 +316,22 @@ async function mostrarDetalhesAluno(aluno) {
 
       // Atualiza os campos (sem modificar o id e status)
       await updateDoc(alunoDocRef, {
-        nome: alunoEditavel.nome,
-        emailResponsavel: alunoEditavel.emailResponsavel,
-        telefoneResponsavel: alunoEditavel.telefoneResponsavel,
-        pagamento: {
-          mensalidade: alunoEditavel.pagamento.mensalidade,
-          porcentagemBolsa: alunoEditavel.pagamento.porcentagemBolsa,
-          motivoBolsa: alunoEditavel.pagamento.motivoBolsa
-        },
-        dataNascimento: alunoEditavel.dataNascimento,
-        serie: alunoEditavel.serie,
-        periodo: alunoEditavel.periodo,
-        dataMatricula: alunoEditavel.dataMatricula,
-        idTurma: alunoEditavel.idTurma
-      });
+  nome: alunoEditavel.nome,
+  emailResponsavel: alunoEditavel.emailResponsavel,
+  telefoneResponsavel: alunoEditavel.telefoneResponsavel,
+  pagamento: {
+    mensalidade: alunoEditavel.pagamento.mensalidade,
+    porcentagemBolsa: alunoEditavel.pagamento.porcentagemBolsa,
+    motivoBolsa: alunoEditavel.pagamento.motivoBolsa
+  },
+  dataNascimento: alunoEditavel.dataNascimento,
+  serie: alunoEditavel.serie,
+  periodo: alunoEditavel.periodo,
+  dataMatricula: alunoEditavel.dataMatricula,
+  idTurma: alunoEditavel.idTurma,
+  status: alunoEditavel.status // ✅ <-- Adicionado aqui
+});
+
 
       alert("Dados atualizados com sucesso!");
       editando = false;
@@ -346,8 +343,6 @@ async function mostrarDetalhesAluno(aluno) {
     }
   };
 }
-
-
   // Inicializa o modal no modo visualização
   renderModoVisualizacao();
   modal.style.display = 'block';
