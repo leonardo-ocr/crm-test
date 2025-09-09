@@ -111,7 +111,7 @@ function configurarModalAdicionarAluno(alunosRef) {
       dataNascimento: document.getElementById("dataNascimento").value.trim(),
       dataMatricula: document.getElementById("dataMatricula").value.trim(),
       serie: document.getElementById("serie").value.trim(),
-      periodo: document.getElementById("periodo").value.trim(), 
+      periodo: document.getElementById("periodo").value.trim(),
       idTurma: document.getElementById("idTurma").value.trim(),
       nomeResponsavel: document.getElementById("nomeResponsavel").value.trim(),
       emailResponsavel: document.getElementById("emailResponsavel").value.trim(),
@@ -192,9 +192,9 @@ async function mostrarDetalhesAluno(aluno) {
   let alunoEditavel = { ...aluno }; // clone para edição
 
   function renderModoVisualizacao() {
-  const isAtivo = alunoEditavel.status;
+    const isAtivo = alunoEditavel.status;
 
-  modal.innerHTML = `
+    modal.innerHTML = `
     <div class="modal-content">
       <span class="close-btn" id="fecharModalDetalhes">&times;</span>
       <div class="modal-header">Detalhes do Aluno</div>
@@ -219,23 +219,23 @@ async function mostrarDetalhesAluno(aluno) {
     </div>
   `;
 
-  document.getElementById('fecharModalDetalhes').onclick = () => modal.style.display = 'none';
+    document.getElementById('fecharModalDetalhes').onclick = () => modal.style.display = 'none';
 
-  window.onclick = (e) => {
-    if (e.target === modal) {
-      modal.style.display = 'none';
-    }
-  };
+    window.onclick = (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    };
 
-  document.getElementById('btnEditar').onclick = () => {
-    editando = true;
-    renderModoEdicao();
-  };
-}
+    document.getElementById('btnEditar').onclick = () => {
+      editando = true;
+      renderModoEdicao();
+    };
+  }
 
 
   function renderModoEdicao() {
-  modal.innerHTML = `
+    modal.innerHTML = `
     <div class="modal-content">
       <span class="close-btn" id="fecharModalDetalhes">&times;</span>
       <div class="modal-header">Editar Aluno</div>
@@ -273,76 +273,76 @@ async function mostrarDetalhesAluno(aluno) {
     </div>
   `;
 
-  document.getElementById('fecharModalDetalhes').onclick = () => modal.style.display = 'none';
+    document.getElementById('fecharModalDetalhes').onclick = () => modal.style.display = 'none';
 
-  window.onclick = (e) => {
-    if (e.target === modal) {
-      modal.style.display = 'none';
-    }
-  };
-
-  document.getElementById('btnCancelar').onclick = () => {
-    editando = false;
-    renderModoVisualizacao();
-  };
-
-  document.getElementById('btnSalvar').onclick = async () => {
-    // Pega os valores dos inputs
-    alunoEditavel.nome = document.getElementById('inputNome').value.trim();
-    alunoEditavel.emailResponsavel = document.getElementById('inputEmailResponsavel').value.trim();
-    alunoEditavel.telefoneResponsavel = document.getElementById('inputTelefoneResponsavel').value.trim();
-    alunoEditavel.pagamento.mensalidade = document.getElementById('inputMensalidade').value.trim();
-    alunoEditavel.pagamento.porcentagemBolsa = document.getElementById('inputPorcentagemBolsa').value.trim();
-    alunoEditavel.pagamento.motivoBolsa = document.getElementById('inputMotivoBolsa').value.trim();
-    alunoEditavel.dataNascimento = document.getElementById('inputDataNascimento').value.trim();
-    alunoEditavel.serie = document.getElementById('inputSerie').value.trim();
-    alunoEditavel.periodo = document.getElementById('inputPeriodo').value.trim();
-    alunoEditavel.dataMatricula = document.getElementById('inputDataMatricula').value.trim();
-    alunoEditavel.idTurma = document.getElementById('inputIdTurma').value.trim();
-    alunoEditavel.status = document.getElementById('inputStatusAluno').value === 'true';
-
-    try {
-      // Busca o documento para pegar o id correto do Firestore
-      const alunosRef = collection(db, "empresa", empresaId, "alunos");
-      const snapshot = await getDocs(alunosRef);
-      const alunoDoc = snapshot.docs.find(doc => doc.data().id === alunoEditavel.id);
-
-      if (!alunoDoc) {
-        alert("Aluno não encontrado.");
-        return;
+    window.onclick = (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
       }
+    };
 
-      const alunoDocRef = doc(db, "empresa", empresaId, "alunos", alunoDoc.id);
-
-      // Atualiza os campos (sem modificar o id e status)
-      await updateDoc(alunoDocRef, {
-  nome: alunoEditavel.nome,
-  emailResponsavel: alunoEditavel.emailResponsavel,
-  telefoneResponsavel: alunoEditavel.telefoneResponsavel,
-  pagamento: {
-    mensalidade: alunoEditavel.pagamento.mensalidade,
-    porcentagemBolsa: alunoEditavel.pagamento.porcentagemBolsa,
-    motivoBolsa: alunoEditavel.pagamento.motivoBolsa
-  },
-  dataNascimento: alunoEditavel.dataNascimento,
-  serie: alunoEditavel.serie,
-  periodo: alunoEditavel.periodo,
-  dataMatricula: alunoEditavel.dataMatricula,
-  idTurma: alunoEditavel.idTurma,
-  status: alunoEditavel.status // ✅ <-- Adicionado aqui
-});
-
-
-      alert("Dados atualizados com sucesso!");
+    document.getElementById('btnCancelar').onclick = () => {
       editando = false;
-      modal.style.display = 'none';
-      location.reload();
-    } catch (error) {
-      console.error("Erro ao atualizar aluno:", error);
-      alert("Erro ao atualizar dados do aluno.");
-    }
-  };
-}
+      renderModoVisualizacao();
+    };
+
+    document.getElementById('btnSalvar').onclick = async () => {
+      // Pega os valores dos inputs
+      alunoEditavel.nome = document.getElementById('inputNome').value.trim();
+      alunoEditavel.emailResponsavel = document.getElementById('inputEmailResponsavel').value.trim();
+      alunoEditavel.telefoneResponsavel = document.getElementById('inputTelefoneResponsavel').value.trim();
+      alunoEditavel.pagamento.mensalidade = document.getElementById('inputMensalidade').value.trim();
+      alunoEditavel.pagamento.porcentagemBolsa = document.getElementById('inputPorcentagemBolsa').value.trim();
+      alunoEditavel.pagamento.motivoBolsa = document.getElementById('inputMotivoBolsa').value.trim();
+      alunoEditavel.dataNascimento = document.getElementById('inputDataNascimento').value.trim();
+      alunoEditavel.serie = document.getElementById('inputSerie').value.trim();
+      alunoEditavel.periodo = document.getElementById('inputPeriodo').value.trim();
+      alunoEditavel.dataMatricula = document.getElementById('inputDataMatricula').value.trim();
+      alunoEditavel.idTurma = document.getElementById('inputIdTurma').value.trim();
+      alunoEditavel.status = document.getElementById('inputStatusAluno').value === 'true';
+
+      try {
+        // Busca o documento para pegar o id correto do Firestore
+        const alunosRef = collection(db, "empresa", empresaId, "alunos");
+        const snapshot = await getDocs(alunosRef);
+        const alunoDoc = snapshot.docs.find(doc => doc.data().id === alunoEditavel.id);
+
+        if (!alunoDoc) {
+          alert("Aluno não encontrado.");
+          return;
+        }
+
+        const alunoDocRef = doc(db, "empresa", empresaId, "alunos", alunoDoc.id);
+
+        // Atualiza os campos (sem modificar o id e status)
+        await updateDoc(alunoDocRef, {
+          nome: alunoEditavel.nome,
+          emailResponsavel: alunoEditavel.emailResponsavel,
+          telefoneResponsavel: alunoEditavel.telefoneResponsavel,
+          pagamento: {
+            mensalidade: alunoEditavel.pagamento.mensalidade,
+            porcentagemBolsa: alunoEditavel.pagamento.porcentagemBolsa,
+            motivoBolsa: alunoEditavel.pagamento.motivoBolsa
+          },
+          dataNascimento: alunoEditavel.dataNascimento,
+          serie: alunoEditavel.serie,
+          periodo: alunoEditavel.periodo,
+          dataMatricula: alunoEditavel.dataMatricula,
+          idTurma: alunoEditavel.idTurma,
+          status: alunoEditavel.status // ✅ <-- Adicionado aqui
+        });
+
+
+        alert("Dados atualizados com sucesso!");
+        editando = false;
+        modal.style.display = 'none';
+        location.reload();
+      } catch (error) {
+        console.error("Erro ao atualizar aluno:", error);
+        alert("Erro ao atualizar dados do aluno.");
+      }
+    };
+  }
   // Inicializa o modal no modo visualização
   renderModoVisualizacao();
   modal.style.display = 'block';

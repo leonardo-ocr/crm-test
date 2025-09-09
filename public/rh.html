@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -70,15 +71,15 @@
         </section>
 
         <select class="aluno-search" id="filtroStatusFuncionario" onchange="filtrarFuncionarios()">
-            <option value="todos">Todos</option>
-            <option value="ativo">Ativo</option>
-            <option value="inativo">Inativo</option>
+          <option value="todos">Todos</option>
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
         </select>
 
 
         <div class="resultadopesquisa">
           <section id="searchResults"></section>
-          
+
           <!-- Modal de Detalhes do Funcionário -->
           <div id="modalDetalhesFuncionario" class="modal" style="display: none;"></div>
         </div>
@@ -94,99 +95,101 @@
       <span class="fechar" id="fecharModalFuncionario">&times;</span>
       <h2>Adicionar Novo Funcionário</h2>
       <form id="formAdicionarFuncionario">
-  <label for="nome">Nome:</label>
-  <input type="text" id="nome" name="nome" required />
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" maxlength="100" required />
 
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email" required />
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" maxlength="100" required />
 
-  <label for="cpf">CPF:</label>
-  <input type="text" id="cpf" name="cpf" required />
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" name="cpf" maxlength="14" required /> <!-- 14 pq formata com pontos e traço -->
 
-  <label for="rg">RG:</label>
-  <input type="text" id="rg" name="rg" required />
+        <label for="rg">RG:</label>
+        <input type="text" id="rg" name="rg" maxlength="20" required />
 
-  <label for="estadoCivil">Estado Civil:</label>
-  <input type="text" id="estadoCivil" name="estadoCivil" required />
+        <label for="estadoCivil">Estado Civil:</label>
+        <input type="text" id="estadoCivil" name="estadoCivil" maxlength="20" required />
 
-  <label for="dependentes">Dependentes:</label>
-  <input type="number" id="dependentes" name="dependentes" min="0" required />
+        <label for="dependentes">Dependentes:</label>
+        <input type="number" id="dependentes" name="dependentes" min="0" max="20" required />
 
-  <label for="cargo">Cargo:</label>
-  <input type="text" id="cargo" name="cargo" required />
+        <label for="cargo">Cargo:</label>
+        <input type="text" id="cargo" name="cargo" maxlength="50" required />
 
-  <label for="departamento">Departamento:</label>
-  <input type="text" id="departamento" name="departamento" required />
+        <label for="departamento">Departamento:</label>
+        <input type="text" id="departamento" name="departamento" maxlength="50" required />
 
-  <label for="jornadaTrabalho">Jornada de Trabalho:</label>
-  <input type="text" id="jornadaTrabalho" name="jornadaTrabalho" placeholder="Ex: 44 horas semanais" required />
+        <label for="jornadaTrabalho">Jornada de Trabalho:</label>
+        <input type="text" id="jornadaTrabalho" name="jornadaTrabalho" maxlength="30"
+          placeholder="Ex: 44 horas semanais" required />
 
-  <label for="tipoContrato">Tipo de Contrato:</label>
-  <input type="text" id="tipoContrato" name="tipoContrato" placeholder="Ex: CLT" required />
+        <label for="tipoContrato">Tipo de Contrato:</label>
+        <input type="text" id="tipoContrato" name="tipoContrato" maxlength="20" placeholder="Ex: CLT" required />
 
-  <label for="dataNascimento">Data de Nascimento:</label>
-  <input type="date" id="dataNascimento" name="dataNascimento" required />
+        <label for="dataNascimento">Data de Nascimento:</label>
+        <input type="date" id="dataNascimento" name="dataNascimento" required />
 
-  <label for="dataAdmissao">Data de Admissão:</label>
-  <input type="date" id="dataAdmissao" name="dataAdmissao" required />
+        <label for="dataAdmissao">Data de Admissão:</label>
+        <input type="date" id="dataAdmissao" name="dataAdmissao" required />
 
-  <label for="salario">Salário:</label>
-  <input type="number" id="salario" name="salario" step="0.01" required />
+        <label for="salario">Salário:</label>
+        <input type="number" id="salario" name="salario" step="0.01" required />
 
-  <label for="telefone">Telefone:</label>
-  <input type="text" id="telefone" name="telefone" required />
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone" maxlength="15" required />
 
-  <label for="banco">Banco:</label>
-  <input type="text" id="banco" name="banco" required />
+        <label for="banco">Banco:</label>
+        <input type="text" id="banco" name="banco" maxlength="30" required />
 
-  <label for="agencia">Agência:</label>
-  <input type="text" id="agencia" name="agencia" required />
+        <label for="agencia">Agência:</label>
+        <input type="text" id="agencia" name="agencia" maxlength="10" required />
 
-  <label for="conta">Conta:</label>
-  <input type="text" id="conta" name="conta" required />
+        <label for="conta">Conta:</label>
+        <input type="text" id="conta" name="conta" maxlength="20" required />
 
-  <label for="carteiraTrabalho">Carteira de Trabalho:</label>
-  <input type="text" id="carteiraTrabalho" name="carteiraTrabalho" required />
+        <label for="carteiraTrabalho">Carteira de Trabalho:</label>
+        <input type="text" id="carteiraTrabalho" name="carteiraTrabalho" maxlength="30" required />
 
-  <label for="pisPasep">PIS/PASEP:</label>
-  <input type="text" id="pisPasep" name="pisPasep" required />
+        <label for="pisPasep">PIS/PASEP:</label>
+        <input type="text" id="pisPasep" name="pisPasep" maxlength="20" required />
 
-  <label for="tituloEleitor">Título de Eleitor:</label>
-  <input type="text" id="tituloEleitor" name="tituloEleitor" required />
+        <label for="tituloEleitor">Título de Eleitor:</label>
+        <input type="text" id="tituloEleitor" name="tituloEleitor" maxlength="20" required />
 
-  <label for="rua">Rua:</label>
-  <input type="text" id="rua" name="rua" required />
+        <label for="rua">Rua:</label>
+        <input type="text" id="rua" name="rua" maxlength="100" required />
 
-  <label for="numero">Número:</label>
-  <input type="text" id="numero" name="numero" required />
+        <label for="numero">Número:</label>
+        <input type="text" id="numero" name="numero" maxlength="10" required />
 
-  <label for="bairro">Bairro:</label>
-  <input type="text" id="bairro" name="bairro" required />
+        <label for="bairro">Bairro:</label>
+        <input type="text" id="bairro" name="bairro" maxlength="50" required />
 
-  <label for="cep">CEP:</label>
-  <input type="text" id="cep" name="cep" required />
+        <label for="cep">CEP:</label>
+        <input type="text" id="cep" name="cep" maxlength="9" required /> <!-- 9 pq formata com o hífen -->
 
-  <label for="cidade">Cidade:</label>
-  <input type="text" id="cidade" name="cidade" required />
+        <label for="cidade">Cidade:</label>
+        <input type="text" id="cidade" name="cidade" maxlength="50" required />
 
-  <label for="estado">Estado:</label>
-  <input type="text" id="estado" name="estado" required />
+        <label for="estado">Estado:</label>
+        <input type="text" id="estado" name="estado" maxlength="2" required /> <!-- UF tem 2 caracteres -->
 
-  <label for="idResponsavel">ID Responsável:</label>
-  <input type="text" id="idResponsavel" name="idResponsavel" required />
+        <label for="idResponsavel">ID Responsável:</label>
+        <input type="text" id="idResponsavel" name="idResponsavel" maxlength="50" required />
 
-  <button type="submit">Salvar</button>
-</form>
+        <button type="submit">Salvar</button>
+      </form>
     </div>
   </div>
 
   <!-- Scripts -->
   <script src="js/script.js"></script>
-  <script type="module" src="js/db-rh.js"></script>
+  <script type="module" src="js/form-masks.js"></script>
   <script type="module" src="js/logout.js"></script>
   <script type="module">
     import { initFuncionarios } from './js/db-rh.js';
     initFuncionarios();
   </script>
 </body>
+
 </html>

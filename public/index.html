@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
   <div class="login-container">
     <h2 id="form-title">Login</h2>
@@ -56,7 +58,7 @@
     document.getElementById('login-form').addEventListener('submit', e => {
       e.preventDefault();
       const email = e.target.email.value;
-      const pass  = e.target.password.value;
+      const pass = e.target.password.value;
 
       signInWithEmailAndPassword(auth, email, pass)
         .then(() => window.location.href = '/dashboard.html')
@@ -70,7 +72,7 @@
     document.getElementById('register-form').addEventListener('submit', e => {
       e.preventDefault();
       const email = e.target.email.value;
-      const pass  = e.target.password.value;
+      const pass = e.target.password.value;
 
       createUserWithEmailAndPassword(auth, email, pass)
         .then(() => {
@@ -100,7 +102,7 @@
 
     // Função para mensagens mais amigáveis
     function tratarErro(code) {
-      switch(code) {
+      switch (code) {
         case 'auth/email-already-in-use':
           return 'E-mail já está em uso.';
         case 'auth/invalid-email':
@@ -116,4 +118,5 @@
     }
   </script>
 </body>
+
 </html>

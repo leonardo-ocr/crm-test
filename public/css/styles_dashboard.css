@@ -1,4 +1,3 @@
-
 * {
   margin: 0;
   padding: 0;
@@ -21,8 +20,8 @@ body {
   background: linear-gradient(180deg, #3a1078 0%, #662ead 100%);
   padding: 2rem 1rem;
   color: white;
-  
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 
@@ -62,8 +61,9 @@ body {
   padding: 1rem 1.5rem;
   border-radius: 10px;
   flex: 1;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  position: relative; /* <- ADICIONE ESTA LINHA */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  position: relative;
+  /* <- ADICIONE ESTA LINHA */
 }
 
 .card-img {
@@ -71,7 +71,8 @@ body {
   height: 60px;
   position: absolute;
   top: 50%;
-  right: 10px; /* Distância da borda direita (ajuste conforme necessário) */
+  right: 10px;
+  /* Distância da borda direita (ajuste conforme necessário) */
   transform: translateY(-50%);
 }
 
@@ -90,7 +91,7 @@ body {
   background-color: #fff;
   padding: 1rem;
   border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .logo {
@@ -120,6 +121,7 @@ body {
   0% {
     background-position: 0% 50%;
   }
+
   100% {
     background-position: 200% 50%;
   }
@@ -153,7 +155,8 @@ body {
 }
 
 .search-container:has(input:focus) {
-  width: 360px; /* largura expandida ao focar */
+  width: 360px;
+  /* largura expandida ao focar */
 }
 
 /* Ícone da lupa */
@@ -182,7 +185,7 @@ body {
   font-size: 14px;
   font-weight: 500;
   font-family: 'Inter', sans-serif;
-  margin-left: 10px;  
+  margin-left: 10px;
 }
 
 .user-info {
@@ -217,7 +220,7 @@ body {
   right: 0;
   background-color: #6b00c9;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   padding: 8px 0;
   display: none;
   min-width: 150px;
@@ -247,7 +250,7 @@ body {
 }
 
 .layout {
-  padding-top: 50px; 
+  padding-top: 50px;
 }
 
 .notification-icon {
@@ -274,7 +277,7 @@ body {
   gap: 10px;
   padding: 10px 20px;
   margin-top: 20px;
-  background: linear-gradient(270deg, rgba(106,13,173,0.3), rgba(255,255,255,0.1));
+  background: linear-gradient(270deg, rgba(106, 13, 173, 0.3), rgba(255, 255, 255, 0.1));
   background-size: 400% 400%;
   animation: gradientLoop 5s ease infinite;
   border-radius: 30px;
@@ -341,14 +344,17 @@ body {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
 }
-.resultadopesquisa{
+
+.resultadopesquisa {
   padding-top: 50px;
 }
 
@@ -361,7 +367,7 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-conteudo {
@@ -370,7 +376,7 @@ body {
   padding: 20px;
   border-radius: 8px;
   width: 400px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .fechar {
@@ -448,6 +454,7 @@ body {
   0% {
     background-position: 0% 50%;
   }
+
   100% {
     background-position: 200% 50%;
   }
@@ -469,7 +476,7 @@ body {
   background: #fff;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
   transition: 0.3s ease;
 }
 
@@ -520,11 +527,12 @@ body {
   padding: 20px 0;
 }
 
-.grafico-card, .tabela-card {
+.grafico-card,
+.tabela-card {
   background: #fff;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
 }
 
 .tabela-financeiro {
@@ -533,7 +541,8 @@ body {
   font-size: 14px;
 }
 
-.tabela-financeiro th, .tabela-financeiro td {
+.tabela-financeiro th,
+.tabela-financeiro td {
   padding: 10px 15px;
   text-align: left;
 }
@@ -550,6 +559,7 @@ body {
 .botao-adicionar {
   padding: 20px 0;
 }
+
 .botao-adicionar button {
   background-color: #6a0dad;
   color: white;
@@ -559,26 +569,75 @@ body {
   cursor: pointer;
   font-size: 1rem;
 }
+
 .botao-adicionar button:hover {
   background-color: #5800b8;
 }
 
 /* Modal */
-.modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); }
-.modal-conteudo { background: #fff; margin: 10% auto; padding: 20px; width: 300px; border-radius: 8px; position: relative; }
-.modal-conteudo label { display: block; margin-bottom: 10px; font-size: 0.9rem; }
-.modal-conteudo input, .modal-conteudo select { width: 100%; padding: 6px; margin-top: 4px; }
-.modal-conteudo button { background: #6a0dad; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
-.modal-conteudo button:hover { background: #5800b8; }
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
 
-.fechar { position: absolute; top: 8px; right: 12px; font-size: 1.2rem; cursor: pointer; }
+.modal-conteudo {
+  background: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  width: 300px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.modal-conteudo label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.modal-conteudo input,
+.modal-conteudo select {
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+}
+
+.modal-conteudo button {
+  background: #6a0dad;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-conteudo button:hover {
+  background: #5800b8;
+}
+
+.fechar {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
 .filtros-container {
   display: flex;
   gap: 20px;
   padding: 12px 20px;
-  background-color: #d9c8f9; /* lilás claro suave */
+  background-color: #d9c8f9;
+  /* lilás claro suave */
   border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(106, 13, 173, 0.3); /* sombra roxa */
+  box-shadow: 0 4px 15px rgba(106, 13, 173, 0.3);
+  /* sombra roxa */
   align-items: center;
   max-width: 700px;
 }
@@ -586,7 +645,8 @@ body {
 .filtros-container select {
   padding: 10px 14px;
   border-radius: 12px;
-  border: 1.5px solid #6a0dad; /* roxo forte */
+  border: 1.5px solid #6a0dad;
+  /* roxo forte */
   background-color: white;
   font-size: 14px;
   color: #333;
@@ -625,7 +685,7 @@ body {
   width: 100%;
   max-width: 400px;
   position: relative;
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
 .fechar {
@@ -734,7 +794,7 @@ body {
   background: linear-gradient(145deg, #f9f4ff, #f3e6ff);
   border-radius: 14px;
   padding: 18px 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   font-size: 0.95rem;
   color: #333;
   border: 1px solid rgba(122, 14, 206, 0.1);
@@ -774,11 +834,13 @@ body {
   background: linear-gradient(90deg, #6a0dad, #8617d9);
   transform: scale(1.03);
 }
+
 /* Responsividade */
 @media (max-width: 1024px) {
   .comunidade-container {
     flex-direction: column;
   }
+
   .sidebar-direita {
     order: -1;
   }
@@ -798,7 +860,7 @@ body {
   overflow-y: auto;
   padding: 20px;
   /* Para melhor performance em dispositivos móveis */
-  -webkit-overflow-scrolling: touch; 
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal.ativo {
@@ -807,8 +869,13 @@ body {
 }
 
 @keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 /* Fundo escuro semi-transparente */
@@ -816,10 +883,11 @@ body {
   display: none;
   position: fixed;
   z-index: 9999;
-  left: 0; top: 0;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.6);
+  background-color: rgba(0, 0, 0, 0.6);
   font-family: 'Poppins', sans-serif;
   overflow-y: auto;
   padding: 20px;
@@ -833,7 +901,7 @@ body {
   max-width: 480px;
   margin: 60px auto;
   padding: 30px 25px 30px 25px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   position: relative;
   color: #333;
   transition: all 0.3s ease;
@@ -850,6 +918,7 @@ body {
   cursor: pointer;
   transition: color 0.3s ease;
 }
+
 #modalDetalhesAluno .close-btn:hover {
   color: #444;
 }
@@ -940,6 +1009,7 @@ body {
   #modalDetalhesAluno .modal-body {
     grid-template-columns: 1fr;
   }
+
   #modalDetalhesAluno .modal-body p.full-width {
     grid-column: auto;
   }
@@ -1026,6 +1096,7 @@ body {
     transform: scale(0.9);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -1036,10 +1107,13 @@ body {
 /* Fundo escuro transparente do modal */
 #modalDetalhesAluno {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.15);
-  display: none; /* modal começa escondido */
+  display: none;
+  /* modal começa escondido */
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -1206,10 +1280,12 @@ body {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.15);
-  display: none; /* começa escondido */
+  display: none;
+  /* começa escondido */
   z-index: 9999;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  overflow: auto; /* <- deixa rolar caso ultrapasse altura */
+  overflow: auto;
+  /* <- deixa rolar caso ultrapasse altura */
   padding: 20px;
   box-sizing: border-box;
 
@@ -1350,5 +1426,54 @@ body {
 
 #modalDetalhesFuncionario .close-btn:hover {
   color: #6a4fce;
+}
+
+.impera-grafico {
+  max-width: 600px; /* maior largura para mais impacto */
+  margin: 50px auto;
+  text-align: center;
+  background: linear-gradient(135deg, #6a0dad, #9b30ff); /* degradê roxo forte */
+  padding: 30px 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(106, 13, 173, 0.6);
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  user-select: none;
+}
+
+.impera-grafico h3 {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 25px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  letter-spacing: 1px;
+}
+
+.impera-card-grafico {
+  background: #3b0063;
+  padding: 30px 35px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(106, 13, 173, 0.7);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.impera-card-grafico:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(106, 13, 173, 0.9);
+}
+
+.impera-card-grafico canvas {
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 15px;
+  filter: drop-shadow(0 0 6px #9b30ffcc);
+}
+
+@media (max-width: 768px) {
+  .impera-grafico {
+    max-width: 95%;
+    padding: 20px 25px;
+  }
 }
 

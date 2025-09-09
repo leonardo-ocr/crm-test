@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IMPERA</title>
   <link rel="stylesheet" href="css/styles_dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
   <!-- Topbar -->
   <header class="topbar">
@@ -43,15 +45,15 @@
     <aside class="sidebar">
       <img class="logo" src="img/LOGO.png" alt="Logo">
       <nav>
-  <a href="dashboard.html"><i class="fas fa-chart-bar" style="color: white;"></i> Dashboard</a>
-  <a href="alunos.html"><i class="fas fa-user-graduate" style="color: white;"></i> Alunos</a>
-  <a href="rh.html"><i class="fas fa-users" style="color: white;"></i> RH</a>
-  <a href="turma.html"><i class="fas fa-chalkboard-teacher" style="color: white;"></i> Turmas</a>
-  <a href="financeiro.html"><i class="fas fa-credit-card" style="color: white;"></i> Financeiro</a>
-  <a href="agenda.html"><i class="fas fa-calendar-alt" style="color: white;"></i> Agenda</a>
-  <a href="reuniao.html"><i class="fas fa-comments" style="color: white;"></i> Reunião</a>
-  <a href="relatorios.html"><i class="fas fa-folder-open" style="color: white;"></i> Relatórios</a>
-</nav>
+        <a href="dashboard.html"><i class="fas fa-chart-bar" style="color: white;"></i> Dashboard</a>
+        <a href="alunos.html"><i class="fas fa-user-graduate" style="color: white;"></i> Alunos</a>
+        <a href="rh.html"><i class="fas fa-users" style="color: white;"></i> RH</a>
+        <a href="turma.html"><i class="fas fa-chalkboard-teacher" style="color: white;"></i> Turmas</a>
+        <a href="financeiro.html"><i class="fas fa-credit-card" style="color: white;"></i> Financeiro</a>
+        <a href="agenda.html"><i class="fas fa-calendar-alt" style="color: white;"></i> Agenda</a>
+        <a href="reuniao.html"><i class="fas fa-comments" style="color: white;"></i> Reunião</a>
+        <a href="relatorios.html"><i class="fas fa-folder-open" style="color: white;"></i> Relatórios</a>
+      </nav>
     </aside>
 
     <!-- Conteúdo principal -->
@@ -69,9 +71,9 @@
         </section>
 
         <select class="aluno-search" id="filtroStatus" onchange="filtrarAlunos()">
-        <option value="todos">Todos</option>
-        <option value="ativo">Ativo</option>
-        <option value="inativo">Inativo</option>
+          <option value="todos">Todos</option>
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
         </select>
 
         <!-- Resultados da Pesquisa -->
@@ -88,25 +90,25 @@
   </div>
 
   <!-- Modal de Adição de Aluno -->
- <div id="modalAdicionarAluno" class="modal">
-  <div class="modal-conteudo">
-    <span class="fechar" id="fecharModal">&times;</span>
-    <h2>Adicionar Novo Aluno</h2>
-    <form id="formAdicionarAluno">
-      <!-- Dados do aluno -->
-      <label for="nome">Nome:</label>
-      <input type="text" id="nome" name="nome" required />
+  <div id="modalAdicionarAluno" class="modal">
+    <div class="modal-conteudo">
+      <span class="fechar" id="fecharModal">&times;</span>
+      <h2>Adicionar Novo Aluno</h2>
+      <form id="formAdicionarAluno">
+        <!-- Dados do aluno -->
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required />
 
-      <label for="dataNascimento">Data de Nascimento:</label>
-      <input type="date" id="dataNascimento" name="dataNascimento" required />
+        <label for="dataNascimento">Data de Nascimento:</label>
+        <input type="date" id="dataNascimento" name="dataNascimento" required />
 
-      <label for="dataMatricula">Data de Matrícula:</label>
-      <input type="date" id="dataMatricula" name="dataMatricula" required />
+        <label for="dataMatricula">Data de Matrícula:</label>
+        <input type="date" id="dataMatricula" name="dataMatricula" required />
 
-      <label for="serie">Série:</label>
-      <input type="text" id="serie" name="serie" required />
+        <label for="serie">Série:</label>
+        <input type="text" id="serie" name="serie" required />
 
-      <label for="periodo">Período:</label>
+        <label for="periodo">Período:</label>
         <select id="periodo" name="periodo" required>
           <option value="">Selecione</option>
           <option value="Manhã">Manhã</option>
@@ -115,50 +117,51 @@
           <option value="Integral">Integral</option>
         </select>
 
-      <label for="idTurma">ID da Turma:</label>
-      <input type="text" id="idTurma" name="idTurma" required />
+        <label for="idTurma">ID da Turma:</label>
+        <input type="text" id="idTurma" name="idTurma" required />
 
-      <!-- Responsável -->
-      <label for="nomeResponsavel">Nome do Responsável:</label>
-      <input type="text" id="nomeResponsavel" name="nomeResponsavel" required />
+        <!-- Responsável -->
+        <label for="nomeResponsavel">Nome do Responsável:</label>
+        <input type="text" id="nomeResponsavel" name="nomeResponsavel" required />
 
-      <label for="emailResponsavel">Email do Responsável:</label>
-      <input type="email" id="emailResponsavel" name="emailResponsavel" required />
+        <label for="emailResponsavel">Email do Responsável:</label>
+        <input type="email" id="emailResponsavel" name="emailResponsavel" required />
 
-      <label for="telefoneResponsavel">Telefone do Responsável:</label>
-      <input type="text" id="telefoneResponsavel" name="telefoneResponsavel" required />
+        <label for="telefoneResponsavel">Telefone do Responsável:</label>
+        <input type="text" id="telefoneResponsavel" name="telefoneResponsavel" required />
 
-      <!-- Pagamento -->
-      <label for="mensalidade">Mensalidade:</label>
-      <input type="text" id="mensalidade" name="mensalidade" required />
+        <!-- Pagamento -->
+        <label for="mensalidade">Mensalidade:</label>
+        <input type="text" id="mensalidade" name="mensalidade" required />
 
-      <label for="motivoBolsa">Motivo da Bolsa:</label>
-      <input type="text" id="motivoBolsa" name="motivoBolsa" />
+        <label for="motivoBolsa">Motivo da Bolsa:</label>
+        <input type="text" id="motivoBolsa" name="motivoBolsa" />
 
-      <label for="porcentagemBolsa">Porcentagem da Bolsa:</label>
-      <input type="text" id="porcentagemBolsa" name="porcentagemBolsa" />
+        <label for="porcentagemBolsa">Porcentagem da Bolsa:</label>
+        <input type="text" id="porcentagemBolsa" name="porcentagemBolsa" />
 
-      <button type="submit">Salvar</button>
-    </form>
-  </div>
-</div>
-
-    <!-- Modal de Detalhes do Aluno -->
-    <div id="modalDetalhesAluno" class="modal">
-      <div class="modal-conteudo">
-        <span class="fechar" id="fecharModalDetalhes">&times;</span>
-        <h2>Detalhes do Aluno</h2>
-        <div id="modalDetalhesAluno"></div>
-          <!-- Dados preenchidos via JS -->
-        </div>
-      </div>
+        <button type="submit">Salvar</button>
+      </form>
     </div>
+  </div>
+
+  <!-- Modal de Detalhes do Aluno -->
+  <div id="modalDetalhesAluno" class="modal">
+    <div class="modal-conteudo">
+      <span class="fechar" id="fecharModalDetalhes">&times;</span>
+      <h2>Detalhes do Aluno</h2>
+      <div id="modalDetalhesAluno"></div>
+      <!-- Dados preenchidos via JS -->
+    </div>
+  </div>
+  </div>
   <script type="module" src="js/firebaseConfig.js"></script>
   <script type="module">
-  import { initAlunos } from "./js/db-alunos.js";
-  initAlunos();
-</script>
-<script src="js/script.js"></script>
-<script type="module" src="js/logout.js"></script>
+    import { initAlunos } from "./js/db-alunos.js";
+    initAlunos();
+  </script>
+  <script src="js/script.js"></script>
+  <script type="module" src="js/logout.js"></script>
 </body>
+
 </html>

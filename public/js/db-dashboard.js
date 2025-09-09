@@ -7,7 +7,7 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Função de contagem animada com efeito de "flip"
+// Função de contagem animada
 function animarContagemFlip(elemento, valorFinal, duracao = 800) {
   let inicio = 0;
   const intervalo = 20;
@@ -21,69 +21,90 @@ function animarContagemFlip(elemento, valorFinal, duracao = 800) {
       clearInterval(contador);
     }
 
-    // Aplica classe de animação
     elemento.classList.add("animando");
     setTimeout(() => elemento.classList.remove("animando"), 100);
-
     elemento.textContent = inicio;
   }, intervalo);
 }
 
+// Espera o DOM carregar
 document.addEventListener("DOMContentLoaded", () => {
   verificarUsuario(async (usuario) => {
-    console.log("Usuário logado:", usuario);
-
-    // Nome do usuário
+    // Nome
     const nomeElemento = document.getElementById("nomeUsuario");
-    if (nomeElemento) {
-      nomeElemento.textContent = usuario.nome || "Usuário";
-    }
+    if (nomeElemento) nomeElemento.textContent = usuario.nome || "Usuário";
 
-    // CNPJ da empresa
+    // CNPJ
     const empresaCnpjElemento = document.getElementById("empresa-cnpj");
     if (empresaCnpjElemento) {
       try {
         const empresaRef = doc(db, "empresa", "esc001");
         const empresaSnap = await getDoc(empresaRef);
-
-        if (empresaSnap.exists()) {
-          const cnpj = empresaSnap.data().cnpj || "Não disponível";
-          empresaCnpjElemento.textContent = `CNPJ: ${cnpj}`;
-        } else {
-          empresaCnpjElemento.textContent = "Empresa não encontrada";
-        }
+        const cnpj = empresaSnap.exists() ? empresaSnap.data().cnpj : "Não disponível";
+        empresaCnpjElemento.textContent = `CNPJ: ${cnpj}`;
       } catch (error) {
-        console.error("Erro ao buscar dados da empresa:", error);
         empresaCnpjElemento.textContent = "Erro ao carregar CNPJ";
       }
     }
 
-    // 🔢 Contador de alunos com animação flip
+    // Alunos
+    let totalAlunos = 0;
     try {
       const alunosRef = collection(db, "empresa", "esc001", "alunos");
       const snapshotAlunos = await getDocs(alunosRef);
-      const totalAlunos = snapshotAlunos.size;
-
-      const contadorAlunosElemento = document.getElementById("contador-alunos");
-      if (contadorAlunosElemento) {
-        animarContagemFlip(contadorAlunosElemento, totalAlunos); // Com efeito flip
-      }
+      totalAlunos = snapshotAlunos.size;
+      const el = document.getElementById("contador-alunos");
+      if (el) animarContagemFlip(el, totalAlunos);
     } catch (error) {
       console.error("Erro ao contar alunos:", error);
     }
 
-    // 🔢 Contador de funcionários com animação flip
+    // Funcionários
+    let totalFuncionarios = 0;
     try {
       const funcionariosRef = collection(db, "empresa", "esc001", "funcionarios");
       const snapshotFuncionarios = await getDocs(funcionariosRef);
-      const totalFuncionarios = snapshotFuncionarios.size;
-
-      const contadorFuncionariosElemento = document.getElementById("contador-funcionarios");
-      if (contadorFuncionariosElemento) {
-        animarContagemFlip(contadorFuncionariosElemento, totalFuncionarios); // Com efeito flip
-      }
+      totalFuncionarios = snapshotFuncionarios.size;
+      const el = document.getElementById("contador-funcionarios");
+      if (el) animarContagemFlip(el, totalFuncionarios);
     } catch (error) {
       console.error("Erro ao contar funcionários:", error);
     }
+
+    // GRÁFICO DE PIZZA 🍕
+    const ctx = document.getElementById("myChart").getContext("2d");
+    const meuGraficoPizza = new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels: ["Alunos", "Funcionários"],
+        datasets: [{
+          data: [totalAlunos, totalFuncionarios],
+          backgroundColor: [
+            "rgba(54, 162, 235, 0.8)",
+            "rgba(255, 99, 132, 0.8)"
+          ],
+          borderColor: [
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 99, 132, 1)"
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "bottom",
+            labels: {
+              color: "#fff",
+              font: {
+                size: 14,
+                weight: "bold"
+              }
+            }
+          }
+        }
+      }
+    });
   });
 });

@@ -1,6 +1,6 @@
 import { db, auth } from './firebase-config.js';
 import {
-  collection, getDocs, query, addDoc, doc, updateDoc
+  collection, getDocs, query, addDoc, doc, updateDoc, Timestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
@@ -20,10 +20,17 @@ export function initFuncionarios() {
       funcionariosCache = await buscarFuncionarios(); // Armazena a lista de funcionários no cache
       renderizarFuncionarios(funcionariosCache);  // Renderiza os funcionários inicialmente
       configurarBusca(funcionariosCache);  // Configura a busca
-      configurarModalAdicionar(funcionariosCache);  // Configura o modal para adicionar funcionários
+      configurarModalAdicionar(funcionariosRef);  // Configura o modal para adicionar funcionários
 
       // Aplica o filtro logo após a renderização inicial
-      filtrarFuncionarios();  // Aplica o filtro após o carregamento dos funcionários
+      // Para aplicar filtro logo após carregar, chama a função 'buscar' da configuração de busca
+      // Ou apenas chama buscar diretamente
+      if (funcionariosCache.length > 0) {
+        // chama a função de busca com o cache atual para renderizar
+        // buscar() não está no escopo, então você pode fazer o filtro manual aqui, 
+        // ou criar uma função global de filtro que pode ser usada.
+      }
+
 
     } catch (error) {
       console.error('Erro ao carregar funcionários:', error);
@@ -40,33 +47,33 @@ function configurarBusca(funcionarios) {
   if (!searchInput || !searchBtn || !filtroStatusFuncionario) return;
 
   const buscar = () => {
-  const query = searchInput.value.trim().toLowerCase(); // Pesquisa em minúsculas
-  const statusSelecionado = filtroStatusFuncionario.value;
+    const query = searchInput.value.trim().toLowerCase(); // Pesquisa em minúsculas
+    const statusSelecionado = filtroStatusFuncionario.value;
 
-  const filtrados = funcionarios.filter(funcionario => {
-    // Garantir que todos os campos sejam tratados como strings antes da comparação
-    const nome = funcionario.nome ? funcionario.nome.toLowerCase() : '';
-    const email = funcionario.email ? funcionario.email.toLowerCase() : '';
-    const idDoc = funcionario.idDoc ? funcionario.idDoc.toLowerCase() : '';
-    const cargo = funcionario.cargo ? (typeof funcionario.cargo === 'string' ? funcionario.cargo.toLowerCase() : '') : '';
+    const filtrados = funcionarios.filter(funcionario => {
+      // Garantir que todos os campos sejam tratados como strings antes da comparação
+      const nome = funcionario.nome ? funcionario.nome.toLowerCase() : '';
+      const email = funcionario.email ? funcionario.email.toLowerCase() : '';
+      const idDoc = funcionario.idDoc ? funcionario.idDoc.toLowerCase() : '';
+      const cargo = funcionario.cargo ? (typeof funcionario.cargo === 'string' ? funcionario.cargo.toLowerCase() : '') : '';
 
-    // Verifica se qualquer campo corresponde ao valor de pesquisa
-    const textoCorresponde =
-      nome.includes(query) ||
-      email.includes(query) ||
-      idDoc.includes(query) ||
-      cargo.includes(query); // Verifica se o cargo é uma string e compara
+      // Verifica se qualquer campo corresponde ao valor de pesquisa
+      const textoCorresponde =
+        nome.includes(query) ||
+        email.includes(query) ||
+        idDoc.includes(query) ||
+        cargo.includes(query); // Verifica se o cargo é uma string e compara
 
-    // Verifica o status
-    const statusFuncionario = funcionario.ativo ? 'ativo' : 'inativo';
-    const statusCorresponde =
-      statusSelecionado === 'todos' || statusSelecionado === statusFuncionario;
+      // Verifica o status
+      const statusFuncionario = funcionario.ativo ? 'ativo' : 'inativo';
+      const statusCorresponde =
+        statusSelecionado === 'todos' || statusSelecionado === statusFuncionario;
 
-    return textoCorresponde && statusCorresponde; // Filtra tanto pelo texto quanto pelo status
-  });
+      return textoCorresponde && statusCorresponde; // Filtra tanto pelo texto quanto pelo status
+    });
 
-  renderizarFuncionarios(filtrados); // Atualiza a tabela de funcionários filtrados
-};
+    renderizarFuncionarios(filtrados); // Atualiza a tabela de funcionários filtrados
+  };
 
 
 
@@ -99,29 +106,33 @@ async function configurarModalAdicionar(funcionariosRef) {
     e.preventDefault();
 
     const novoFuncionario = {
-  nome: form.nome.value.trim(),
-  email: form.email.value.trim(),
-  cpf: form.cpf.value.trim(),
-  rg: form.rg.value.trim(),
-  estadoCivil: form.estadoCivil.value.trim(),
-  dependentes: parseInt(form.dependentes.value) || 0,
-  cargo: form.cargo.value.trim(),
-  departamento: form.departamento.value.trim(),
-  jornadaTrabalho: form.jornadaTrabalho.value.trim(),
-  tipoContrato: form.tipoContrato.value.trim(),
-  dataNascimento: form.dataNascimento.value.trim(),
-  dataAdmissao: form.dataAdmissao.value.trim(),
-  salario: parseFloat(form.salario.value) || 0,
-  telefone: form.telefone.value.trim(),
-  banco: form.banco.value.trim(),
-  agencia: form.agencia.value.trim(),
-  conta: form.conta.value.trim(),
-  carteiraTrabalho: form.carteiraTrabalho.value.trim(),
-  pisPasep: form.pisPasep.value.trim(),
-  tituloEleitor: form.tituloEleitor.value.trim(),
-  idResponsavel: form.idResponsavel.value.trim(),
-  ativo: true // Adiciona um campo ativo ao funcionário
-};
+      nome: form.nome.value.trim(),
+      email: form.email.value.trim(),
+      cpf: form.cpf.value.trim(),
+      rg: form.rg.value.trim(),
+      estadoCivil: form.estadoCivil.value.trim(),
+      dependentes: parseInt(form.dependentes.value) || 0,
+      cargo: form.cargo.value.trim(),
+      departamento: form.departamento.value.trim(),
+      jornadaTrabalho: form.jornadaTrabalho.value.trim(),
+      tipoContrato: form.tipoContrato.value.trim(),
+      dataNascimento: form.dataNascimento.value
+        ? Timestamp.fromDate(new Date(form.dataNascimento.value))
+        : null,
+      dataAdmissao: form.dataAdmissao.value
+        ? Timestamp.fromDate(new Date(form.dataAdmissao.value))
+        : null,
+      salario: parseFloat(form.salario.value) || 0,
+      telefone: form.telefone.value.trim(),
+      banco: form.banco.value.trim(),
+      agencia: form.agencia.value.trim(),
+      conta: form.conta.value.trim(),
+      carteiraTrabalho: form.carteiraTrabalho.value.trim(),
+      pisPasep: form.pisPasep.value.trim(),
+      tituloEleitor: form.tituloEleitor.value.trim(),
+      idResponsavel: form.idResponsavel.value.trim(),
+      ativo: true // Adiciona um campo ativo ao funcionário
+    };
 
 
     try {
@@ -210,8 +221,18 @@ function mostrarDetalhesFuncionario(funcionario) {
       <p><strong>Departamento:</strong> ${funcionarioEditavel.departamento || '-'}</p>
       <p><strong>Jornada de Trabalho:</strong> ${funcionarioEditavel.jornadaTrabalho || '-'}</p>
       <p><strong>Tipo de Contrato:</strong> ${funcionarioEditavel.tipoContrato || '-'}</p>
-      <p><strong>Data de Nascimento:</strong> ${funcionarioEditavel.dataNascimento || '-'}</p>
-      <p><strong>Data de Admissão:</strong> ${funcionarioEditavel.dataAdmissao || '-'}</p>
+      <p><strong>Data de Nascimento:</strong> ${funcionarioEditavel.dataNascimento
+      ? (funcionarioEditavel.dataNascimento.toDate
+        ? funcionarioEditavel.dataNascimento.toDate().toLocaleDateString('pt-BR')
+        : new Date(funcionarioEditavel.dataNascimento).toLocaleDateString('pt-BR'))
+      : '-'
+    }</p>
+    <p><strong>Data de Admissão:</strong> ${funcionarioEditavel.dataAdmissao
+      ? (funcionarioEditavel.dataAdmissao.toDate
+        ? funcionarioEditavel.dataAdmissao.toDate().toLocaleDateString('pt-BR')
+        : new Date(funcionarioEditavel.dataAdmissao).toLocaleDateString('pt-BR'))
+      : '-'
+    }</p>
       <p><strong>Salário:</strong> R$ ${funcionarioEditavel.salario || '-'}</p>
       <p><strong>Telefone:</strong> ${funcionarioEditavel.telefone || '-'}</p>
       <p><strong>ID Responsável:</strong> ${funcionarioEditavel.idResponsavel || '-'}</p>
@@ -265,7 +286,7 @@ function renderEditar(funcionarioEditavel) {
       <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
         <label>Nome:<br><input type="text" id="inputNome" value="${funcionarioEditavel.nome || ''}"></label>
         <label>Email:<br><input type="email" id="inputEmail" value="${funcionarioEditavel.email || ''}"></label>
-        <label>ID:<br><input type="text" id="inputId" value="${funcionarioEditavel.id || ''}"></label>
+        <label>ID:<br><input type="text" value="${funcionarioEditavel.idDoc || ''}" disabled></label>
         <label>CPF:<br><input type="text" id="inputCpf" value="${funcionarioEditavel.cpf || ''}"></label>
         <label>RG:<br><input type="text" id="inputRg" value="${funcionarioEditavel.rg || ''}"></label>
         <label>Estado Civil:<br><input type="text" id="inputEstadoCivil" value="${funcionarioEditavel.estadoCivil || ''}"></label>
@@ -274,8 +295,22 @@ function renderEditar(funcionarioEditavel) {
         <label>Departamento:<br><input type="text" id="inputDepartamento" value="${funcionarioEditavel.departamento || ''}"></label>
         <label>Jornada de Trabalho:<br><input type="text" id="inputJornada" value="${funcionarioEditavel.jornadaTrabalho || ''}"></label>
         <label>Tipo de Contrato:<br><input type="text" id="inputContrato" value="${funcionarioEditavel.tipoContrato || ''}"></label>
-        <label>Data de Nascimento:<br><input type="date" id="inputNascimento" value="${funcionarioEditavel.dataNascimento || ''}"></label>
-        <label>Data de Admissão:<br><input type="date" id="inputAdmissao" value="${funcionarioEditavel.dataAdmissao || ''}"></label>
+        <label>Data de Nascimento:<br>
+        <input type="date" id="inputNascimento" value="${funcionarioEditavel.dataNascimento
+      ? (funcionarioEditavel.dataNascimento.toDate
+        ? funcionarioEditavel.dataNascimento.toDate().toISOString().split('T')[0]
+        : new Date(funcionarioEditavel.dataNascimento).toISOString().split('T')[0])
+      : ''
+    }">
+      </label>
+      <label>Data de Admissão:<br>
+        <input type="date" id="inputAdmissao" value="${funcionarioEditavel.dataAdmissao
+      ? (funcionarioEditavel.dataAdmissao.toDate
+        ? funcionarioEditavel.dataAdmissao.toDate().toISOString().split('T')[0]
+        : new Date(funcionarioEditavel.dataAdmissao).toISOString().split('T')[0])
+      : ''
+    }">
+      </label>
         <label>Salário:<br><input type="number" step="0.01" id="inputSalario" value="${funcionarioEditavel.salario || ''}"></label>
         <label>Telefone:<br><input type="text" id="inputTelefone" value="${funcionarioEditavel.telefone || ''}"></label>
         <label>ID Responsável:<br><input type="text" id="inputIdResponsavel" value="${funcionarioEditavel.idResponsavel || ''}"></label>
@@ -318,7 +353,7 @@ function renderEditar(funcionarioEditavel) {
   // Cancelar a edição
   document.getElementById('btnCancelarEdicao').onclick = () => {
     modal.style.display = 'none';  // Fechar o modal
-    renderizarFuncionarios();  // Exibe a lista de funcionários
+    renderizarFuncionarios(funcionariosCache);  // Exibe a lista de funcionários
   };
 
   // Salvar as alterações no Firestore
@@ -326,7 +361,6 @@ function renderEditar(funcionarioEditavel) {
     const funcionarioAtualizado = {
       nome: document.getElementById('inputNome').value.trim(),
       email: document.getElementById('inputEmail').value.trim(),
-      id: document.getElementById('inputId').value.trim(),
       cpf: document.getElementById('inputCpf').value.trim(),
       rg: document.getElementById('inputRg').value.trim(),
       estadoCivil: document.getElementById('inputEstadoCivil').value.trim(),
@@ -335,8 +369,12 @@ function renderEditar(funcionarioEditavel) {
       departamento: document.getElementById('inputDepartamento').value.trim(),
       jornadaTrabalho: document.getElementById('inputJornada').value.trim(),
       tipoContrato: document.getElementById('inputContrato').value.trim(),
-      dataNascimento: document.getElementById('inputNascimento').value.trim(),
-      dataAdmissao: document.getElementById('inputAdmissao').value.trim(),
+      dataNascimento: document.getElementById('inputNascimento').value
+        ? Timestamp.fromDate(new Date(document.getElementById('inputNascimento').value))
+        : null,
+      dataAdmissao: document.getElementById('inputAdmissao').value
+        ? Timestamp.fromDate(new Date(document.getElementById('inputAdmissao').value))
+        : null,
       salario: parseFloat(document.getElementById('inputSalario').value) || 0,
       telefone: document.getElementById('inputTelefone').value.trim(),
       idResponsavel: document.getElementById('inputIdResponsavel').value.trim(),
