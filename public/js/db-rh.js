@@ -38,6 +38,41 @@ export function initFuncionarios() {
   });
 }
 
+function formatarDataFirebase(data) {
+  if (!data) return '-';
+
+  try {
+    // Se for um objeto do Firestore (Timestamp), converte
+    if (data.toDate) {
+      data = data.toDate();
+    }
+
+    // Se já for Date ou string válida
+    const dateObj = new Date(data);
+
+    // Verifica se a data é válida
+    if (isNaN(dateObj.getTime())) return '-';
+
+    const dia = String(dateObj.getDate()).padStart(2, '0');
+    const mes = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const ano = dateObj.getFullYear();
+
+    return `${dia}/${mes}/${ano}`;
+  } catch (e) {
+    return '-';
+  }
+}
+
+function formatarDataParaString(dataInput) {
+  const date = new Date(dataInput);
+  if (isNaN(date)) return '-';
+  const dia = String(date.getDate()).padStart(2, '0');
+  const mes = String(date.getMonth() + 1).padStart(2, '0');
+  const ano = date.getFullYear();
+  return `${dia}/${mes}/${ano}`;
+}
+
+
 
 function configurarBusca(funcionarios) {
   const searchInput = document.getElementById('searchInput');
@@ -106,33 +141,37 @@ async function configurarModalAdicionar(funcionariosRef) {
     e.preventDefault();
 
     const novoFuncionario = {
-      nome: form.nome.value.trim(),
-      email: form.email.value.trim(),
-      cpf: form.cpf.value.trim(),
-      rg: form.rg.value.trim(),
-      estadoCivil: form.estadoCivil.value.trim(),
-      dependentes: parseInt(form.dependentes.value) || 0,
-      cargo: form.cargo.value.trim(),
-      departamento: form.departamento.value.trim(),
-      jornadaTrabalho: form.jornadaTrabalho.value.trim(),
-      tipoContrato: form.tipoContrato.value.trim(),
-      dataNascimento: form.dataNascimento.value
-        ? Timestamp.fromDate(new Date(form.dataNascimento.value))
-        : null,
-      dataAdmissao: form.dataAdmissao.value
-        ? Timestamp.fromDate(new Date(form.dataAdmissao.value))
-        : null,
-      salario: parseFloat(form.salario.value) || 0,
-      telefone: form.telefone.value.trim(),
-      banco: form.banco.value.trim(),
-      agencia: form.agencia.value.trim(),
-      conta: form.conta.value.trim(),
-      carteiraTrabalho: form.carteiraTrabalho.value.trim(),
-      pisPasep: form.pisPasep.value.trim(),
-      tituloEleitor: form.tituloEleitor.value.trim(),
-      idResponsavel: form.idResponsavel.value.trim(),
-      ativo: true // Adiciona um campo ativo ao funcionário
-    };
+  nome: form.nome.value.trim(),
+  email: form.email.value.trim(),
+  cpf: form.cpf.value.trim(),
+  rg: form.rg.value.trim(),
+  estadoCivil: form.estadoCivil.value.trim(),
+  dependentes: parseInt(form.dependentes.value) || 0,
+  cargo: form.cargo.value.trim(),
+  departamento: form.departamento.value.trim(),
+  jornadaTrabalho: form.jornadaTrabalho.value.trim(),
+  tipoContrato: form.tipoContrato.value.trim(),
+  dataNascimento: formatarDataParaString(dataNascimentoInput.value),
+  dataAdmissao: formatarDataParaString(dataAdmissaoInput.value),
+  salario: parseFloat(form.salario.value) || 0,
+  telefone: form.telefone.value.trim(),
+  banco: form.banco.value.trim(),
+  agencia: form.agencia.value.trim(),
+  conta: form.conta.value.trim(),
+  carteiraTrabalho: form.carteiraTrabalho.value.trim(),
+  pisPasep: form.pisPasep.value.trim(),
+  tituloEleitor: form.tituloEleitor.value.trim(),
+  idResponsavel: form.idResponsavel.value.trim(),
+  ativo: true,
+  endereco: {
+    rua: form.rua.value.trim(),
+    numero: form.numero.value.trim(),
+    bairro: form.bairro.value.trim(),
+    cep: form.cep.value.trim(),
+    cidade: form.cidade.value.trim(),
+    estado: form.estado.value.trim()
+  }
+};
 
 
     try {
@@ -221,22 +260,11 @@ function mostrarDetalhesFuncionario(funcionario) {
       <p><strong>Departamento:</strong> ${funcionarioEditavel.departamento || '-'}</p>
       <p><strong>Jornada de Trabalho:</strong> ${funcionarioEditavel.jornadaTrabalho || '-'}</p>
       <p><strong>Tipo de Contrato:</strong> ${funcionarioEditavel.tipoContrato || '-'}</p>
-      <p><strong>Data de Nascimento:</strong> ${funcionarioEditavel.dataNascimento
-      ? (funcionarioEditavel.dataNascimento.toDate
-        ? funcionarioEditavel.dataNascimento.toDate().toLocaleDateString('pt-BR')
-        : new Date(funcionarioEditavel.dataNascimento).toLocaleDateString('pt-BR'))
-      : '-'
-    }</p>
-    <p><strong>Data de Admissão:</strong> ${funcionarioEditavel.dataAdmissao
-      ? (funcionarioEditavel.dataAdmissao.toDate
-        ? funcionarioEditavel.dataAdmissao.toDate().toLocaleDateString('pt-BR')
-        : new Date(funcionarioEditavel.dataAdmissao).toLocaleDateString('pt-BR'))
-      : '-'
-    }</p>
+      <p><strong>Data de Nascimento:</strong> ${formatarDataFirebase(funcionarioEditavel.dataNascimento)}</p>
+      <p><strong>Data de Admissão:</strong> ${formatarDataFirebase(funcionarioEditavel.dataAdmissao)}</p>
       <p><strong>Salário:</strong> R$ ${funcionarioEditavel.salario || '-'}</p>
       <p><strong>Telefone:</strong> ${funcionarioEditavel.telefone || '-'}</p>
       <p><strong>ID Responsável:</strong> ${funcionarioEditavel.idResponsavel || '-'}</p>
-
       <h3>Endereço</h3>
       <p><strong>Rua:</strong> ${funcionarioEditavel.endereco?.rua || '-'}</p>
       <p><strong>Número:</strong> ${funcionarioEditavel.endereco?.numero || '-'}</p>
@@ -273,6 +301,20 @@ function mostrarDetalhesFuncionario(funcionario) {
   modal.style.display = 'block';
 }
 
+function formatarDataISO(dataOriginal) {
+  if (!dataOriginal) return '';
+
+  let data;
+  if (typeof dataOriginal.toDate === 'function') {
+    data = dataOriginal.toDate();
+  } else {
+    data = new Date(dataOriginal);
+  }
+
+  if (isNaN(data.getTime())) return ''; // <- Protege contra datas inválidas
+
+  return data.toISOString().split('T')[0];
+}
 
 
 function renderEditar(funcionarioEditavel) {
@@ -296,20 +338,10 @@ function renderEditar(funcionarioEditavel) {
         <label>Jornada de Trabalho:<br><input type="text" id="inputJornada" value="${funcionarioEditavel.jornadaTrabalho || ''}"></label>
         <label>Tipo de Contrato:<br><input type="text" id="inputContrato" value="${funcionarioEditavel.tipoContrato || ''}"></label>
         <label>Data de Nascimento:<br>
-        <input type="date" id="inputNascimento" value="${funcionarioEditavel.dataNascimento
-      ? (funcionarioEditavel.dataNascimento.toDate
-        ? funcionarioEditavel.dataNascimento.toDate().toISOString().split('T')[0]
-        : new Date(funcionarioEditavel.dataNascimento).toISOString().split('T')[0])
-      : ''
-    }">
-      </label>
+        <input type="date" id="inputNascimento" value="${formatarDataISO(funcionarioEditavel.dataNascimento)}">
+        </label>
       <label>Data de Admissão:<br>
-        <input type="date" id="inputAdmissao" value="${funcionarioEditavel.dataAdmissao
-      ? (funcionarioEditavel.dataAdmissao.toDate
-        ? funcionarioEditavel.dataAdmissao.toDate().toISOString().split('T')[0]
-        : new Date(funcionarioEditavel.dataAdmissao).toISOString().split('T')[0])
-      : ''
-    }">
+        <input type="date" id="inputAdmissao" value="${formatarDataISO(funcionarioEditavel.dataAdmissao)}">
       </label>
         <label>Salário:<br><input type="number" step="0.01" id="inputSalario" value="${funcionarioEditavel.salario || ''}"></label>
         <label>Telefone:<br><input type="text" id="inputTelefone" value="${funcionarioEditavel.telefone || ''}"></label>
@@ -369,12 +401,8 @@ function renderEditar(funcionarioEditavel) {
       departamento: document.getElementById('inputDepartamento').value.trim(),
       jornadaTrabalho: document.getElementById('inputJornada').value.trim(),
       tipoContrato: document.getElementById('inputContrato').value.trim(),
-      dataNascimento: document.getElementById('inputNascimento').value
-        ? Timestamp.fromDate(new Date(document.getElementById('inputNascimento').value))
-        : null,
-      dataAdmissao: document.getElementById('inputAdmissao').value
-        ? Timestamp.fromDate(new Date(document.getElementById('inputAdmissao').value))
-        : null,
+      dataNascimento: formatarDataParaString(document.getElementById('inputDataNascimento').value),
+      dataAdmissao: formatarDataParaString(document.getElementById('inputDataAdmissao').value),
       salario: parseFloat(document.getElementById('inputSalario').value) || 0,
       telefone: document.getElementById('inputTelefone').value.trim(),
       idResponsavel: document.getElementById('inputIdResponsavel').value.trim(),
