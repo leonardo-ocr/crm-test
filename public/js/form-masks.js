@@ -124,3 +124,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// form-aluno-validacao.js
+
+document.addEventListener('DOMContentLoaded', () => {
+  const limites = {
+    nome: 100,
+    emailResponsavel: 100,
+    telefoneResponsavel: 15,
+    mensalidade: 15,
+    motivoBolsa: 100,
+    porcentagemBolsa: 3,
+    dataNascimento: 10,
+    dataMatricula: 10,
+    serie: 20,
+    periodo: 20,
+    idTurma: 20
+  };
+
+  function limitarInput(input, maxLength) {
+    if (input.value.length > maxLength) {
+      input.value = input.value.slice(0, maxLength);
+    }
+  }
+
+  function somenteNumeros(valor) {
+    return valor.replace(/\D/g, '');
+  }
+
+  function formatarTelefone(tel) {
+    tel = tel.replace(/\D/g, '');
+    tel = tel.slice(0, 11);
+    if (tel.length <= 10) {
+      return tel.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+    } else {
+      return tel.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+    }
+  }
+
+  Object.keys(limites).forEach(id => {
+    const input = document.getElementById(id);
+    if (!input) return;
+
+    input.addEventListener('input', () => {
+      let valor = input.value.trim();
+
+      if (id === 'telefoneResponsavel') {
+        input.value = formatarTelefone(valor);
+      } else if (id === 'mensalidade' || id === 'porcentagemBolsa') {
+        input.value = valor.replace(/[^0-9.]/g, '');
+        const partes = input.value.split('.');
+        if (partes.length > 2) {
+          input.value = partes[0] + '.' + partes.slice(1).join('');
+        }
+      }
+
+      limitarInput(input, limites[id]);
+    });
+  });
+});

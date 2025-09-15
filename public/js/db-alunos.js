@@ -18,23 +18,35 @@ export function initAlunos() {
       return;
     }
 
-    const empresaId = "esc001";
     const userId = user.uid;
+    let empresaId = null;
 
     try {
-      const userDocRef = doc(db, "empresa", empresaId, "usuario", userId);
-      const userDocSnap = await getDoc(userDocRef);
+      // 1. Buscar todas as empresas
+      const empresasSnapshot = await getDocs(collection(db, "empresa"));
 
-      if (!userDocSnap.exists()) {
-        console.warn("Documento do usuário não encontrado.");
+      // 2. Procurar em qual empresa o usuário está cadastrado
+      for (const empresaDoc of empresasSnapshot.docs) {
+        const usuarioRef = doc(db, "empresa", empresaDoc.id, "usuario", userId);
+        const usuarioSnap = await getDoc(usuarioRef);
+
+        if (usuarioSnap.exists()) {
+          empresaId = empresaDoc.id;
+          break;
+        }
+      }
+
+      if (!empresaId) {
+        console.warn("Empresa do usuário não encontrada.");
         return;
       }
 
+      // 3. Carregar os alunos da empresa correta
       const alunosRef = collection(db, "empresa", empresaId, "alunos");
       const alunos = await buscarAlunos(alunosRef);
 
-      renderizarAlunos(alunos);
-      configurarBusca(alunos);
+      renderizarAlunos(alunos, empresaId);
+      configurarBusca(alunos, empresaId);
       configurarModalAdicionarAluno(alunosRef);
 
     } catch (error) {
@@ -43,13 +55,14 @@ export function initAlunos() {
   });
 }
 
+
 async function buscarAlunos(alunosRef) {
   const q = query(alunosRef);
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(doc => doc.data());
 }
 
-function configurarBusca(alunos) {
+function configurarBusca(alunos, empresaId) {
   const searchInput = document.getElementById('searchInput');
   const searchBtn = document.getElementById('searchBtn');
   const filtroStatus = document.getElementById('filtroStatus'); // <- novo
@@ -74,7 +87,8 @@ function configurarBusca(alunos) {
       return textoCorresponde && statusCorresponde;
     });
 
-    renderizarAlunos(filtrados);
+    renderizarAlunos(filtrados, empresaId);
+
   };
 
   searchInput.addEventListener('input', buscar);
@@ -138,7 +152,7 @@ function configurarModalAdicionarAluno(alunosRef) {
   };
 }
 
-function renderizarAlunos(lista) {
+function renderizarAlunos(lista, empresaId) {
   const container = document.getElementById('searchResults');
   if (!container) return;
 
@@ -177,17 +191,17 @@ function renderizarAlunos(lista) {
   document.querySelectorAll('.aluno-nome').forEach(nomeEl => {
     nomeEl.addEventListener('click', () => {
       const aluno = JSON.parse(decodeURIComponent(nomeEl.dataset.aluno));
-      mostrarDetalhesAluno(aluno);
+      mostrarDetalhesAluno(aluno, empresaId);  // <-- Passe empresaId aqui
     });
   });
 }
 
 
-async function mostrarDetalhesAluno(aluno) {
+async function mostrarDetalhesAluno(aluno, empresaId) {
+
   const modal = document.getElementById('modalDetalhesAluno');
   if (!modal) return;
 
-  const empresaId = "esc001";
   let editando = false;
   let alunoEditavel = { ...aluno }; // clone para edição
 
@@ -196,27 +210,31 @@ async function mostrarDetalhesAluno(aluno) {
 
     modal.innerHTML = `
     <div class="modal-content">
-      <span class="close-btn" id="fecharModalDetalhes">&times;</span>
-      <div class="modal-header">Detalhes do Aluno</div>
-      <div class="modal-body">
-        <p><strong>Nome:</strong> <span id="campoNome">${alunoEditavel.nome || "-"}</span></p>
-        <p><strong>Email do responsável:</strong> <span id="campoEmailResponsavel">${alunoEditavel.emailResponsavel || "-"}</span></p>
-        <p><strong>Telefone do responsável:</strong> <span id="campoTelefoneResponsavel">${alunoEditavel.telefoneResponsavel || "-"}</span></p>
-        <p><strong>Mensalidade:</strong> R$<span id="campoMensalidade">${alunoEditavel.pagamento?.mensalidade || "-"}</span></p>
-        <p><strong>Porcentagem da bolsa:</strong> <span id="campoPorcentagemBolsa">${alunoEditavel.pagamento?.porcentagemBolsa || "0"}</span>%</p>
-        <p><strong>Motivo da bolsa:</strong> <span id="campoMotivoBolsa">${alunoEditavel.pagamento?.motivoBolsa || "-"}</span></p>
-        <p><strong>Data de nascimento:</strong> <span id="campoDataNascimento">${alunoEditavel.dataNascimento || "-"}</span></p>
-        <p><strong>Série:</strong> <span id="campoSerie">${alunoEditavel.serie || "-"}</span></p>
-        <p><strong>Período:</strong> <span id="campoPeriodo">${alunoEditavel.periodo || "-"}</span></p>
-        <p><strong>Data de matrícula:</strong> <span id="campoDataMatricula">${alunoEditavel.dataMatricula || "-"}</span></p>
-        <p><strong>Status da matrícula:</strong> <span class="${isAtivo ? 'status-ativo' : 'status-inativo'}">${isAtivo ? 'Ativo' : 'Inativo'}</span></p>
-        <p><strong>ID:</strong> ${alunoEditavel.id || "-"}</p>
-        <p><strong>ID Turma:</strong> <span id="campoIdTurma">${alunoEditavel.idTurma || "-"}</span></p>
-      </div>
-      <div class="modal-footer">
-        <button id="btnEditar">Editar</button>
-      </div>
+  <span class="close-btn" id="fecharModalDetalhes">&times;</span>
+  <div class="modal-header">Detalhes do Aluno</div>
+  <div class="modal-body grid">
+    <div class="coluna">
+      <p><strong>Nome:</strong> ${alunoEditavel.nome || "-"}</p>
+      <p><strong>Email do responsável:</strong> ${alunoEditavel.emailResponsavel || "-"}</p>
+      <p><strong>Telefone do responsável:</strong> ${alunoEditavel.telefoneResponsavel || "-"}</p>
+      <p><strong>Mensalidade:</strong> R$ ${alunoEditavel.pagamento?.mensalidade || "-"}</p>
+      <p><strong>Porcentagem da bolsa:</strong> ${alunoEditavel.pagamento?.porcentagemBolsa || "0"}%</p>
+      <p><strong>Motivo da bolsa:</strong> ${alunoEditavel.pagamento?.motivoBolsa || "-"}</p>
     </div>
+    <div class="coluna">
+      <p><strong>Data de nascimento:</strong> ${alunoEditavel.dataNascimento || "-"}</p>
+      <p><strong>Série:</strong> ${alunoEditavel.serie || "-"}</p>
+      <p><strong>Período:</strong> ${alunoEditavel.periodo || "-"}</p>
+      <p><strong>Data de matrícula:</strong> ${alunoEditavel.dataMatricula || "-"}</p>
+      <p><strong>Status da matrícula:</strong> <span class="${alunoEditavel.status ? 'status-ativo' : 'status-inativo'}">${alunoEditavel.status ? 'Ativo' : 'Inativo'}</span></p>
+      <p><strong>ID:</strong> ${alunoEditavel.id || "-"}</p>
+      <p><strong>ID Turma:</strong> ${alunoEditavel.idTurma || "-"}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button id="btnEditar">Editar</button>
+  </div>
+</div>
   `;
 
     document.getElementById('fecharModalDetalhes').onclick = () => modal.style.display = 'none';

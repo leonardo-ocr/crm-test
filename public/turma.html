@@ -48,6 +48,8 @@
 <a href="alunos.html"><i class="fas fa-user-graduate" style="color: white;"></i> Alunos</a>
 <a href="rh.html"><i class="fas fa-users" style="color: white;"></i> RH</a>
 <a href="turma.html"><i class="fas fa-chalkboard-teacher" style="color: white;"></i> Turmas</a>
+<a href="materiais.html"><i class="fas fa-book" style="color: white;"></i> Materiais</a>
+<a href="planejamento.html"><i class="fas fa-clipboard-list" style="color: white;"></i> Planejamento</a>
 <a href="financeiro.html"><i class="fas fa-credit-card" style="color: white;"></i> Financeiro</a>
 <a href="agenda.html"><i class="fas fa-calendar-alt" style="color: white;"></i> Agenda</a>
 <a href="reuniao.html"><i class="fas fa-comments" style="color: white;"></i> Reunião</a>
@@ -90,7 +92,9 @@
             <option value="">Selecione a Turma</option>
           </select>
         </div>
-
+      </section>
+      <section id="turmasContainer" class="turmas-grid">
+  <!-- Os cards das turmas vão aparecer aqui via JS -->
       </section>
     </main>
   </div>
@@ -120,6 +124,18 @@
         </div>
 
         <div class="form-group">
+  <label for="periodoTurma">Período:</label>
+  <select id="periodoTurma" required>
+    <option value="">Selecione o Período</option>
+    <option value="manha">Manhã</option>
+    <option value="tarde">Tarde</option>
+    <option value="noite">Noite</option>
+    <option value="integral">Integral</option>
+  </select>
+</div>
+
+
+        <div class="form-group">
           <label for="anoEscolar">Ano Escolar:</label>
           <select id="anoEscolar" required>
             <option value="">Selecione o Ano</option>
@@ -141,10 +157,13 @@
         <button type="submit" class="btn-submit">Adicionar Turma</button>
       </form>
     </div>
+  
   </div>
 
-  <script src="js/script.js"></script>
-  <script type="module" src="js/logout.js"></script>
-</body>
+  
 
+  <script type="module" src="js/logout.js"></script>
+  <script src="js/script.js"></script>
+  <script type="module" src="js/db-turma.js"></script>
+</body>
 </html>
