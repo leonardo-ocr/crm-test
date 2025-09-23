@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // 🚫 Verifica termos proibidos (opcional)
-      const termosProibidos = ['nigger', 'palavrão1', 'offensive'];
+      const termosProibidos = ['nigger', 'palavrão1', 'offensive','buiu'];
       if (termosProibidos.some(palavra => nomeTurma.toLowerCase().includes(palavra))) {
         alert("O nome da turma contém termos proibidos.");
         return;
