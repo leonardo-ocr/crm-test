@@ -76,26 +76,20 @@
         <!-- Filtros -->
         <div class="filtros-container">
           <label for="filtroSerie" class="visually-hidden">Filtrar por Série</label>
-          <select id="filtroSerie" name="filtroSerie">
-            <option value="">Selecione a Série</option>
-            <option value="infantil">Educação Infantil</option>
-            <option value="fund1">Ensino Fundamental 1</option>
-            <option value="fund2">Ensino Fundamental 2</option>
-            <option value="medio">Ensino Médio</option>
-          </select>
+<select id="filtroSerie">
+  <option value="">Selecione a série</option>
+  <option value="infantil">Educação Infantil</option>
+  <option value="fundamental1">Ensino Fundamental 1</option>
+  <option value="fundamental2">Ensino Fundamental 2</option>
+  <option value="medio">Ensino Médio</option>
+</select>
 
           <label for="filtroAno" class="visually-hidden">Filtrar por Ano</label>
           <select id="filtroAno" name="filtroAno" disabled>
             <option value="">Selecione o Ano</option>
           </select>
-
-          <label for="filtroTurma" class="visually-hidden">Filtrar por Turma</label>
-          <select id="filtroTurma" name="filtroTurma" disabled>
-            <option value="">Selecione a Turma</option>
-          </select>
         </div>
       </section>
-
       <section id="turmasContainer" class="turmas-grid" aria-live="polite" aria-label="Lista de turmas">
         <!-- Os cards das turmas vão aparecer aqui via JS -->
       </section>
@@ -117,12 +111,13 @@
         <div class="filtros-container">
           <label for="serieTurma" class="visually-hidden">Filtrar por Série</label>
           <select id="serieTurma" name="serieTurma" required>
-            <option value="">Selecione a Série</option>
-            <option value="infantil">Educação Infantil</option>
-            <option value="fund1">Ensino Fundamental 1</option>
-            <option value="fund2">Ensino Fundamental 2</option>
-            <option value="medio">Ensino Médio</option>
-          </select>
+  <option value="">Selecione a Série</option>
+  <option value="infantil">Educação Infantil</option>
+  <option value="fundamental1">Ensino Fundamental 1</option>
+  <option value="fundamental2">Ensino Fundamental 2</option>
+  <option value="medio">Ensino Médio</option>
+</select>
+
 
           <label for="periodoTurma" class="visually-hidden">Filtrar por Período</label>
           <select id="periodoTurma" name="periodoTurma" required>

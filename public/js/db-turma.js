@@ -10,80 +10,80 @@ import {
 const empresaId = "esc001";
 let turmasCarregadas = [];
 
-document.addEventListener("DOMContentLoaded", () => {
+const nomesSeries = {
+  infantil: "Educação Infantil",
+  fundamental1: "Ensino Fundamental 1",
+  fundamental2: "Ensino Fundamental 2",
+  medio: "Ensino Médio"
+};
 
+document.addEventListener("DOMContentLoaded", () => {
 
   // Filtros de série, ano e turma
   const filtroSerie = document.getElementById("filtroSerie");
   const filtroAno = document.getElementById("filtroAno");
-  const filtroTurma = document.getElementById("filtroTurma");
 
   const dados = {
-    infantil: {
-      "1º Ano": ["Turma A", "Turma B"],
-      "2º Ano": ["Turma A", "Turma B"]
-    },
-    fund1: {
-      "1º Ano": ["Turma A", "Turma B"],
-      "2º Ano": ["Turma A", "Turma C"],
-      "3º Ano": ["Turma A", "Turma B", "Turma D"]
-    },
-    fund2: {
-      "6º Ano": ["Turma A"],
-      "7º Ano": ["Turma A", "Turma B"]
-    },
-    medio: {
-      "1º Ano": ["Turma A"],
-      "2º Ano": ["Turma A", "Turma B"],
-      "3º Ano": ["Turma A"]
-    }
-  };
+  infantil: {
+    "1º Ano": ["Turma A", "Turma B"],
+    "2º Ano": ["Turma A", "Turma B"]
+  },
+  fundamental1: {
+    "1º Ano": ["Turma A", "Turma B"],
+    "2º Ano": ["Turma A", "Turma C"],
+    "3º Ano": ["Turma A", "Turma B", "Turma D"]
+  },
+  fundamental2: {
+    "6º Ano": ["Turma A"],
+    "7º Ano": ["Turma A", "Turma B"]
+  },
+  medio: {
+    "1º Ano": ["Turma A"],
+    "2º Ano": ["Turma A", "Turma B"],
+    "3º Ano": ["Turma A"]
+  }
+};
 
   // Lógica dos filtros
-  filtroSerie.addEventListener("change", function () {
-    const serie = filtroSerie.value;
-    filtroAno.innerHTML = '<option value="">Selecione o Ano</option>';
-    filtroTurma.innerHTML = '<option value="">Selecione a Turma</option>';
-    filtroAno.disabled = true;
-    filtroTurma.disabled = true;
+  // Quando mudar a série, atualiza os anos e filtra turmas
+filtroSerie.addEventListener("change", function () {
+  const serie = filtroSerie.value;
+  filtroAno.innerHTML = '<option value="">Selecione o Ano</option>';
+  filtroAno.disabled = true;
 
-    if (serie && dados[serie]) {
-      Object.keys(dados[serie]).forEach(ano => {
-        const opt = document.createElement("option");
-        opt.value = ano;
-        opt.textContent = ano;
-        filtroAno.appendChild(opt);
-      });
-      filtroAno.disabled = false;
-    }
+  if (serie && dados[serie]) {
+    Object.keys(dados[serie]).forEach(ano => {
+      const opt = document.createElement("option");
+      opt.value = ano;
+      opt.textContent = `${ano} (${nomesSeries[serie]})`;
+      filtroAno.appendChild(opt);
+    });
+    filtroAno.disabled = false;
+  }
+  
+  filtrarTurmasPorFiltros();  // Atualiza a lista conforme filtro
+});
+
+// Quando mudar o ano, filtra turmas
+filtroAno.addEventListener("change", function () {
+  filtrarTurmasPorFiltros();  // Atualiza a lista conforme filtro
+});
+
+
+
+function filtrarTurmasPorFiltros() {
+  const serieSelecionada = filtroSerie.value;
+  const anoSelecionado = filtroAno.value;
+
+  const turmasFiltradas = turmasCarregadas.filter(({ dados }) => {
+    if (serieSelecionada && dados.serie !== serieSelecionada) return false;
+    if (anoSelecionado && dados.ano !== anoSelecionado) return false;
+    return true;
   });
 
-  filtroAno.addEventListener("change", function () {
-    const serie = filtroSerie.value;
-    const ano = filtroAno.value;
-    filtroTurma.innerHTML = '<option value="">Selecione a Turma</option>';
-    filtroTurma.disabled = true;
+  renderizarTurmas(turmasFiltradas);
+}
 
-    if (serie && ano && dados[serie][ano]) {
-      dados[serie][ano].forEach(turma => {
-        const opt = document.createElement("option");
-        opt.value = turma;
-        opt.textContent = turma;
-        filtroTurma.appendChild(opt);
-      });
-      filtroTurma.disabled = false;
-    }
-  });
-
-  filtroTurma.addEventListener("change", function () {
-    const serie = filtroSerie.value;
-    const ano = filtroAno.value;
-    const turma = filtroTurma.value;
-
-    if (turma) {
-      console.log(`Selecionado: ${serie} > ${ano} > ${turma}`);
-    }
-  });
 
   // Cadastro da turma com Firebase
   const formNovaTurma = document.getElementById('formNovaTurma');
@@ -133,12 +133,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const novaTurma = {
-        turma: nomeTurma,
-        série: serie,
-        período: periodo,
-        ano: `${ano}º Ano`,
-        idResponsavel: "",
-      };
+  turma: nomeTurma,
+  serie: serie,          // ✅ correto
+  periodo: periodo,      // ✅ correto
+  ano: `${ano}`,
+  idResponsavel: "",
+};
+
 
       try {
         const turmasRef = collection(db, "empresa", empresaId, "turmas");
@@ -148,7 +149,9 @@ document.addEventListener("DOMContentLoaded", () => {
         formNovaTurma.reset();
         modalNovaTurma.style.display = "none";
         modalNovaTurma.setAttribute("aria-hidden", "true");
-        location.reload(); // atualize a lista se necessário
+        await carregarTurmas();
+        // Recarrega apenas as turmas
+
       } catch (error) {
         console.error("Erro ao adicionar turma:", error);
         alert("Erro ao adicionar turma.");
@@ -168,12 +171,15 @@ async function carregarTurmas() {
     const turmasRef = collection(db, "empresa", empresaId, "turmas");
     const snapshot = await getDocs(turmasRef);
 
-    turmasCarregadas = []; // limpa o array toda vez que carregar
+    turmasCarregadas = []; // Limpa o array de turmas carregadas
 
     const promessas = snapshot.docs.map(async (doc) => {
       const turma = doc.data();
       const turmaId = doc.id;
       const qtdAlunos = await contarAlunosPorTurma(turmaId);
+
+      console.log("Turma Carregada:", turma);  // Exibe os dados da turma
+      console.log("Turma ID:", turmaId);  // Exibe o ID da turma
 
       return {
         id: turmaId,
@@ -184,16 +190,21 @@ async function carregarTurmas() {
 
     turmasCarregadas = await Promise.all(promessas);
 
-    renderizarTurmas(turmasCarregadas);
+    console.log("Turmas Carregadas:", turmasCarregadas);  // Verifique o que está sendo carregado
 
+    renderizarTurmas(turmasCarregadas);  // Exibe as turmas na tela
+    
   } catch (error) {
     console.error("Erro ao carregar turmas:", error);
     turmasContainer.innerHTML = `<p>Erro ao carregar turmas.</p>`;
   }
 }
 
+
+
+
 function renderizarTurmas(listaTurmas) {
-  turmasContainer.innerHTML = "";
+  turmasContainer.innerHTML = "";  // Limpa o conteúdo anterior
 
   if (listaTurmas.length === 0) {
     turmasContainer.innerHTML = "<p>Nenhuma turma encontrada para a busca.</p>";
@@ -206,9 +217,9 @@ function renderizarTurmas(listaTurmas) {
 
     card.innerHTML = `
       <h3>${dados.turma}</h3>
-      <p><strong>Série:</strong> ${dados.série}</p>
+      <p><strong>Série:</strong> ${nomesSeries[dados.serie]}</p>
       <p><strong>Ano:</strong> ${dados.ano}</p>
-      <p><strong>Período:</strong> ${dados.período}</p>
+      <p><strong>Período:</strong> ${dados.periodo}</p>
       <p><strong>Alunos:</strong> ${qtdAlunos}</p>
     `;
 
@@ -220,21 +231,19 @@ function renderizarTurmas(listaTurmas) {
 }
 
 
-
 function abrirModalTurma(turmaId, turma) {
   const modal = document.getElementById("modalDetalhesTurma");
   const conteudo = document.getElementById("conteudoDetalhesTurma");
 
   conteudo.innerHTML = `
-    <h2>${turma.turma}</h2>
-    <p><strong>Série:</strong> ${turma.série}</p>
-    <p><strong>Ano:</strong> ${turma.ano}</p>
-    <p><strong>Período:</strong> ${turma.período}</p>
-    <hr />
-    <p><em>🧑‍🏫 Lista de Professores (em breve)</em></p>
-    <p><em>👩‍🎓 Lista de Alunos (em breve)</em></p>
-  `;
-
+  <h2>${turma.turma}</h2>
+  <p><strong>Série:</strong> ${nomesSeries[turma.serie]}</p>
+  <p><strong>Ano:</strong> ${turma.ano}</p>
+  <p><strong>Período:</strong> ${turma.periodo}</p> <!-- ✅ Aqui -->
+  <hr />
+  <p><em>🧑‍🏫 Lista de Professores (em breve)</em></p>
+  <p><em>👩‍🎓 Lista de Alunos (em breve)</em></p>
+`;
   modal.style.display = "block";
   modal.setAttribute("aria-hidden", "false");
 }
@@ -276,19 +285,27 @@ if (searchInput) {
   });
 }
 
+
+
 function filtrarTurmasPorBusca(textoBusca) {
   textoBusca = textoBusca.toLowerCase();
 
   const turmasFiltradas = turmasCarregadas.filter(({ dados }) => {
+    const turma = (dados.turma || "").toLowerCase();
+    const nomeSerieAmigavel = (nomesSeries[dados.serie] || "").toLowerCase();
+    const ano = (dados.ano || "").toLowerCase();
+    const periodo = (dados.periodo || "").toLowerCase();
+
     return (
-      dados.turma.toLowerCase().includes(textoBusca) ||
-      dados.série.toLowerCase().includes(textoBusca) ||
-      dados.ano.toLowerCase().includes(textoBusca) ||
-      dados.período.toLowerCase().includes(textoBusca)
+      turma.includes(textoBusca) ||
+      nomeSerieAmigavel.includes(textoBusca) ||
+      ano.includes(textoBusca) ||
+      periodo.includes(textoBusca)
     );
   });
 
   renderizarTurmas(turmasFiltradas);
 }
+
 
 
