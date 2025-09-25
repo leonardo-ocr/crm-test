@@ -1499,3 +1499,31 @@ body {
   font-size: 0.75rem;
   margin-right: 0.5rem;
 }
+
+.modal {
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  background-color: rgba(0, 0, 0, 0.15);
+  display: none; /* escondido por padrão */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modal.ativo {
+  display: flex; /* quando tiver essa classe, aparece e centraliza */
+}
+
+.modal .modal-content, .modal .modal-conteudo {
+  background-color: white;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 100%;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+

@@ -1,3 +1,4 @@
+import { query, where } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { db } from './firebase-config.js';
 import {
   collection,
@@ -7,8 +8,11 @@ import {
 
 // ✅ Variável global para uso em todo o script
 const empresaId = "esc001";
+let turmasCarregadas = [];
 
 document.addEventListener("DOMContentLoaded", () => {
+
+
   // Filtros de série, ano e turma
   const filtroSerie = document.getElementById("filtroSerie");
   const filtroAno = document.getElementById("filtroAno");
@@ -110,18 +114,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (formNovaTurma) {
     formNovaTurma.onsubmit = async (e) => {
-      e.preventDefault();
+  e.preventDefault();
 
-      const nomeTurma = document.getElementById("nomeTurma").value.trim();
-      const serie = document.getElementById("serieTurma").value.trim();
-      const periodo = document.getElementById("periodoTurma").value.trim();
-      const ano = document.getElementById("anoEscolar").value.trim();
+  const nomeTurma = document.getElementById("nomeTurma").value.trim();
+  const periodo = document.getElementById("periodoTurma").value.trim();
+  const ano = document.getElementById("anoTurma").value.trim();
+  const serie = document.getElementById("serieTurma").value.trim();
 
-      if (!nomeTurma || !serie || !periodo || !ano) {
-        alert("Por favor, preencha todos os campos.");
-        return;
-      }
-
+  if (!nomeTurma || !serie || !periodo || !ano) {
+    alert("Por favor, preencha todos os campos.");
+    return;
+  }
       // 🚫 Verifica termos proibidos (opcional)
       const termosProibidos = ['nigger', 'palavrão1', 'offensive','buiu'];
       if (termosProibidos.some(palavra => nomeTurma.toLowerCase().includes(palavra))) {
@@ -165,25 +168,127 @@ async function carregarTurmas() {
     const turmasRef = collection(db, "empresa", empresaId, "turmas");
     const snapshot = await getDocs(turmasRef);
 
-    turmasContainer.innerHTML = ""; // limpa o container antes de renderizar
+    turmasCarregadas = []; // limpa o array toda vez que carregar
 
-    snapshot.forEach((doc) => {
+    const promessas = snapshot.docs.map(async (doc) => {
       const turma = doc.data();
-      const card = document.createElement("div");
-      card.classList.add("card-turma");
+      const turmaId = doc.id;
+      const qtdAlunos = await contarAlunosPorTurma(turmaId);
 
-      card.innerHTML = `
-        <h3>${turma.turma}</h3>
-        <p><strong>Série:</strong> ${turma.série}</p>
-        <p><strong>Ano:</strong> ${turma.ano}</p>
-        <p><strong>Período:</strong> ${turma.período}</p>
-      `;
-
-      turmasContainer.appendChild(card);
+      return {
+        id: turmaId,
+        dados: turma,
+        qtdAlunos
+      };
     });
+
+    turmasCarregadas = await Promise.all(promessas);
+
+    renderizarTurmas(turmasCarregadas);
 
   } catch (error) {
     console.error("Erro ao carregar turmas:", error);
     turmasContainer.innerHTML = `<p>Erro ao carregar turmas.</p>`;
   }
 }
+
+function renderizarTurmas(listaTurmas) {
+  turmasContainer.innerHTML = "";
+
+  if (listaTurmas.length === 0) {
+    turmasContainer.innerHTML = "<p>Nenhuma turma encontrada para a busca.</p>";
+    return;
+  }
+
+  listaTurmas.forEach(({ id, dados, qtdAlunos }) => {
+    const card = document.createElement("div");
+    card.classList.add("card-turma");
+
+    card.innerHTML = `
+      <h3>${dados.turma}</h3>
+      <p><strong>Série:</strong> ${dados.série}</p>
+      <p><strong>Ano:</strong> ${dados.ano}</p>
+      <p><strong>Período:</strong> ${dados.período}</p>
+      <p><strong>Alunos:</strong> ${qtdAlunos}</p>
+    `;
+
+    card.style.cursor = "pointer";
+    card.onclick = () => abrirModalTurma(id, dados);
+
+    turmasContainer.appendChild(card);
+  });
+}
+
+
+
+function abrirModalTurma(turmaId, turma) {
+  const modal = document.getElementById("modalDetalhesTurma");
+  const conteudo = document.getElementById("conteudoDetalhesTurma");
+
+  conteudo.innerHTML = `
+    <h2>${turma.turma}</h2>
+    <p><strong>Série:</strong> ${turma.série}</p>
+    <p><strong>Ano:</strong> ${turma.ano}</p>
+    <p><strong>Período:</strong> ${turma.período}</p>
+    <hr />
+    <p><em>🧑‍🏫 Lista de Professores (em breve)</em></p>
+    <p><em>👩‍🎓 Lista de Alunos (em breve)</em></p>
+  `;
+
+  modal.style.display = "block";
+  modal.setAttribute("aria-hidden", "false");
+}
+
+// Fecha o modal de detalhes da turma
+document.getElementById("fecharModalTurma").onclick = () => {
+  const modal = document.getElementById("modalDetalhesTurma");
+  modal.style.display = "none";
+  modal.setAttribute("aria-hidden", "true");
+};
+
+window.onclick = (event) => {
+  const modal = document.getElementById("modalDetalhesTurma");
+  if (event.target === modal) {
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+  }
+};
+
+// Função para contar alunos de uma turma
+async function contarAlunosPorTurma(turmaId) {
+  try {
+    const alunosRef = collection(db, "empresa", empresaId, "alunos");
+    const q = query(alunosRef, where("idTurma", "==", turmaId));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.size; // Retorna o número de alunos na turma
+  } catch (error) {
+    console.error("Erro ao contar alunos:", error);
+    return 0; // Em caso de erro, retorna 0
+  }
+}
+
+const searchInput = document.getElementById("searchInput");
+
+if (searchInput) {
+  searchInput.addEventListener("input", function () {
+    const textoBusca = this.value.trim();
+    filtrarTurmasPorBusca(textoBusca);
+  });
+}
+
+function filtrarTurmasPorBusca(textoBusca) {
+  textoBusca = textoBusca.toLowerCase();
+
+  const turmasFiltradas = turmasCarregadas.filter(({ dados }) => {
+    return (
+      dados.turma.toLowerCase().includes(textoBusca) ||
+      dados.série.toLowerCase().includes(textoBusca) ||
+      dados.ano.toLowerCase().includes(textoBusca) ||
+      dados.período.toLowerCase().includes(textoBusca)
+    );
+  });
+
+  renderizarTurmas(turmasFiltradas);
+}
+
+

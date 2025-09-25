@@ -153,3 +153,10 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     };
   }})
+
+  // Para abrir o modal
+document.getElementById("modalDetalhesTurma").style.display = "flex";
+
+// Para fechar o modal
+document.getElementById("modalDetalhesTurma").style.display = "none";
+

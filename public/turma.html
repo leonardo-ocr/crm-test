@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>IMPERA</title>
   <link rel="stylesheet" href="css/styles_dashboard.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -11,14 +11,15 @@
 
 <body>
   <!-- Topbar -->
-  <header class="topbar">
-    <div class="clock-area">
-      <div class="date" id="data">--/--/----</div>
-      <div class="clock" id="relogio">--:--:--</div>
+  <header class="topbar" role="banner">
+    <div class="clock-area" aria-label="Data e hora">
+      <div class="date" id="data" aria-live="polite">--/--/----</div>
+      <div class="clock" id="relogio" aria-live="polite">--:--:--</div>
     </div>
 
     <div class="search-container">
-      <input id="searchInput" type="search" placeholder="Pesquisar..." />
+      <label for="searchInput" class="visually-hidden">Pesquisar</label>
+      <input id="searchInput" type="search" placeholder="Pesquisar..." aria-label="Pesquisar" />
     </div>
 
     <div class="user-info">
@@ -41,42 +42,41 @@
   <!-- Layout principal -->
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" role="navigation" aria-label="Menu principal">
       <img class="logo" src="img/LOGO.png" alt="Logo" />
       <nav>
-        <a href="dashboard.html"><i class="fas fa-chart-bar" style="color: white;"></i> Dashboard</a>
-<a href="alunos.html"><i class="fas fa-user-graduate" style="color: white;"></i> Alunos</a>
-<a href="rh.html"><i class="fas fa-users" style="color: white;"></i> RH</a>
-<a href="turma.html"><i class="fas fa-chalkboard-teacher" style="color: white;"></i> Turmas</a>
-<a href="materiais.html"><i class="fas fa-book" style="color: white;"></i> Materiais</a>
-<a href="planejamento.html"><i class="fas fa-clipboard-list" style="color: white;"></i> Planejamento</a>
-<a href="financeiro.html"><i class="fas fa-credit-card" style="color: white;"></i> Financeiro</a>
-<a href="agenda.html"><i class="fas fa-calendar-alt" style="color: white;"></i> Agenda</a>
-<a href="reuniao.html"><i class="fas fa-comments" style="color: white;"></i> Reunião</a>
-<a href="relatorios.html"><i class="fas fa-folder-open" style="color: white;"></i> Relatórios</a>
-<a href="calculadora.html"><i class="fas fa-calculator" style="color: white;"></i> Calculadora</a>
-<a href="rep.html"><i class="fas fa-clock" style="color: white;"></i> REP</a>
-
+        <a href="dashboard.html"><i class="fas fa-chart-bar" aria-hidden="true" style="color: white;"></i> Dashboard</a>
+        <a href="alunos.html"><i class="fas fa-user-graduate" aria-hidden="true" style="color: white;"></i> Alunos</a>
+        <a href="rh.html"><i class="fas fa-users" aria-hidden="true" style="color: white;"></i> RH</a>
+        <a href="turma.html"><i class="fas fa-chalkboard-teacher" aria-hidden="true" style="color: white;"></i> Turmas</a>
+        <a href="materiais.html"><i class="fas fa-book" aria-hidden="true" style="color: white;"></i> Materiais</a>
+        <a href="planejamento.html"><i class="fas fa-clipboard-list" aria-hidden="true" style="color: white;"></i> Planejamento</a>
+        <a href="financeiro.html"><i class="fas fa-credit-card" aria-hidden="true" style="color: white;"></i> Financeiro</a>
+        <a href="agenda.html"><i class="fas fa-calendar-alt" aria-hidden="true" style="color: white;"></i> Agenda</a>
+        <a href="reuniao.html"><i class="fas fa-comments" aria-hidden="true" style="color: white;"></i> Reunião</a>
+        <a href="relatorios.html"><i class="fas fa-folder-open" aria-hidden="true" style="color: white;"></i> Relatórios</a>
+        <a href="calculadora.html"><i class="fas fa-calculator" aria-hidden="true" style="color: white;"></i> Calculadora</a>
+        <a href="rep.html"><i class="fas fa-clock" aria-hidden="true" style="color: white;"></i> REP</a>
       </nav>
     </aside>
 
     <!-- Conteúdo principal -->
-    <main class="main">
+    <main class="main" role="main">
       <header class="header">
-        <h2>Gestão de Turmas</h2>
+        <h1>Gestão de Turmas</h1>
       </header>
 
       <!-- Seção de ações e filtros -->
-      <section class="aluno-search">
-
+      <section class="aluno-search" aria-label="Ações e filtros para turmas">
         <!-- Botão Nova Turma -->
-        <button id="addClassBtn" class="add-aluno">
-          <i class="fas fa-plus"></i> Nova Turma
+        <button id="addClassBtn" class="add-aluno" type="button" aria-haspopup="dialog" aria-controls="modalNovaTurma">
+          <i class="fas fa-plus" aria-hidden="true"></i> Nova Turma
         </button>
 
         <!-- Filtros -->
         <div class="filtros-container">
-          <select id="filtroSerie">
+          <label for="filtroSerie" class="visually-hidden">Filtrar por Série</label>
+          <select id="filtroSerie" name="filtroSerie">
             <option value="">Selecione a Série</option>
             <option value="infantil">Educação Infantil</option>
             <option value="fund1">Ensino Fundamental 1</option>
@@ -84,86 +84,104 @@
             <option value="medio">Ensino Médio</option>
           </select>
 
-          <select id="filtroAno" disabled>
+          <label for="filtroAno" class="visually-hidden">Filtrar por Ano</label>
+          <select id="filtroAno" name="filtroAno" disabled>
             <option value="">Selecione o Ano</option>
           </select>
 
-          <select id="filtroTurma" disabled>
+          <label for="filtroTurma" class="visually-hidden">Filtrar por Turma</label>
+          <select id="filtroTurma" name="filtroTurma" disabled>
             <option value="">Selecione a Turma</option>
           </select>
         </div>
       </section>
-      <section id="turmasContainer" class="turmas-grid">
-  <!-- Os cards das turmas vão aparecer aqui via JS -->
+
+      <section id="turmasContainer" class="turmas-grid" aria-live="polite" aria-label="Lista de turmas">
+        <!-- Os cards das turmas vão aparecer aqui via JS -->
       </section>
     </main>
   </div>
 
-  <!-- Modal para adicionar nova turma (fora do layout principal) -->
-  <div id="modalNovaTurma" class="modal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle"
-    style="display:none;">
+  <!-- Modal para adicionar nova turma -->
+  <div id="modalNovaTurma" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true" style="display:none;">
     <div class="modal-conteudo">
       <button class="fechar" id="fecharModal" aria-label="Fechar modal">&times;</button>
-      <h3 id="modalTitle">Adicionar Nova Turma</h3>
+      <h2 id="modalTitle">Adicionar Nova Turma</h2>
 
       <form id="formNovaTurma" novalidate>
         <div class="form-group">
           <label for="nomeTurma">Nome da Turma:</label>
-          <input type="text" id="nomeTurma" placeholder="Ex: Turma A" required />
+          <input type="text" id="nomeTurma" name="nomeTurma" placeholder="Ex: Turma A" required />
         </div>
 
-        <div class="form-group">
-          <label for="serieTurma">Série:</label>
-          <select id="serieTurma" required>
+        <div class="filtros-container">
+          <label for="serieTurma" class="visually-hidden">Filtrar por Série</label>
+          <select id="serieTurma" name="serieTurma" required>
             <option value="">Selecione a Série</option>
             <option value="infantil">Educação Infantil</option>
             <option value="fund1">Ensino Fundamental 1</option>
             <option value="fund2">Ensino Fundamental 2</option>
             <option value="medio">Ensino Médio</option>
           </select>
-        </div>
 
-        <div class="form-group">
-  <label for="periodoTurma">Período:</label>
-  <select id="periodoTurma" required>
-    <option value="">Selecione o Período</option>
-    <option value="manha">Manhã</option>
-    <option value="tarde">Tarde</option>
-    <option value="noite">Noite</option>
-    <option value="integral">Integral</option>
-  </select>
-</div>
+          <label for="periodoTurma" class="visually-hidden">Filtrar por Período</label>
+          <select id="periodoTurma" name="periodoTurma" required>
+            <option value="">Selecione o Período</option>
+            <option value="manha">Manhã</option>
+            <option value="tarde">Tarde</option>
+            <option value="noite">Noite</option>
+            <option value="integral">Integral</option>
+          </select>
 
-
-        <div class="form-group">
-          <label for="anoEscolar">Ano Escolar:</label>
-          <select id="anoEscolar" required>
-            <option value="">Selecione o Ano</option>
-            <option value="1">1º Ano</option>
-            <option value="2">2º Ano</option>
-            <option value="3">3º Ano</option>
-            <option value="4">4º Ano</option>
-            <option value="5">5º Ano</option>
-            <option value="6">6º Ano</option>
-            <option value="7">7º Ano</option>
-            <option value="8">8º Ano</option>
-            <option value="9">9º Ano</option>
-            <option value="1M">1º Médio</option>
-            <option value="2M">2º Médio</option>
-            <option value="3M">3º Médio</option>
+          <label for="anoTurma" class="visually-hidden">Filtrar por Ano Escolar</label>
+          <select id="anoTurma" name="anoTurma" required>
+            <option value="">Selecione o Ano Escolar</option>
+            <option value="1º Ano">1º Ano</option>
+            <option value="2º Ano">2º Ano</option>
+            <option value="3º Ano">3º Ano</option>
+            <option value="4º Ano">4º Ano</option>
+            <option value="5º Ano">5º Ano</option>
+            <option value="6º Ano">6º Ano</option>
+            <option value="7º Ano">7º Ano</option>
+            <option value="8º Ano">8º Ano</option>
+            <option value="9º Ano">9º Ano</option>
+            <option value="1º Ano Médio">1º Ano Médio</option>
+            <option value="2º Ano Médio">2º Ano Médio</option>
+            <option value="3º Ano Médio">3º Ano Médio</option>
           </select>
         </div>
 
         <button type="submit" class="btn-submit">Adicionar Turma</button>
       </form>
-    </div>
-  
-  </div>
 
-  
+    </div>
+  </div>
+  <!-- Modal para detalhes da turma -->
+  <div id="modalDetalhesTurma" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalDetalhesTitle" aria-hidden="true" style="display:none;">
+    <div class="modal-conteudo">
+      <button id="fecharModalTurma" class="fechar" aria-label="Fechar modal detalhes">&times;</button>
+      <h2 id="modalDetalhesTitle" class="visually-hidden">Detalhes da Turma</h2>
+      <div id="conteudoDetalhesTurma"></div>
+    </div>
+  </div>
 
   <script type="module" src="js/logout.js"></script>
   <script src="js/script.js"></script>
   <script type="module" src="js/db-turma.js"></script>
+
+  <style>
+    /* Visually hidden helper class */
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+  </style>
 </body>
 </html>
