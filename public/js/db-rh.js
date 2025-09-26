@@ -4,6 +4,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
+
 const empresaId = 'esc001';
 const funcionariosRef = collection(db, 'empresa', empresaId, 'funcionarios');
 
@@ -239,6 +240,11 @@ function mostrarDetalhesFuncionario(funcionario) {
   document.getElementById('btnEditarFuncionario').onclick = () => renderEditar(funcionarioEditavel);
   modal.style.display = 'block';
 }
+
+export function getProfessoresDisponiveis() {
+  return funcionariosCache.filter(f => f.ativo && f.cargo?.toLowerCase().includes('professor'));
+}
+
 
 function renderEditar(funcionarioEditavel) {
   const modal = document.getElementById('modalDetalhesFuncionario');

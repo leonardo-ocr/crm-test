@@ -76,13 +76,13 @@
         <!-- Filtros -->
         <div class="filtros-container">
           <label for="filtroSerie" class="visually-hidden">Filtrar por Série</label>
-<select id="filtroSerie">
-  <option value="">Selecione a série</option>
-  <option value="infantil">Educação Infantil</option>
-  <option value="fundamental1">Ensino Fundamental 1</option>
-  <option value="fundamental2">Ensino Fundamental 2</option>
-  <option value="medio">Ensino Médio</option>
-</select>
+          <select id="filtroSerie" name="filtroSerie">
+            <option value="">Selecione a série</option>
+            <option value="infantil">Educação Infantil</option>
+            <option value="fundamental1">Ensino Fundamental 1</option>
+            <option value="fundamental2">Ensino Fundamental 2</option>
+            <option value="medio">Ensino Médio</option>
+          </select>
 
           <label for="filtroAno" class="visually-hidden">Filtrar por Ano</label>
           <select id="filtroAno" name="filtroAno" disabled>
@@ -90,6 +90,7 @@
           </select>
         </div>
       </section>
+
       <section id="turmasContainer" class="turmas-grid" aria-live="polite" aria-label="Lista de turmas">
         <!-- Os cards das turmas vão aparecer aqui via JS -->
       </section>
@@ -109,17 +110,16 @@
         </div>
 
         <div class="filtros-container">
-          <label for="serieTurma" class="visually-hidden">Filtrar por Série</label>
+          <label for="serieTurma" class="visually-hidden">Selecionar Série</label>
           <select id="serieTurma" name="serieTurma" required>
-  <option value="">Selecione a Série</option>
-  <option value="infantil">Educação Infantil</option>
-  <option value="fundamental1">Ensino Fundamental 1</option>
-  <option value="fundamental2">Ensino Fundamental 2</option>
-  <option value="medio">Ensino Médio</option>
-</select>
+            <option value="">Selecione a Série</option>
+            <option value="infantil">Educação Infantil</option>
+            <option value="fundamental1">Ensino Fundamental 1</option>
+            <option value="fundamental2">Ensino Fundamental 2</option>
+            <option value="medio">Ensino Médio</option>
+          </select>
 
-
-          <label for="periodoTurma" class="visually-hidden">Filtrar por Período</label>
+          <label for="periodoTurma" class="visually-hidden">Selecionar Período</label>
           <select id="periodoTurma" name="periodoTurma" required>
             <option value="">Selecione o Período</option>
             <option value="manha">Manhã</option>
@@ -128,37 +128,30 @@
             <option value="integral">Integral</option>
           </select>
 
-          <label for="anoTurma" class="visually-hidden">Filtrar por Ano Escolar</label>
-          <select id="anoTurma" name="anoTurma" required>
+          <label for="anoTurma" class="visually-hidden">Selecionar Ano Escolar</label>
+          <select id="anoTurma" name="anoTurma" required disabled>
             <option value="">Selecione o Ano Escolar</option>
-            <option value="1º Ano">1º Ano</option>
-            <option value="2º Ano">2º Ano</option>
-            <option value="3º Ano">3º Ano</option>
-            <option value="4º Ano">4º Ano</option>
-            <option value="5º Ano">5º Ano</option>
-            <option value="6º Ano">6º Ano</option>
-            <option value="7º Ano">7º Ano</option>
-            <option value="8º Ano">8º Ano</option>
-            <option value="9º Ano">9º Ano</option>
-            <option value="1º Ano Médio">1º Ano Médio</option>
-            <option value="2º Ano Médio">2º Ano Médio</option>
-            <option value="3º Ano Médio">3º Ano Médio</option>
           </select>
         </div>
 
         <button type="submit" class="btn-submit">Adicionar Turma</button>
       </form>
-
     </div>
   </div>
+
   <!-- Modal para detalhes da turma -->
   <div id="modalDetalhesTurma" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalDetalhesTitle" aria-hidden="true" style="display:none;">
-    <div class="modal-conteudo">
-      <button id="fecharModalTurma" class="fechar" aria-label="Fechar modal detalhes">&times;</button>
-      <h2 id="modalDetalhesTitle" class="visually-hidden">Detalhes da Turma</h2>
-      <div id="conteudoDetalhesTurma"></div>
-    </div>
+  <div class="modal-conteudo">
+    <label for="professorTurma">Professor</label>
+    <select id="professorTurma" required>
+      <option value="">Selecione um professor</option>
+    </select>
+    <button id="fecharModalTurma" class="fechar" aria-label="Fechar modal detalhes">&times;</button>
+    <h2 id="modalDetalhesTitle" class="visually-hidden">Detalhes da Turma</h2>
+    <div id="conteudoDetalhesTurma"></div>
   </div>
+</div>
+
 
   <script type="module" src="js/logout.js"></script>
   <script src="js/script.js"></script>
@@ -179,4 +172,5 @@
     }
   </style>
 </body>
+
 </html>
