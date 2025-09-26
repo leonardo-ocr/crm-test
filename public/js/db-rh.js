@@ -94,37 +94,38 @@ export async function configurarModalAdicionar(funcionariosRef) {
     e.preventDefault();
 
     const novoFuncionario = {
-      nome: form.nome.value.trim(),
-      email: form.email.value.trim(),
-      cpf: form.cpf.value.trim(),
-      rg: form.rg.value.trim(),
-      estadoCivil: form.estadoCivil.value.trim(),
-      dependentes: parseInt(form.dependentes.value) || 0,
-      cargo: form.cargo.value.trim(),
-      departamento: form.departamento.value.trim(),
-      jornadaTrabalho: form.jornadaTrabalho.value.trim(),
-      tipoContrato: form.tipoContrato.value.trim(),
-      dataNascimento: form.dataNascimento.value, // já vem como YYYY-MM-DD
-      dataAdmissao: form.dataAdmissao.value,
-      salario: parseFloat(form.salario.value) || 0,
-      telefone: form.telefone.value.trim(),
-      banco: form.banco.value.trim(),
-      agencia: form.agencia.value.trim(),
-      conta: form.conta.value.trim(),
-      carteiraTrabalho: form.carteiraTrabalho.value.trim(),
-      pisPasep: form.pisPasep.value.trim(),
-      tituloEleitor: form.tituloEleitor.value.trim(),
-      idResponsavel: form.idResponsavel.value.trim(),
-      ativo: true,
-      endereco: {
-        rua: form.rua.value.trim(),
-        numero: form.numero.value.trim(),
-        bairro: form.bairro.value.trim(),
-        cep: form.cep.value.trim(),
-        cidade: form.cidade.value.trim(),
-        estado: form.estado.value.trim()
-      }
-    };
+    nome: form.nome.value.trim(),
+    email: form.email.value.trim(),
+    cpf: form.cpf.value.trim(),
+    rg: form.rg.value.trim(),
+    estadoCivil: form.estadoCivil.value.trim(),
+    dependentes: parseInt(form.dependentes.value) || 0,
+    cargo: form.cargo.value.trim(),
+    departamento: form.departamento.value.trim(),
+    jornadaTrabalho: form.jornadaTrabalho.value.trim(),
+    tipoContrato: form.tipoContrato.value.trim(),
+    dataNascimento: form.dataNascimento.value, // já vem como YYYY-MM-DD
+    dataAdmissao: form.dataAdmissao.value,
+    salario: parseFloat(form.salario.value) || 0,
+    telefone: form.telefone.value.trim(),
+    banco: form.banco.value.trim(),
+    agencia: form.agencia.value.trim(),
+    conta: form.conta.value.trim(),
+    carteiraTrabalho: form.carteiraTrabalho.value.trim(),
+    pisPasep: form.pisPasep.value.trim(),
+    tituloEleitor: form.tituloEleitor.value.trim(),
+    idResponsavel: form.idResponsavel.value.trim(),
+    ativo: true,
+    endereco: {
+      rua: form.rua.value.trim(),
+      numero: form.numero.value.trim(),
+      bairro: form.bairro.value.trim(),
+      cep: form.cep.value.trim(),
+      cidade: form.cidade.value.trim(),
+      estado: form.estado.value.trim()
+    },
+    disciplina: document.getElementById('inputDisciplinaAdiciona').value.trim()  // ADICIONADO AQUI
+  };
 
     try {
       const docRef = await addDoc(funcionariosRef, novoFuncionario);
@@ -198,6 +199,7 @@ function mostrarDetalhesFuncionario(funcionario) {
       <h2>Detalhes do Funcionário</h2>
       <p><strong>Nome:</strong> ${funcionarioEditavel.nome || '-'}</p>
       <p><strong>Cargo:</strong> ${funcionarioEditavel.cargo || '-'}</p>
+      <p><strong>Disciplina:</strong> ${funcionarioEditavel.disciplina || '-'}</p>
       <p><strong>ID:</strong> ${funcionarioEditavel.idDoc || '-'}</p>
       <p><strong>CPF:</strong> ${funcionarioEditavel.cpf || '-'}</p>
       <p><strong>RG:</strong> ${funcionarioEditavel.rg || '-'}</p>
@@ -263,6 +265,7 @@ function renderEditar(funcionarioEditavel) {
         <label>Estado Civil:<br><input type="text" id="inputEstadoCivil" value="${funcionarioEditavel.estadoCivil || ''}"></label>
         <label>Dependentes:<br><input type="number" id="inputDependentes" value="${funcionarioEditavel.dependentes || 0}"></label>
         <label>Cargo:<br><input type="text" id="inputCargo" value="${funcionarioEditavel.cargo || ''}"></label>
+        <label>Disciplina:<br><input type="text" id="inputDisciplina" value="${funcionarioEditavel.disciplina || ''}"></label>
         <label>Departamento:<br><input type="text" id="inputDepartamento" value="${funcionarioEditavel.departamento || ''}"></label>
         <label>Jornada de Trabalho:<br><input type="text" id="inputJornada" value="${funcionarioEditavel.jornadaTrabalho || ''}"></label>
         <label>Tipo de Contrato:<br><input type="text" id="inputContrato" value="${funcionarioEditavel.tipoContrato || ''}"></label>
@@ -315,38 +318,40 @@ function renderEditar(funcionarioEditavel) {
   };
 
   document.getElementById('btnSalvarFuncionario').onclick = async () => {
-    const funcionarioAtualizado = {
-      nome: document.getElementById('inputNome').value.trim(),
-      email: document.getElementById('inputEmail').value.trim(),
-      cpf: document.getElementById('inputCpf').value.trim(),
-      rg: document.getElementById('inputRg').value.trim(),
-      estadoCivil: document.getElementById('inputEstadoCivil').value.trim(),
-      dependentes: parseInt(document.getElementById('inputDependentes').value) || 0,
-      cargo: document.getElementById('inputCargo').value.trim(),
-      departamento: document.getElementById('inputDepartamento').value.trim(),
-      jornadaTrabalho: document.getElementById('inputJornada').value.trim(),
-      tipoContrato: document.getElementById('inputContrato').value.trim(),
-      dataNascimento: document.getElementById('inputNascimento').value,
-      dataAdmissao: document.getElementById('inputAdmissao').value,
-      salario: parseFloat(document.getElementById('inputSalario').value) || 0,
-      telefone: document.getElementById('inputTelefone').value.trim(),
-      idResponsavel: document.getElementById('inputIdResponsavel').value.trim(),
-      endereco: {
-        rua: document.getElementById('inputRua').value.trim(),
-        numero: document.getElementById('inputNumero').value.trim(),
-        bairro: document.getElementById('inputBairro').value.trim(),
-        cep: document.getElementById('inputCep').value.trim(),
-        cidade: document.getElementById('inputCidade').value.trim(),
-        estado: document.getElementById('inputEstado').value.trim()
-      },
-      banco: document.getElementById('inputBanco').value.trim(),
-      agencia: document.getElementById('inputAgencia').value.trim(),
-      conta: document.getElementById('inputConta').value.trim(),
-      carteiraTrabalho: document.getElementById('inputCarteiraTrabalho').value.trim(),
-      pisPasep: document.getElementById('inputPisPasep').value.trim(),
-      tituloEleitor: document.getElementById('inputTituloEleitor').value.trim(),
-      ativo: document.getElementById('inputAtivo').value === 'true'
-    };
+   const funcionarioAtualizado = {
+  nome: document.getElementById('inputNome').value.trim(),
+  email: document.getElementById('inputEmail').value.trim(),
+  cpf: document.getElementById('inputCpf').value.trim(),
+  rg: document.getElementById('inputRg').value.trim(),
+  estadoCivil: document.getElementById('inputEstadoCivil').value.trim(),
+  dependentes: parseInt(document.getElementById('inputDependentes').value) || 0,
+  cargo: document.getElementById('inputCargo').value.trim(),
+  departamento: document.getElementById('inputDepartamento').value.trim(),
+  jornadaTrabalho: document.getElementById('inputJornada').value.trim(),
+  tipoContrato: document.getElementById('inputContrato').value.trim(),
+  dataNascimento: document.getElementById('inputNascimento').value,
+  dataAdmissao: document.getElementById('inputAdmissao').value,
+  salario: parseFloat(document.getElementById('inputSalario').value) || 0,
+  telefone: document.getElementById('inputTelefone').value.trim(),
+  idResponsavel: document.getElementById('inputIdResponsavel').value.trim(),
+  endereco: {
+    rua: document.getElementById('inputRua').value.trim(),
+    numero: document.getElementById('inputNumero').value.trim(),
+    bairro: document.getElementById('inputBairro').value.trim(),
+    cep: document.getElementById('inputCep').value.trim(),
+    cidade: document.getElementById('inputCidade').value.trim(),
+    estado: document.getElementById('inputEstado').value.trim()
+  },
+  banco: document.getElementById('inputBanco').value.trim(),
+  agencia: document.getElementById('inputAgencia').value.trim(),
+  conta: document.getElementById('inputConta').value.trim(),
+  carteiraTrabalho: document.getElementById('inputCarteiraTrabalho').value.trim(),
+  pisPasep: document.getElementById('inputPisPasep').value.trim(),
+  tituloEleitor: document.getElementById('inputTituloEleitor').value.trim(),
+  ativo: document.getElementById('inputAtivo').value === 'true',
+  disciplina: document.getElementById('inputDisciplina').value.trim()  // Nova linha para disciplina
+};
+
 
     try {
       const funcionarioDocRef = doc(db, 'empresa', empresaId, 'funcionarios', funcionarioEditavel.idDoc);
