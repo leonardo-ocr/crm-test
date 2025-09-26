@@ -9,7 +9,6 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 import { db } from './firebase-config.js';
-import { initFuncionarios, getProfessoresDisponiveis } from './db-rh.js';
 
 const empresaId = "esc001";
 let turmasCarregadas = [];
@@ -33,8 +32,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   const filtroAno = document.getElementById("filtroAno");
   const searchInput = document.getElementById("searchInput");
   const turmasContainer = document.getElementById("turmasContainer");
+  const addClassBtn = document.getElementById("addClassBtn");
+  const modalNovaTurma = document.getElementById("modalNovaTurma");
+  const formNovaTurma = document.getElementById("formNovaTurma");
+  const nomeTurmaInput = document.getElementById("nomeTurma");
+  const serieTurmaSelect = document.getElementById("serieTurma");
+  const periodoTurmaSelect = document.getElementById("periodoTurma");
+  const anoTurmaSelect = document.getElementById("anoTurma");
 
-  // Carrega filtros ao iniciar
   inicializarFiltroSerie();
 
   filtroSerie.addEventListener("change", () => {
@@ -45,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   filtroAno.addEventListener("change", aplicarFiltrosComBusca);
   searchInput.addEventListener("input", aplicarFiltrosComBusca);
 
-  await carregarTurmas(); // carrega dados do Firestore
+  await carregarTurmas();
 
   function inicializarFiltroSerie() {
     filtroSerie.innerHTML = `<option value="">Todas as Séries</option>`;
@@ -97,7 +102,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function contarAlunosPorTurma(turmaId) {
     try {
       const alunosRef = collection(db, "empresa", empresaId, "alunos");
-
       const ativosQuery = query(alunosRef, where("idTurma", "==", turmaId), where("status", "==", true));
       const inativosQuery = query(alunosRef, where("idTurma", "==", turmaId), where("status", "==", false));
 
@@ -132,7 +136,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
       );
 
-      aplicarFiltrosComBusca(); // mostra turmas filtradas
+      aplicarFiltrosComBusca();
     } catch (e) {
       console.error("Erro ao carregar turmas:", e);
       turmasContainer.innerHTML = `<p>Erro ao carregar turmas.</p>`;
@@ -158,20 +162,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         <p><strong>Alunos Ativos:</strong> ${qtdAtivos}</p>
         <p><strong>Inativos:</strong> ${qtdInativos}</p>
       `;
-      
-      // Adicionando o evento de clique no card de turma
       div.addEventListener("click", () => abrirModalTurma(id, dados));
-
       turmasContainer.appendChild(div);
     });
   }
 
-  // Função para abrir o modal de detalhes
   async function abrirModalTurma(turmaId, turma) {
     const modal = document.getElementById("modalDetalhesTurma");
     const conteudo = document.getElementById("conteudoDetalhesTurma");
 
-    // Buscar alunos ativos e inativos da turma
     const alunosAtivos = await buscarAlunosPorTurmaComStatus(turmaId, true);
     const alunosInativos = await buscarAlunosPorTurmaComStatus(turmaId, false);
 
@@ -199,14 +198,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     modal.setAttribute("aria-hidden", "false");
   }
 
-  // Função para fechar o modal
   document.getElementById("fecharModalTurma").onclick = () => {
     const modal = document.getElementById("modalDetalhesTurma");
     modal.style.display = "none";
     modal.setAttribute("aria-hidden", "true");
   };
 
-  // Fecha o modal se clicar fora dele
   window.onclick = (event) => {
     const modal = document.getElementById("modalDetalhesTurma");
     if (event.target === modal) {
@@ -215,7 +212,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   };
 
-  // Função para buscar alunos por status
   async function buscarAlunosPorTurmaComStatus(turmaId, statusBool) {
     try {
       const alunosRef = collection(db, "empresa", empresaId, "alunos");
@@ -232,6 +228,81 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Inicializa as turmas ao carregar a página
+  if (addClassBtn && modalNovaTurma) {
+    addClassBtn.addEventListener("click", () => {
+      modalNovaTurma.style.display = "block";
+      modalNovaTurma.setAttribute("aria-hidden", "false");
+
+      formNovaTurma.reset();
+      anoTurmaSelect.innerHTML = '<option value="">Selecione o Ano Escolar</option>';
+      anoTurmaSelect.disabled = true;
+    });
+  }
+
+  document.getElementById("fecharModal").onclick = () => {
+    modalNovaTurma.style.display = "none";
+    modalNovaTurma.setAttribute("aria-hidden", "true");
+    addClassBtn.focus();
+  };
+
+  window.addEventListener("click", (event) => {
+    if (event.target === modalNovaTurma) {
+      modalNovaTurma.style.display = "none";
+      modalNovaTurma.setAttribute("aria-hidden", "true");
+      addClassBtn.focus();
+    }
+  });
+
+  // ✅ Preencher opções de Ano com base na Série (modal de nova turma)
+  serieTurmaSelect.addEventListener("change", () => {
+    const serieSelecionada = serieTurmaSelect.value;
+    anoTurmaSelect.innerHTML = '<option value="">Selecione o Ano Escolar</option>';
+    anoTurmaSelect.disabled = true;
+
+    if (serieSelecionada && dados[serieSelecionada]) {
+      Object.keys(dados[serieSelecionada]).forEach((ano) => {
+        const opt = document.createElement("option");
+        opt.value = ano;
+        opt.textContent = ano;
+        anoTurmaSelect.appendChild(opt);
+      });
+      anoTurmaSelect.disabled = false;
+    }
+  });
+
+  formNovaTurma.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nomeTurma = nomeTurmaInput.value.trim();
+    const serieTurma = serieTurmaSelect.value;
+    const periodoTurma = periodoTurmaSelect.value;
+    const anoTurma = anoTurmaSelect.value;
+
+    if (!nomeTurma || !serieTurma || !periodoTurma || !anoTurma) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "empresa", empresaId, "turmas"), {
+        turma: nomeTurma,
+        serie: serieTurma,
+        periodo: periodoTurma,
+        ano: anoTurma
+      });
+
+      alert("Turma adicionada com sucesso!");
+      modalNovaTurma.style.display = "none";
+      formNovaTurma.reset();
+      anoTurmaSelect.innerHTML = '<option value="">Selecione o Ano Escolar</option>';
+      anoTurmaSelect.disabled = true;
+
+      carregarTurmas();
+    } catch (error) {
+      console.error("Erro ao adicionar turma:", error);
+      alert("Erro ao adicionar turma!");
+    }
+  });
+
   carregarTurmas();
 });
